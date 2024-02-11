@@ -1,0 +1,27 @@
+package edu.chnu.recruiting.models;
+
+import java.util.UUID;
+
+import edu.chnu.recruiting.models.wizard.Wizard;
+import edu.chnu.recruiting.utils.JpaConverterJson;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import lombok.Data;
+
+@Data
+@Entity
+public class Application {
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
+	
+	@ManyToOne
+	private Position position;
+	
+	@Convert(converter = JpaConverterJson.class)
+	private Wizard wizardData;
+}
