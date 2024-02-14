@@ -6,7 +6,8 @@ import lombok.Data;
 
 @Data
 public class WizardStep {
-	private int order;
-	private String name;
-	private List<WizardInput> inputs;
+	private String id;
+	private String label;
+	private int orderIndex;
+	private List<WizardField> fields;
 }

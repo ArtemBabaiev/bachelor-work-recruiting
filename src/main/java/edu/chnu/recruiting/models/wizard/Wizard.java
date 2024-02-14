@@ -6,5 +6,6 @@ import lombok.Data;
 
 @Data
 public class Wizard {
+	private String currentStep;
 	List<WizardStep> steps;
 }
