@@ -13,17 +13,21 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import edu.chnu.recruiting.front.components.AudioRecorder;
+import edu.chnu.recruiting.front.components.layouts.MainLayout;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Main")
-@Route(value = "")
-public class MainView extends HorizontalLayout {
+@PageTitle("Audio")
+@Route(value = "audio",layout = MainLayout.class)
+@RolesAllowed({"ADMIN"})
+public class AudioExampleView extends HorizontalLayout {
 
     private TextField name;
     private Button sayHello;
     
     AudioRecorder recorder = new AudioRecorder();
 
-    public MainView() {
+    public AudioExampleView() {
         name = new TextField("Your name");
         sayHello = new Button("Say hello");
         sayHello.addClickListener(e -> {
