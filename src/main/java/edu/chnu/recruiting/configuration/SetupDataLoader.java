@@ -1,4 +1,4 @@
-package edu.chnu.recruiting;
+package edu.chnu.recruiting.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -9,6 +9,7 @@ import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.RoleRepository;
 import edu.chnu.recruiting.repositories.UserRepository;
+import edu.chnu.recruiting.utils.constants.StarterRoles;
 import jakarta.transaction.Transactional;
 
 @Component
@@ -28,9 +29,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
 		if (alreadySetup)
 			return;
-		createRoleIfNotFound("ROLE_COMPANY");
-		createRoleIfNotFound("ROLE_APPLICANT");
-		Role adminRole = createRoleIfNotFound("ROLE_ADMIN");
+		createRoleIfNotFound(StarterRoles.COMPANY);
+		createRoleIfNotFound(StarterRoles.APPLICANT);
+		Role adminRole = createRoleIfNotFound(StarterRoles.ADMIN);
 		User admin = new User();
 		admin.setEmail("test@email.com");
 		admin.setPassword("$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW");
