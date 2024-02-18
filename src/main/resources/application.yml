@@ -7,9 +7,35 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
+#  datasource: 
+#    url: jdbc:mariadb://localhost:3306/bachelor-recruiting
+#    username: root
+#    password: password
+#    driver-class-name: org.mariadb.jdbc.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: create-drop
+#    properties:
+#      hibernate:
+#        globally_quoted_identifiers: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: babaiev.artem@chnu.edu.ua
+    password: chnu180702
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   mustache:
     check-template-location: false
  
 vaadin: 
   launch-browser: true
   whitelisted-packages: com.vaadin,org.vaadin,dev.hilla,edu.chnu.recruiting
+
+verifaction-token:
+  expiration: 1440 # 24 hours
+base-url: http://localhost:8080

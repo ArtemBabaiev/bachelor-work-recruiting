@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
+import edu.chnu.recruiting.models.security.VerificationToken;
 import edu.chnu.recruiting.repositories.RoleRepository;
 import edu.chnu.recruiting.repositories.UserRepository;
+import edu.chnu.recruiting.repositories.VerificationTokeRepository;
 import edu.chnu.recruiting.utils.constants.StarterRoles;
 import jakarta.transaction.Transactional;
 
@@ -22,6 +24,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private VerificationTokeRepository tokenRepository;
 
 	@Override
 	@Transactional
@@ -39,6 +44,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 		admin.setEnabled(true);
 		admin.getRoles().add(adminRole);
 		this.userRepository.save(admin);
+		VerificationToken token = new VerificationToken();
+		token.setUser(admin);
+		token.setToken("59291730-3105-4710-9e03-393826c6a68c");
+		token.calculateExpiryDate(1440);
+		this.tokenRepository.save(token);
 		alreadySetup = true;
 	}
 

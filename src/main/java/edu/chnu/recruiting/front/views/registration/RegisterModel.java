@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.auth;
+package edu.chnu.recruiting.front.views.registration;
 
 import edu.chnu.recruiting.utils.constants.RegexPatterns;
 import jakarta.validation.constraints.Email;

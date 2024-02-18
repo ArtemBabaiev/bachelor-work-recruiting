@@ -38,6 +38,7 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
+    	setDrawerOpened(false);
         addToDrawer(new VerticalLayout( 
                 //new RouterLink("Audio", AudioRecorder.class)  
         ));
