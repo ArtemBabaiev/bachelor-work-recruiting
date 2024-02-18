@@ -10,7 +10,6 @@ import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -28,11 +27,10 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextAlignment;
 
 import lombok.Getter;
 
-public class RegisterForm extends VerticalLayout {
-	// TODO: ADD COMPANY CREATION
+public class SignUpForm extends VerticalLayout {
 	private H2 title = new H2("Sign up");
 
-	private Binder<RegisterModel> binder = new BeanValidationBinder<RegisterModel>(RegisterModel.class);
+	private Binder<SignUpModel> binder = new BeanValidationBinder<SignUpModel>(SignUpModel.class);
 
 	private TextField username = new TextField("Username");
 	private TextField email = new TextField("Email");
@@ -40,14 +38,14 @@ public class RegisterForm extends VerticalLayout {
 	private PasswordField confirmPassword = new PasswordField("Confirm password");
 	private Checkbox asCompany = new Checkbox("Register as Recruiter");
 
-	private Button confirmBtn = new Button("Sign in");
+	private Button confirmBtn = new Button("Sign up");
 	private Button cancelBtn = new Button("Cancel");
 
-	public RegisterForm() {
-		this(new RegisterModel());
+	public SignUpForm() {
+		this(new SignUpModel());
 	}
 
-	public RegisterForm(RegisterModel model) {
+	public SignUpForm(SignUpModel model) {
 		binder.bindInstanceFields(this);
 
 		setHeightFull();
@@ -109,10 +107,10 @@ public class RegisterForm extends VerticalLayout {
 	}
 
 	@Getter
-	public static abstract class RegisterFormEvent extends ComponentEvent<RegisterForm> {
-		private RegisterModel model;
+	public static abstract class RegisterFormEvent extends ComponentEvent<SignUpForm> {
+		private SignUpModel model;
 
-		protected RegisterFormEvent(RegisterForm source, RegisterModel model) {
+		protected RegisterFormEvent(SignUpForm source, SignUpModel model) {
 			super(source, false);
 			this.model = model;
 		}
@@ -120,14 +118,14 @@ public class RegisterForm extends VerticalLayout {
 
 	public static class SaveEvent extends RegisterFormEvent {
 
-		SaveEvent(RegisterForm source, RegisterModel model) {
+		SaveEvent(SignUpForm source, SignUpModel model) {
 			super(source, model);
 		}
 	}
 
 	public static class CancelEvent extends RegisterFormEvent {
 
-		CancelEvent(RegisterForm source) {
+		CancelEvent(SignUpForm source) {
 			super(source, null);
 		}
 	}

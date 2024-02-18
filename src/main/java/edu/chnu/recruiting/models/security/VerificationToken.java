@@ -1,13 +1,8 @@
 package edu.chnu.recruiting.models.security;
 
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import jakarta.persistence.Basic;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -41,4 +36,9 @@ public class VerificationToken {
 		cal.add(Calendar.MINUTE, expiryTimeInMinutes);
 		this.expiryDate =  new Date(cal.getTime().getTime());
 	}
+	
+	public void updateToken(final String token, int expiryTimeInMinutes) {
+        this.token = token;
+        calculateExpiryDate(expiryTimeInMinutes);
+    }
 }

@@ -13,8 +13,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import edu.chnu.recruiting.front.components.AudioRecorder;
-import edu.chnu.recruiting.front.components.layouts.MainLayout;
-import jakarta.annotation.security.PermitAll;
+import edu.chnu.recruiting.front.layouts.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Audio")

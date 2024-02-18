@@ -7,9 +7,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-import edu.chnu.recruiting.front.components.layouts.MainLayout;
-import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
+import edu.chnu.recruiting.front.layouts.MainLayout;
 
 @PageTitle("Home")
 @Route(value = "",layout = MainLayout.class)

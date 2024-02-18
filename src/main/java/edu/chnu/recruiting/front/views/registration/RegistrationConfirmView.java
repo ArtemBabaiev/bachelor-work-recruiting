@@ -2,9 +2,13 @@ package edu.chnu.recruiting.front.views.registration;
 
 import java.util.List;
 
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -19,7 +23,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 
 import edu.chnu.recruiting.exceptions.VerificationTokenExpiredException;
-import edu.chnu.recruiting.front.components.layouts.MainLayout;
+import edu.chnu.recruiting.front.layouts.MainLayout;
+import edu.chnu.recruiting.front.views.HomeView;
 import edu.chnu.recruiting.services.UserService;
 import edu.chnu.recruiting.services.VerificationTokenService;
 
@@ -54,14 +59,26 @@ public class RegistrationConfirmView extends Div implements BeforeEnterObserver 
 	private void initComponent() {
 		setSizeFull();
 		VerticalLayout vLayout = new VerticalLayout();
+		vLayout.setHeightFull();
 		vLayout.addClassNames(Display.FLEX, JustifyContent.CENTER, AlignItems.CENTER);
+		resendBtn.addClickListener(e -> handleResendClick(e));
+		homeBtn.addClickListener(e -> UI.getCurrent().navigate(HomeView.class));
+		
 		try {
-			this.tokenService.confirmRegistration(token);	
+			this.tokenService.confirmRegistration(token);
+			message.setText("Verification Successful");
 			vLayout.add(message, homeBtn);
 		} catch (VerificationTokenExpiredException e) {
+			message.setText("Verification link is expired");
 			vLayout.add(message, homeBtn, resendBtn);
 		}
 		add(vLayout);
+	}
+
+	private Object handleResendClick(ClickEvent<Button> e) {
+		this.tokenService.generateAndSendNewVerificationToken(token);
+		Notification.show("Email was sent", 5000, Position.BOTTOM_CENTER);
+		return null;
 	}
 	
 	

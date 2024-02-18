@@ -1,4 +1,4 @@
-package edu.chnu.recruiting;
+package edu.chnu.recruiting.events.registration;
 
 import org.springframework.context.ApplicationEvent;
 

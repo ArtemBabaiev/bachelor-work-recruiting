@@ -12,20 +12,20 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.views.HomeView;
-import edu.chnu.recruiting.front.views.registration.RegisterForm.CancelEvent;
-import edu.chnu.recruiting.front.views.registration.RegisterForm.SaveEvent;
+import edu.chnu.recruiting.front.views.registration.SignUpForm.CancelEvent;
+import edu.chnu.recruiting.front.views.registration.SignUpForm.SaveEvent;
 import edu.chnu.recruiting.services.UserService;
 
-@Route("register") 
+@Route("sign-up") 
 @PageTitle("Sign Up")
 @AnonymousAllowed
-public class RegisterView extends Div{
+public class SignUpView extends Div{
 	
 	private UserService userService;
 	
-	private RegisterForm form;
+	private SignUpForm form;
 	
-	public RegisterView(UserService userService) {
+	public SignUpView(UserService userService) {
 		this.userService = userService;
 		setSizeFull();
 		initComponents();
@@ -35,7 +35,7 @@ public class RegisterView extends Div{
 	}
 
 	private void initComponents() {
-		form = new RegisterForm();
+		form = new SignUpForm();
 	}
 	
 	private void configureComponents() {
