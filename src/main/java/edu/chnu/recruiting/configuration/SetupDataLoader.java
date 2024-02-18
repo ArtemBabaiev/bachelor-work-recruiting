@@ -33,6 +33,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 		createRoleIfNotFound(StarterRoles.APPLICANT);
 		Role adminRole = createRoleIfNotFound(StarterRoles.ADMIN);
 		User admin = new User();
+		admin.setUsername("test");
 		admin.setEmail("test@email.com");
 		admin.setPassword("$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW");
 		admin.setEnabled(true);

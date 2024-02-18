@@ -37,6 +37,12 @@ public class SecurityConfig extends VaadinWebSecurity {
         http.authorizeHttpRequests(auth ->
                     auth.requestMatchers(
                         AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/images/*.png")).permitAll())
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+        )
+        .csrf(csrf -> csrf
+                .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")))
+        .headers(headers -> headers.frameOptions().disable())
         .authenticationManager(authenticationManager);  
         super.configure(http);
         setLoginView(http, LoginView.class); 
