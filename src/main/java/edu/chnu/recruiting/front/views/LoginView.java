@@ -1,16 +1,8 @@
 package edu.chnu.recruiting.front.views;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.login.AbstractLogin.LoginEvent;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
+import com.vaadin.flow.component.login.LoginI18n.ErrorMessage;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -23,34 +15,28 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
-	private final LoginForm login = new LoginForm();
 	private LoginI18n i18n = LoginI18n.createDefault();
+	private final LoginForm login = new LoginForm(i18n);
+	private ErrorMessage errorMessage = new ErrorMessage();
 
-	private AuthenticationManager authManager;
-
-	public LoginView(AuthenticationManager authManager) {
-
-		this.authManager = authManager;
+	public LoginView() {
 		addClassName("login-view");
 		setSizeFull();
 		setAlignItems(Alignment.CENTER);
 		setJustifyContentMode(JustifyContentMode.CENTER);
-
-		login.setI18n(i18n);
-
-		login.addLoginListener(e -> handleLogin(e));
-
-		add(new H1("Vaadin CRM"), login);
+		
+		configureForm();
+		
+		add(login);
 	}
 
-	private void handleLogin(LoginEvent e) {
-		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(e.getUsername(),
-				e.getPassword());
-		Authentication auth = authManager.authenticate(authReq);
-		SecurityContext sc = SecurityContextHolder.getContext();
-		sc.setAuthentication(auth);
-		UI.getCurrent().getPage().getHistory().back();
-
+	private void configureForm() {
+		errorMessage.setTitle("Attempt failed");
+		errorMessage.setMessage("Check your credentials and account verification");
+		i18n.setErrorMessage(errorMessage);
+		login.setI18n(i18n);
+		login.setAction("login");
+		
 	}
 
 	@Override

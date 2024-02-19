@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,9 +21,7 @@ import edu.chnu.recruiting.front.views.LoginView;
 public class SecurityConfig extends VaadinWebSecurity { 
 	
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-    	
-    	
+    protected void configure(HttpSecurity http) throws Exception {    	
         http.authorizeHttpRequests(auth ->
                     auth.requestMatchers(
                         AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/images/*.png")).permitAll())
@@ -32,19 +30,16 @@ public class SecurityConfig extends VaadinWebSecurity {
         )
         .csrf(csrf -> csrf
                 .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")))
-        .headers(headers -> headers.frameOptions().disable())
-        .authenticationManager(authenticationManager(http));  
+        .headers(headers -> headers.frameOptions().disable());
         super.configure(http);
         setLoginView(http, LoginView.class); 
     }
     
-	@Bean
-	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-		AuthenticationManagerBuilder authenticationManagerBuilder = http
-				.getSharedObject(AuthenticationManagerBuilder.class);
-		authenticationManagerBuilder.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
-		return authenticationManagerBuilder.build();
-	}
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
