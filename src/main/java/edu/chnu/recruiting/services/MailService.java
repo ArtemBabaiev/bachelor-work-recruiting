@@ -1,5 +1,7 @@
 package edu.chnu.recruiting.services;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,10 +28,12 @@ public class MailService {
 	}
 	
 	public void sendEmail(String to, String subject, String body) {
-		SimpleMailMessage email = new SimpleMailMessage();
-		email.setTo(to);
-		email.setSubject(subject);
-		email.setText(body);
-		mailSender.send(email);
+		CompletableFuture.runAsync(() -> {
+			SimpleMailMessage email = new SimpleMailMessage();
+			email.setTo(to);
+			email.setSubject(subject);
+			email.setText(body);
+			mailSender.send(email);
+		});
 	}
 }

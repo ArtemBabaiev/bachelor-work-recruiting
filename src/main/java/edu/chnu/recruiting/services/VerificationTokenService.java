@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import edu.chnu.recruiting.exceptions.TokenInvalidException;
 import edu.chnu.recruiting.exceptions.VerificationTokenExpiredException;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.security.VerificationToken;
@@ -44,18 +45,23 @@ public class VerificationTokenService {
 
 	public User confirmRegistration(String token) {
 		VerificationToken verificationToken = this.getVerificationToken(token);
-		User user = verificationToken.getUser();
+		
 		final Calendar cal = Calendar.getInstance();
+		if (verificationToken == null) {
+			throw new TokenInvalidException();
+		}
+		
 		if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-			tokenRepository.delete(verificationToken);
 			throw new VerificationTokenExpiredException();
 		}
+		User user = verificationToken.getUser();
 		user.setEnabled(true);
+		tokenRepository.delete(verificationToken);
 		return userService.updateUser(user);
 	}
 
 	public VerificationToken generateAndSendNewVerificationToken(String existingToken) {
-		VerificationToken vToken = tokenRepository.findByToken(existingToken);
+		VerificationToken vToken = this.getVerificationToken(existingToken);
 		vToken.updateToken(UUID.randomUUID().toString(), this.tokenExpiration);
 		vToken = tokenRepository.save(vToken);
 

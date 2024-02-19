@@ -12,8 +12,6 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
@@ -22,10 +20,10 @@ import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 
+import edu.chnu.recruiting.exceptions.TokenInvalidException;
 import edu.chnu.recruiting.exceptions.VerificationTokenExpiredException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.HomeView;
-import edu.chnu.recruiting.services.UserService;
 import edu.chnu.recruiting.services.VerificationTokenService;
 
 @Route(value = "registration-confirm", layout = MainLayout.class)
@@ -34,10 +32,10 @@ import edu.chnu.recruiting.services.VerificationTokenService;
 public class RegistrationConfirmView extends Div implements BeforeEnterObserver {
 
 	private H2 message = new H2();
-	
+
 	private Button homeBtn = new Button("Back to home");
 	private Button resendBtn = new Button("Resend confirmation");
-	
+
 	private String token;
 
 	private VerificationTokenService tokenService;
@@ -63,7 +61,7 @@ public class RegistrationConfirmView extends Div implements BeforeEnterObserver 
 		vLayout.addClassNames(Display.FLEX, JustifyContent.CENTER, AlignItems.CENTER);
 		resendBtn.addClickListener(e -> handleResendClick(e));
 		homeBtn.addClickListener(e -> UI.getCurrent().navigate(HomeView.class));
-		
+
 		try {
 			this.tokenService.confirmRegistration(token);
 			message.setText("Verification Successful");
@@ -71,6 +69,9 @@ public class RegistrationConfirmView extends Div implements BeforeEnterObserver 
 		} catch (VerificationTokenExpiredException e) {
 			message.setText("Verification link is expired");
 			vLayout.add(message, homeBtn, resendBtn);
+		} catch (TokenInvalidException e) {
+			message.setText("Invalid verification");
+			vLayout.add(message, homeBtn);
 		}
 		add(vLayout);
 	}
@@ -80,9 +81,5 @@ public class RegistrationConfirmView extends Div implements BeforeEnterObserver 
 		Notification.show("Email was sent", 5000, Position.BOTTOM_CENTER);
 		return null;
 	}
-	
-	
-	
-	
 
 }
