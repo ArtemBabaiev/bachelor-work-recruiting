@@ -1,6 +1,6 @@
 package edu.chnu.recruiting.models;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import edu.chnu.recruiting.models.security.User;
@@ -23,7 +23,7 @@ public class Application {
 	
 	private String lastName;
 	private String firstName;
-	private Date dateOfBirth;
+	private LocalDate dateOfBirth;
 	
 	private String status;
 	private String rejectReason;

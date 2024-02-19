@@ -1,8 +1,10 @@
 package edu.chnu.recruiting.models.security;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,14 +24,15 @@ public class User {
 	private Long id;
 
 	private String email;
+	private String username;
 	private String password;
 	private boolean enabled;
 	private boolean tokenExpired;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "users_roles", 
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
 			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-	private Collection<Role> roles;
+	private Set<Role> roles = new HashSet<Role>();
 }
