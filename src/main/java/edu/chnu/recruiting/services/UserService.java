@@ -1,17 +1,21 @@
 package edu.chnu.recruiting.services;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.events.registration.OnRegistrationCompleteEvent;
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.views.registration.SignUpModel;
+import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.UserRepository;
+import edu.chnu.recruiting.security.SecurityService;
 import edu.chnu.recruiting.utils.constants.StarterRoles;
 
 @Service
@@ -29,9 +33,12 @@ public class UserService {
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 	
+	@Autowired
+	private SecurityService securityService;
+	
 	public User registerUser(SignUpModel model) {
 		if (this.userRepository.existsByUsernameOrEmail(model.getUsername(), model.getEmail())) {
-			throw new AlreadyExistsException();
+			throw new AlreadyExistsException("User with such email/username already in use");
 		}
 
 		User user = new User();
@@ -39,7 +46,7 @@ public class UserService {
 		user.setEnabled(false);
 		user.setPassword(this.passwordEncoder.encode(model.getPassword()));
 		user.setUsername(model.getUsername());
-		user.setRoles(Set.of(this.roleService.getRoleByName(StarterRoles.APPLICANT)));
+		user.setRole(this.roleService.getRoleByName(StarterRoles.USER.getName()));
 
 		user = this.userRepository.save(user);
 		
@@ -49,5 +56,19 @@ public class UserService {
 	
 	public User updateUser(User user) {
 		return this.userRepository.save(user);
+	}
+	
+	public List<User> getAllUsers(){
+		return this.userRepository.findAll();
+	}
+	
+	public List<User> searchPaginated(String username, PageRequest pageRequest){
+		Role userRole = this.roleService.getRoleByName(StarterRoles.USER.getName());
+		var res = this.userRepository.findAllUsernameLikeAndRoleIs(username, userRole.getId(), pageRequest);
+		return res;
+	}
+	
+	public User getAuthenticatedUser() {
+		return this.userRepository.findByUsername(this.securityService.getAuthenticatedUser().getUsername()).get();
 	}
 }
