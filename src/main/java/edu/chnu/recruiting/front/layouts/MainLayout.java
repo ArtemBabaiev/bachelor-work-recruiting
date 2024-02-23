@@ -17,6 +17,9 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 
 import edu.chnu.recruiting.front.views.LoginView;
+import edu.chnu.recruiting.front.views.ProfileView;
+import edu.chnu.recruiting.front.views.company.CompanyCreateView;
+import edu.chnu.recruiting.front.views.company.CompanyView;
 import edu.chnu.recruiting.front.views.registration.RegistrationConfirmView;
 import edu.chnu.recruiting.front.views.registration.SignUpView;
 import edu.chnu.recruiting.security.SecurityService;
@@ -71,7 +74,10 @@ public class MainLayout extends AppLayout {
     	nav.addItem(
     			new SideNavItem("Login", LoginView.class),
     			new SideNavItem("Sign-up", SignUpView.class),
-    			new SideNavItem("Confirmation", RegistrationConfirmView.class)
+    			new SideNavItem("Confirmation", RegistrationConfirmView.class),
+    			new SideNavItem("Profile", ProfileView.class),
+    			new SideNavItem("Company", CompanyView.class),
+    			new SideNavItem("Company-create", CompanyCreateView.class)
     			);
 
     	var themeToggle = new Checkbox("Dark theme");

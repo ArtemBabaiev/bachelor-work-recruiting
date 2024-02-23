@@ -1,5 +1,7 @@
 package edu.chnu.recruiting.configuration;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -34,21 +36,24 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
 		if (alreadySetup)
 			return;
-		createRoleIfNotFound(StarterRoles.COMPANY);
-		createRoleIfNotFound(StarterRoles.APPLICANT);
-		Role adminRole = createRoleIfNotFound(StarterRoles.ADMIN);
+		Role adminRole = createRoleIfNotFound(StarterRoles.ADMIN.getName());
+		for (StarterRoles role : StarterRoles.values()) {
+			createRoleIfNotFound(role.getName());
+		}
+		 
 		User admin = new User();
-		admin.setUsername("test");
+		admin.setUsername("admin");
 		admin.setEmail("test@email.com");
 		admin.setPassword("$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW");
 		admin.setEnabled(true);
-		admin.getRoles().add(adminRole);
+		admin.setRole(adminRole);
 		this.userRepository.save(admin);
 		VerificationToken token = new VerificationToken();
 		token.setUser(admin);
 		token.setToken("59291730-3105-4710-9e03-393826c6a68c");
 		token.calculateExpiryDate(1440);
 		this.tokenRepository.save(token);
+		populateUsers();
 		alreadySetup = true;
 	}
 
@@ -61,5 +66,28 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 			roleRepository.save(role);
 		}
 		return role;
+	}
+
+	private void populateUsers() {
+		var role = this.roleRepository.findByName(StarterRoles.USER.getName());
+		for (int i = 0; i < 15; i++) {
+			User user = new User();
+			user.setUsername("user" + i);
+			user.setEmail("test" + i + "@email.com");
+			user.setPassword("$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW");
+			user.setEnabled(true);
+			user.setRole(role);
+			this.userRepository.save(user);
+		}
+		
+		for (int i = 0; i < 15; i++) {
+			User user = new User();
+			user.setUsername("test" + i);
+			user.setEmail("test" + i + "@email.com");
+			user.setPassword("$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW");
+			user.setEnabled(true);
+			user.setRole(role);
+			this.userRepository.save(user);
+		}
 	}
 }

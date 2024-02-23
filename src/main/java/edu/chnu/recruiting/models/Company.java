@@ -4,10 +4,12 @@ import java.util.List;
 
 import edu.chnu.recruiting.models.security.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Data
@@ -19,6 +21,9 @@ public class Company {
 	
 	private String name;
 	
-	@OneToMany
-	private List<User> users;
+	@OneToMany(fetch = FetchType.EAGER)
+	private List<User> recruiters;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	private User owner;
 }
