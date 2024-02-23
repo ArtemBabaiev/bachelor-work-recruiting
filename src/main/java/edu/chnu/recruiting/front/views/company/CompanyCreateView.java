@@ -4,12 +4,16 @@ import org.springframework.data.domain.PageRequest;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 
+import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.company.CompanyForm.SaveEvent;
 import edu.chnu.recruiting.security.SecurityService;
@@ -43,14 +47,18 @@ public class CompanyCreateView extends Div {
 				personSearchTerm -> personSearchTerm);
 
 		this.form.addSaveListener(e -> handleSaveClick(e));
-		this.form.addSaveListener(e -> UI.getCurrent().getPage().getHistory().back());
+		this.form.addCancelListener(e -> UI.getCurrent().getPage().getHistory().back());
 		
 		add(form);
 	}
 
 	private void handleSaveClick(SaveEvent e) {
-		this.companyService.createCompany(e.getModel());
-		securityService.logout();
-		//UI.getCurrent().navigate(CompanyView.class);
+		try {
+			this.companyService.createCompany(e.getModel());
+			securityService.logout();
+		} catch (AlreadyExistsException ex) {
+			Notification notification = Notification.show(ex.getMessage(), 5000, Position.BOTTOM_STRETCH);
+			notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+		}
 	}
 }
