@@ -1,1 +1,5 @@
 @import url('./main-layout.css');
+
+.question-card:hover{
+	cursor: grab;
+}
