@@ -1,5 +1,7 @@
 package edu.chnu.recruiting.front.components.position;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dnd.DropEffect;
@@ -15,6 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import edu.chnu.recruiting.front.components.questions.NumberQuestion;
 import edu.chnu.recruiting.front.components.questions.QuestionCard;
 import edu.chnu.recruiting.front.components.questions.QuestionComponent;
+import edu.chnu.recruiting.front.components.questions.RadioQuestion;
 import edu.chnu.recruiting.front.components.questions.TextQuestion;
 
 public class SectionComponent extends VerticalLayout implements DropTarget<QuestionCard> {
@@ -40,6 +43,7 @@ public class SectionComponent extends VerticalLayout implements DropTarget<Quest
 			QuestionComponent target = switch (source.getType()) {
 			case NUMBER -> new NumberQuestion();
 			case TEXT -> new TextQuestion();
+			case SELECTION_RADIO -> new RadioQuestion();
 			default -> null;
 			};
 			box.add(target);
@@ -51,4 +55,12 @@ public class SectionComponent extends VerticalLayout implements DropTarget<Quest
 		this.removeFromParent();
 	}
 
+	public List<QuestionComponent> getQuestionsComponents() {
+		return box.getChildren().filter(c -> c instanceof QuestionComponent).map(c -> (QuestionComponent) c).toList();
+	}
+	
+	public String getSectionName() {
+		return this.sectionName.getValue();
+	}
+	
 }

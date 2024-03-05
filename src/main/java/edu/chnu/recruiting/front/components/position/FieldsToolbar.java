@@ -11,7 +11,8 @@ public class FieldsToolbar extends VerticalLayout{
 	public FieldsToolbar() {
 		add(
 				new QuestionCard(ValueType.NUMBER), 
-				new QuestionCard(ValueType.TEXT)
+				new QuestionCard(ValueType.TEXT),
+				new QuestionCard(ValueType.SELECTION_RADIO)
 				);
 	}
 }
