@@ -1,9 +1,22 @@
 package edu.chnu.recruiting.front.views.position;
 
+import java.util.stream.Stream;
+
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.component.tabs.TabSheetVariant;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
@@ -11,6 +24,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.components.position.FieldsToolbar;
 import edu.chnu.recruiting.front.components.position.FormСreationComponent;
@@ -26,30 +40,82 @@ import edu.chnu.recruiting.services.PositionService;
 public class PositionCreateView extends VerticalLayout {
 	Binder<Position> binder = new BeanValidationBinder<Position>(Position.class);
 	Position model = new Position();
-	
+
+	TabSheet tabSheet = new TabSheet();
+
 	TextField name = new TextField("Position name");
-	
+	TextArea description = new TextArea("Description");
+
 	FieldsToolbar toolbar = new FieldsToolbar();
 	FormСreationComponent form = new FormСreationComponent();
-	
+
 	Button addSectionBtn = new Button("Add section");
 	Button createPositionBtn = new Button("Create position");
 
 	PositionService positionService;
-	
+
 	public PositionCreateView(PositionService positionService) {
 		this.positionService = positionService;
-		binder.bindInstanceFields(this);
-		HorizontalLayout content = new HorizontalLayout(form, toolbar);
-		toolbar.setWidth("350px");
-        content.addClassNames("content");
-        content.setSizeFull();
-		add(new HorizontalLayout(addSectionBtn, createPositionBtn), name, content);
+		this.configureBinder();
+		this.configureComponents();
+		tabSheet.add("Position Info", this.getPositionInfoSheet());
+		tabSheet.add("Form", this.getFormSheet());
+		tabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_CENTERED);
+		tabSheet.setSizeFull();
+		add(createPositionBtn, tabSheet);
+
+	}
+
+	private void configureComponents() {
 		name.setValueChangeMode(ValueChangeMode.EAGER);
 		addSectionBtn.addClickListener(e -> form.add(new SectionComponent()));
 		createPositionBtn.addClickListener(e -> this.positionService.createPosition(binder.getBean(), form));
+	}
+
+	private void configureBinder() {
+		binder.bindInstanceFields(this);
 		binder.setBean(model);
+	}
+
+	private Component getPositionInfoSheet() {
+		VerticalLayout infoSheet = new VerticalLayout();
+		infoSheet.setSizeFull();
+		infoSheet.setAlignItems(Alignment.CENTER);
+		infoSheet.add(name, description);
+		this.setWidth("315px", name, description);
+		return infoSheet;
+	}
+
+	private Component getFormSheet() {
+		VerticalLayout sheet = new VerticalLayout();
 		
-		form.getChildren().filter(child -> child instanceof SectionComponent);
+		VerticalLayout formCanvas = new VerticalLayout(getNote(), form, addSectionBtn);
+		HorizontalLayout formSetup = new HorizontalLayout(formCanvas, toolbar);
+		
+		toolbar.setWidth("350px");
+		formSetup.addClassNames("content");
+		formSetup.setSizeFull();
+		sheet.add(formSetup);
+		//formCanvas.setAlignItems(Alignment.CENTER);
+		return sheet;
+	}
+	
+	private Component getNote() {
+		Span note = new Span("First name, Last name and Date of birth are mandantory data ang will be automatically created");
+		Span iconSpan = new Span();
+		
+		Icon icon = VaadinIcon.WARNING.create();
+		icon.getStyle().set("padding", "var(--lumo-space-xs)");
+		iconSpan.add(icon);
+		
+		note.addClassNames(LumoUtility.Padding.Horizontal.SMALL);
+		
+		iconSpan.getElement().getThemeList().add("badge error");
+		
+		return new Span(iconSpan, note);
+	}
+	
+	private void setWidth(String width, HasSize... components) {
+		Stream.of(components).forEach(comp -> comp.setWidth(width));
 	}
 }

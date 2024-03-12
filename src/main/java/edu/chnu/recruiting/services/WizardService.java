@@ -17,8 +17,7 @@ public class WizardService {
 				.map(c -> (SectionComponent) c).toList();
 		Wizard wizard = new Wizard();
 		for (SectionComponent sectionComponent : sections) {
-			WizardStep step = new WizardStep();
-			step.setLabel(sectionComponent.getSectionName());
+			WizardStep step = sectionComponent.getStep();
 			sectionComponent.getQuestionsComponents().forEach(q -> step.addField(q.getField()));
 			wizard.addStep(step);
 		}

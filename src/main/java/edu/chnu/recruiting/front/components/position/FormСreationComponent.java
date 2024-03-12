@@ -4,6 +4,5 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class FormСreationComponent extends VerticalLayout {
 	public FormСreationComponent() {
-		add(new SectionComponent());
 	}
 }

@@ -2,9 +2,7 @@ package edu.chnu.recruiting.front.components.position;
 
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dnd.DropEffect;
 import com.vaadin.flow.component.dnd.DropEvent;
 import com.vaadin.flow.component.dnd.DropTarget;
 import com.vaadin.flow.component.html.Div;
@@ -13,25 +11,35 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.Binder;
 
-import edu.chnu.recruiting.front.components.questions.NumberQuestion;
 import edu.chnu.recruiting.front.components.questions.QuestionCard;
 import edu.chnu.recruiting.front.components.questions.QuestionComponent;
-import edu.chnu.recruiting.front.components.questions.RadioQuestion;
-import edu.chnu.recruiting.front.components.questions.TextQuestion;
+import edu.chnu.recruiting.models.wizard.WizardStep;
 
 public class SectionComponent extends VerticalLayout implements DropTarget<QuestionCard> {
+	Binder<WizardStep> binder = new BeanValidationBinder<WizardStep>(WizardStep.class);
 	Div box = new Div();
-	TextField sectionName = new TextField("Section name");
-	ObjectMapper objectMapper = new ObjectMapper();
+	WizardStep step = new WizardStep();
+	TextField name = new TextField("Section name");
 	Button removeBtn = new Button(new Icon(VaadinIcon.CLOSE));
 
 	public SectionComponent() {
+		binder.bindInstanceFields(this);
+		configureComponent();
+		binder.setBean(step);
+
+	}
+
+	private void configureComponent() {
 		setActive(true);
 		getStyle().set("border", "6px dotted DarkOrange");
-		this.addDropListener(e -> handleDrop(e));
+		addDropListener(e -> handleDrop(e));
+
 		removeBtn.addClickListener(e -> remove());
-		var hzl = new HorizontalLayout(sectionName, removeBtn);
+
+		HorizontalLayout hzl = new HorizontalLayout(name, removeBtn);
 		hzl.setAlignItems(Alignment.BASELINE);
 		add(hzl, box);
 	}
@@ -40,13 +48,7 @@ public class SectionComponent extends VerticalLayout implements DropTarget<Quest
 		var optSource = e.getDragSourceComponent();
 		if (optSource.isPresent()) {
 			var source = (QuestionCard) optSource.get();
-			QuestionComponent target = switch (source.getType()) {
-			case NUMBER -> new NumberQuestion();
-			case TEXT -> new TextQuestion();
-			case SELECTION_RADIO -> new RadioQuestion();
-			default -> null;
-			};
-			box.add(target);
+			box.add(source.getQuestionComponent());
 		}
 
 	}
@@ -55,12 +57,12 @@ public class SectionComponent extends VerticalLayout implements DropTarget<Quest
 		this.removeFromParent();
 	}
 
+	public WizardStep getStep() {
+		return this.binder.getBean();
+	}
+
 	public List<QuestionComponent> getQuestionsComponents() {
 		return box.getChildren().filter(c -> c instanceof QuestionComponent).map(c -> (QuestionComponent) c).toList();
 	}
-	
-	public String getSectionName() {
-		return this.sectionName.getValue();
-	}
-	
+
 }

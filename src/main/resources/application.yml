@@ -1,25 +1,27 @@
 spring: 
   application:
     name: Recruiting App
-  datasource: 
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: password
-    driverClassName: org.h2.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
 #  datasource: 
-#    url: jdbc:mariadb://localhost:3306/bachelor-recruiting
-#    username: root
+#    url: jdbc:h2:mem:testdb
+#    username: sa
 #    password: password
-#    driver-class-name: org.mariadb.jdbc.Driver
+#    driverClassName: org.h2.Driver
 #  jpa:
-#    hibernate:
-#      ddl-auto: create-drop
-#    properties:
-#      hibernate:
-#        globally_quoted_identifiers: true
+#    database-platform: org.hibernate.dialect.H2Dialect
+#    defer-datasource-initialization: true
+  datasource: 
+    url: jdbc:mariadb://localhost:3306/bachelor-recruiting?createDatabaseIfNotExist=true
+    username: root
+    password: password
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: 
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        globally_quoted_identifiers: true
   mail:
     host: smtp.gmail.com
     port: 587

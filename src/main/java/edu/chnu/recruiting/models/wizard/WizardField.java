@@ -11,11 +11,19 @@ public class WizardField {
 	private String question;
 	private ValueType type;
 	private Object userValue;
+	private boolean required = false;
+	private boolean isTextToSpeech = false;
+	
 	
 	//in case checkbox, or dropdown list
 	private List<String> options = new ArrayList<String>();
 	
 	public void addOption(String option) {
 		this.options.add(option);
+	}
+	
+	public void resetOptional() {
+		options.clear();
+		
 	}
 }
