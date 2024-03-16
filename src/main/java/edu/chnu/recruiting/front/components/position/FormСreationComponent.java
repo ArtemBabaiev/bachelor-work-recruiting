@@ -1,5 +1,6 @@
 package edu.chnu.recruiting.front.components.position;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.vaadin.flow.component.ClickEvent;
@@ -50,5 +51,10 @@ public class FormСreationComponent extends VerticalLayout {
 		children.add(index - 1, e.getSource());
 		box.add(children);
 		return;
+	}
+	
+	public List<SectionComponent> getSections(){
+		return box.getChildren().filter(c -> c instanceof SectionComponent)
+		.map(c -> (SectionComponent) c).toList();
 	}
 }

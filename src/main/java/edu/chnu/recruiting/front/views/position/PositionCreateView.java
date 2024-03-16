@@ -19,7 +19,6 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.components.position.FieldsToolbar;
@@ -27,10 +26,11 @@ import edu.chnu.recruiting.front.components.position.FormСreationComponent;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.services.PositionService;
+import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Create Position")
 @Route(value = "position-create", layout = MainLayout.class)
-@AnonymousAllowed
+@RolesAllowed({"COMPANY", "RECRUITER"})
 public class PositionCreateView extends VerticalLayout {
 	Binder<Position> binder = new BeanValidationBinder<Position>(Position.class);
 	Position model = new Position();

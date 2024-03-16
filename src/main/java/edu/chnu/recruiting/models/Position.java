@@ -2,6 +2,7 @@ package edu.chnu.recruiting.models;
 
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.utils.JpaConverterJson;
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +29,7 @@ public class Position {
 	@ManyToOne
 	private Company company;
 
+	@Column(name = "wizard_data", columnDefinition="LONGTEXT")
 	@Convert(converter = JpaConverterJson.class)
 	private Wizard wizardData;
 }

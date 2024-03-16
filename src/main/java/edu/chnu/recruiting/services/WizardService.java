@@ -13,8 +13,7 @@ import edu.chnu.recruiting.models.wizard.WizardStep;
 public class WizardService {
 
 	public Wizard createWizard(FormСreationComponent form) {
-		List<SectionComponent> sections = form.getChildren().filter(c -> c instanceof SectionComponent)
-				.map(c -> (SectionComponent) c).toList();
+		List<SectionComponent> sections = form.getSections();
 		Wizard wizard = new Wizard();
 		for (SectionComponent sectionComponent : sections) {
 			WizardStep step = sectionComponent.getStep();
