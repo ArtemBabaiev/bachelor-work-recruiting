@@ -96,7 +96,11 @@ public class PositionCreateView extends VerticalLayout {
 	}
 	
 	private Component getCompleteSheet() {
-		return new VerticalLayout(createPositionBtn);
+		var vl = new VerticalLayout();
+		vl.setSizeFull();
+		vl.setAlignItems(Alignment.CENTER);
+		vl.add(createPositionBtn);
+		return vl;
 	}
 	
 	private Component getNote() {
