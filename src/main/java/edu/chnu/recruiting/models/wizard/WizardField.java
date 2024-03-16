@@ -7,7 +7,6 @@ import lombok.Data;
 
 @Data
 public class WizardField {
-	private String id;
 	private String question;
 	private ValueType type;
 	private Object userValue;
