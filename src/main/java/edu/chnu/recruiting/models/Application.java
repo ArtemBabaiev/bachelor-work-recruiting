@@ -1,6 +1,6 @@
 package edu.chnu.recruiting.models;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 import edu.chnu.recruiting.models.security.User;
@@ -12,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 
 @Data
@@ -23,7 +25,9 @@ public class Application {
 	
 	private String lastName;
 	private String firstName;
-	private LocalDate dateOfBirth;
+	
+	@Temporal(TemporalType.DATE)
+	private Date dateOfBirth;
 	
 	private String status;
 	private String rejectReason;

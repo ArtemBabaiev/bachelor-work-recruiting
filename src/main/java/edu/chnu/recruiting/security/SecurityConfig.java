@@ -29,7 +29,8 @@ public class SecurityConfig extends VaadinWebSecurity {
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
         )
         .csrf(csrf -> csrf
-                .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")))
+                .ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"),
+                		AntPathRequestMatcher.antMatcher("/VAADIN/dynamic/resource/**/microphone")))
         .headers(headers -> headers.frameOptions().disable());
         super.configure(http);
         setLoginView(http, LoginView.class); 

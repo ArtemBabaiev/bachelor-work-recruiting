@@ -68,6 +68,13 @@ public class CompanyService {
 		return map(company);
 	}
 	
+	public Company getCompanyByUser(User user) {
+		if (user.getRole().getName().equals(StarterRoles.COMPANY.getName())) {
+			return this.companyRepository.findByOwner(user);
+		}
+		return this.companyRepository.findByRecruiters(user);
+	}
+	
 	private CompanyModel map(Company company) {
 		CompanyModel model = new CompanyModel();
 		model.setId(company.getId());

@@ -1,16 +1,28 @@
 package edu.chnu.recruiting.models.wizard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
 
 @Data
 public class WizardField {
-	private String id;
-	private String labelKey;
+	private String question;
 	private ValueType type;
 	private Object userValue;
+	private boolean required = false;
+	private boolean textToSpeech = false;
+	
 	
 	//in case checkbox, or dropdown list
-	List<String> options;
+	private List<String> options = new ArrayList<String>();
+	
+	public void addOption(String option) {
+		this.options.add(option);
+	}
+	
+	public void resetOptional() {
+		options.clear();
+		
+	}
 }
