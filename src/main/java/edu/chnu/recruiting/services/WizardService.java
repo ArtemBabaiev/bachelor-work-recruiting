@@ -21,7 +21,7 @@ public class WizardService {
 			sectionComponent.getQuestionsComponents().forEach(q -> step.addField(q.getField()));
 			wizard.addStep(step);
 		}
-		
+		System.out.println(wizard);
 		return wizard;
 	}
 }

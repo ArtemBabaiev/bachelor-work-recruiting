@@ -1,6 +1,9 @@
 package edu.chnu.recruiting.front.components.questions;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.Text;
@@ -19,6 +22,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.models.wizard.ValueType;
@@ -36,8 +40,7 @@ public class QuestionComponent extends VerticalLayout {
 	TextField optionField = new TextField();
 	Button addOptionButton = new Button("Add");
 
-	// TODO: no bind
-	Checkbox isTextToSpeech = new Checkbox("Use Text-to-Speech");
+	Checkbox textToSpeech = new Checkbox("Use Text-to-Speech");
 
 	HorizontalLayout header = new HorizontalLayout();
 	VerticalLayout info = new VerticalLayout();
@@ -61,6 +64,8 @@ public class QuestionComponent extends VerticalLayout {
 		type.addValueChangeListener(e -> setExtra());
 		
 		closeBtn.addClickListener(e -> remove());
+		upBtn.addClickListener(e -> handleUpClick(e));
+		downBtn.addClickListener(e -> handleDownClick(e));
 		question.setValueChangeMode(ValueChangeMode.EAGER);
 		question.setWidth("315px");
 		
@@ -120,7 +125,7 @@ public class QuestionComponent extends VerticalLayout {
 			extra.add(new Text("Options"), new HorizontalLayout(optionField, addOptionButton), optionsList);
 			break;
 		case AUDIO:
-			extra.add(isTextToSpeech);
+			extra.add(textToSpeech);
 			break;
 		}
 	}
@@ -141,6 +146,14 @@ public class QuestionComponent extends VerticalLayout {
 	public void remove() {
 		this.removeFromParent();
 	}
+	
+	private void handleUpClick(ClickEvent<Button> e) {
+		fireEvent(new UpQuestionEvent(this));
+	}
+
+	private void handleDownClick(ClickEvent<Button> e) {
+		fireEvent(new DownQuestionEvent(this));
+	}
 
 	private void removeOption(String option) {
 		binder.getBean().getOptions().remove(option);
@@ -158,5 +171,33 @@ public class QuestionComponent extends VerticalLayout {
 
 	public WizardField getField() {
 		return this.binder.getBean();
+	}
+	
+	public Registration addUpListener(ComponentEventListener<UpQuestionEvent> listener) {
+		return addListener(UpQuestionEvent.class, listener);
+	}
+
+	public Registration addDownListener(ComponentEventListener<DownQuestionEvent> listener) {
+		return addListener(DownQuestionEvent.class, listener);
+	}
+	
+	public static abstract class MoveQuestionEvent extends ComponentEvent<QuestionComponent> {
+		protected MoveQuestionEvent(QuestionComponent source) {
+			super(source, false);
+		}
+	}
+
+	public static class UpQuestionEvent extends MoveQuestionEvent {
+
+		UpQuestionEvent(QuestionComponent source) {
+			super(source);
+		}
+	}
+
+	public static class DownQuestionEvent extends MoveQuestionEvent {
+
+		DownQuestionEvent(QuestionComponent source) {
+			super(source);
+		}
 	}
 }

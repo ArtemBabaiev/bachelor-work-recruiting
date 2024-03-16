@@ -2,13 +2,9 @@ package edu.chnu.recruiting.front.views.position;
 
 import java.util.stream.Stream;
 
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -28,10 +24,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.components.position.FieldsToolbar;
 import edu.chnu.recruiting.front.components.position.FormСreationComponent;
-import edu.chnu.recruiting.front.components.position.SectionComponent;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.models.Position;
-import edu.chnu.recruiting.models.wizard.WizardField;
 import edu.chnu.recruiting.services.PositionService;
 
 @PageTitle("Create Position")
@@ -49,7 +43,7 @@ public class PositionCreateView extends VerticalLayout {
 	FieldsToolbar toolbar = new FieldsToolbar();
 	FormСreationComponent form = new FormСreationComponent();
 
-	Button addSectionBtn = new Button("Add section");
+	
 	Button createPositionBtn = new Button("Create position");
 
 	PositionService positionService;
@@ -60,20 +54,23 @@ public class PositionCreateView extends VerticalLayout {
 		this.configureComponents();
 		tabSheet.add("Position Info", this.getPositionInfoSheet());
 		tabSheet.add("Form", this.getFormSheet());
+		tabSheet.add("Complete", this.getCompleteSheet());
+		
 		tabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_CENTERED);
 		tabSheet.setSizeFull();
-		add(createPositionBtn, tabSheet);
+		add(tabSheet);
 
 	}
 
 	private void configureComponents() {
 		name.setValueChangeMode(ValueChangeMode.EAGER);
-		addSectionBtn.addClickListener(e -> form.add(new SectionComponent()));
+		form.setWidthFull();
 		createPositionBtn.addClickListener(e -> this.positionService.createPosition(binder.getBean(), form));
 	}
 
 	private void configureBinder() {
 		binder.bindInstanceFields(this);
+		binder.addStatusChangeListener(e -> createPositionBtn.setEnabled(binder.isValid()));
 		binder.setBean(model);
 	}
 
@@ -88,10 +85,8 @@ public class PositionCreateView extends VerticalLayout {
 
 	private Component getFormSheet() {
 		VerticalLayout sheet = new VerticalLayout();
-		
-		VerticalLayout formCanvas = new VerticalLayout(getNote(), form, addSectionBtn);
+		VerticalLayout formCanvas = new VerticalLayout(getNote(), form);
 		HorizontalLayout formSetup = new HorizontalLayout(formCanvas, toolbar);
-		
 		toolbar.setWidth("350px");
 		formSetup.addClassNames("content");
 		formSetup.setSizeFull();
@@ -100,8 +95,12 @@ public class PositionCreateView extends VerticalLayout {
 		return sheet;
 	}
 	
+	private Component getCompleteSheet() {
+		return new VerticalLayout(createPositionBtn);
+	}
+	
 	private Component getNote() {
-		Span note = new Span("First name, Last name and Date of birth are mandantory data ang will be automatically created");
+		Span note = new Span("First name, Last name and Date of birth are mandantory data and will be automatically created");
 		Span iconSpan = new Span();
 		
 		Icon icon = VaadinIcon.WARNING.create();

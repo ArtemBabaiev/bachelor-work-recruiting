@@ -12,7 +12,7 @@ public class WizardField {
 	private ValueType type;
 	private Object userValue;
 	private boolean required = false;
-	private boolean isTextToSpeech = false;
+	private boolean textToSpeech = false;
 	
 	
 	//in case checkbox, or dropdown list
