@@ -19,7 +19,7 @@ public class CompanyView extends Div{
 	private H2 title = new H2();
 	
 	private CompanyService companyService;
-	private CompanyModel model;
+	private CompanyFormModel model;
 	public CompanyView(CompanyService companyService) {
 		this.companyService = companyService;
 		this.model = companyService.getModelByCurrentUser();

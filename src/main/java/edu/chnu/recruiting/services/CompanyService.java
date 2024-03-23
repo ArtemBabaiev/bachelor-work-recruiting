@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
-import edu.chnu.recruiting.front.views.company.CompanyModel;
+import edu.chnu.recruiting.front.views.company.CompanyFormModel;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
@@ -29,7 +29,7 @@ public class CompanyService {
 	@Autowired
 	private RoleService roleService;
 
-	public Company createCompany(CompanyModel model) {
+	public Company createCompany(CompanyFormModel model) {
 		if (companyRepository.existsByName(model.getName())) {
 			throw new AlreadyExistsException("Company Already Exists");
 		}
@@ -54,7 +54,7 @@ public class CompanyService {
 		return company;
 	}
 	
-	public Company updateCompany(CompanyModel model) {
+	public Company updateCompany(CompanyFormModel model) {
 		throw new NotImplementedException();
 	}
 
@@ -62,7 +62,7 @@ public class CompanyService {
 		return this.userService.searchPaginated(username, pageRequest);
 	}
 	
-	public CompanyModel getModelByCurrentUser() {
+	public CompanyFormModel getModelByCurrentUser() {
 		User owner = this.userService.getAuthenticatedUser();
 		Company company= this.companyRepository.findByOwner(owner);
 		return map(company);
@@ -75,8 +75,8 @@ public class CompanyService {
 		return this.companyRepository.findByRecruiters(user);
 	}
 	
-	private CompanyModel map(Company company) {
-		CompanyModel model = new CompanyModel();
+	private CompanyFormModel map(Company company) {
+		CompanyFormModel model = new CompanyFormModel();
 		model.setId(company.getId());
 		model.setName(company.getName());
 		model.setOwner(company.getOwner());
@@ -84,7 +84,7 @@ public class CompanyService {
 		return model;
 	}
 	
-	private Company map(CompanyModel model) {
+	private Company map(CompanyFormModel model) {
 		Company company = new Company();
 		company.setId(model.getId());
 		company.setName(model.getName());

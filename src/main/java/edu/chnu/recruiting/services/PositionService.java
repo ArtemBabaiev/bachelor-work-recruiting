@@ -1,17 +1,22 @@
 package edu.chnu.recruiting.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.vaadin.flow.router.InternalServerError;
 import com.vaadin.flow.router.NotFoundException;
 
+import edu.chnu.recruiting.exceptions.NoAuthorizationException;
 import edu.chnu.recruiting.front.components.position.FormСreationComponent;
+import edu.chnu.recruiting.front.views.viewModels.PositionViewModel;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
+import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.repositories.PositionRepository;
 import jakarta.transaction.Transactional;
@@ -22,41 +27,68 @@ import lombok.extern.slf4j.Slf4j;
 public class PositionService {
 	@Autowired
 	private WizardService wizardService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private CompanyService companyService;
-	
+
 	@Autowired
 	private PositionRepository positionRepository;
-	
+
+	@Autowired
+	private ModelMapper modelMapper;
+
 	public Position createPosition(Position position, FormСreationComponent formComponent) {
-		try {
-			Wizard wizard = this.wizardService.createWizard(formComponent);
-			Company company = companyService.getCompanyByUser(userService.getAuthenticatedUser());
-			position.setWizardData(wizard);
-			position.setCompany(company);
-			return positionRepository.save(position);
-		} catch (Exception e) {
-			throw e;
-		}
-		
+		Wizard wizard = this.wizardService.createWizard(formComponent);
+		Company company = companyService.getCompanyByUser(userService.getAuthenticatedUser());
+		position.setWizardData(wizard);
+		position.setCompany(company);
+		return positionRepository.save(position);
+
 	}
 	
-	public List<Position> getFilteredPositions(String name, Pageable page) {
-		log.info("Page: {}; Size {}", page.getPageNumber(), page.getPageSize());
-		return this.positionRepository.findByNameContains(name, page).getContent();
+	public List<PositionViewModel> getAllBy(Specification<Position> specification, Pageable page){
+		return this.positionRepository.findAll(specification, page).getContent().stream()
+				.map(e -> modelMapper.map(e, PositionViewModel.class)).collect(Collectors.toList());
 	}
 	
-	public List<Position> getFilteredPositionsCount(String name, Pageable page) {
-		log.info("Page: {}; Size {}", page.getPageNumber(), page.getPageSize());
-		return this.positionRepository.findByNameContains(name, page).getContent();
+	public long countBy(Specification<Position> specification) {
+		return this.positionRepository.count(specification);
+	}
+
+	public PositionViewModel getPositionVM(Long id) {
+		Position model = this.positionRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Position not found"));
+		PositionViewModel vm = modelMapper.map(model, PositionViewModel.class);
+		return vm;
 	}
 	
 	@Transactional
-	public Position getPosition(Long id) {
-		return this.positionRepository.findById(id).orElseThrow(() -> new NotFoundException("Position not found"));
+	public boolean canCurrenUserManagePosition(Long id) {
+		Position position = this.positionRepository.findById(id).orElse(null);
+		if (position == null) {
+			return false;
+		}
+		try {
+			User user = userService.getAuthenticatedUser();
+			Company co = position.getCompany();
+			List<Long> ids = co.getRecruiters().stream().map(c -> c.getId()).collect(Collectors.toList());
+			ids.add(co.getOwner().getId());
+			return ids.contains(user.getId());
+		} catch (NoAuthorizationException e) {
+			return false;
+		}
+	}
+	
+	@Transactional
+	public void deactivatePosition(Long id) {
+		this.positionRepository.setActiveWhereId(id, false);
+	}
+	
+	@Transactional
+	public void activatePosition(Long id) {
+		this.positionRepository.setActiveWhereId(id, true);
 	}
 }

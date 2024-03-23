@@ -26,8 +26,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import edu.chnu.recruiting.front.components.picker.DecimalRangePicker;
-import edu.chnu.recruiting.front.components.picker.PickerRange;
+import edu.chnu.recruiting.front.components.picker.SalaryRangePicker;
+import edu.chnu.recruiting.front.components.picker.SalaryRange;
 import edu.chnu.recruiting.front.components.position.FieldsToolbar;
 import edu.chnu.recruiting.front.components.position.FormСreationComponent;
 import edu.chnu.recruiting.front.layouts.MainLayout;
@@ -39,7 +39,7 @@ import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Create Position")
 @Route(value = "position-create", layout = MainLayout.class)
-@RolesAllowed({"COMPANY", "RECRUITER"})
+@RolesAllowed({ "COMPANY", "RECRUITER" })
 public class PositionCreateView extends VerticalLayout {
 	Binder<Position> binder = new BeanValidationBinder<Position>(Position.class);
 	Position model = new Position();
@@ -51,12 +51,11 @@ public class PositionCreateView extends VerticalLayout {
 	TextField department = new TextField("Department");
 	TextField location = new TextField("Location");
 	ComboBox<String> employmentType = new ComboBox<>("Employment type");
-	DecimalRangePicker salaryRange = new DecimalRangePicker("Salary range");
+	SalaryRangePicker salaryRange = new SalaryRangePicker("Salary range");
 
 	FieldsToolbar toolbar = new FieldsToolbar();
 	FormСreationComponent form = new FormСreationComponent();
 
-	
 	Button createPositionBtn = new Button("Create position");
 
 	PositionService positionService;
@@ -79,7 +78,7 @@ public class PositionCreateView extends VerticalLayout {
 		form.setWidthFull();
 		employmentType.setItems(Arrays.stream(EmploymentType.values()).map(EmploymentType::toString).toList());
 		employmentType.setItemLabelGenerator(i -> EmploymentType.valueOf(i).getLabel());
-		
+
 		createPositionBtn.addClickListener(e -> {
 			var pos = this.positionService.createPosition(binder.getBean(), form);
 			UI.getCurrent().navigate(PositionView.class, new RouteParam("posId", pos.getId()));
@@ -89,20 +88,17 @@ public class PositionCreateView extends VerticalLayout {
 	private void configureBinder() {
 		binder.bindInstanceFields(this);
 		binder.addStatusChangeListener(e -> createPositionBtn.setEnabled(binder.isValid()));
-		binder.forField(salaryRange)
-			.withNullRepresentation(new PickerRange<Double>(0.0,0.0))
-        	.withValidator(
-                    decimalRange -> decimalRange.getStart() == null
-                            || decimalRange.getEnd() == null
-                            || decimalRange.getStart() < decimalRange.getEnd(),
-                    "Min salary should be less or equal to max salary")
-        	.bind(position -> new PickerRange<Double>(
-        			position.getMinSalary(), position.getMaxSalary()),
-                    (appointment, salaryRange) -> {
-                        appointment.setMinSalary(
-                        		salaryRange.getStart());
-                        appointment.setMaxSalary(salaryRange.getEnd());
-                    });
+		binder.forField(salaryRange).withNullRepresentation(new SalaryRange(0.0, 0.0, "USD"))
+				.withValidator(
+						decimalRange -> decimalRange.getStart() == null || decimalRange.getEnd() == null
+								|| decimalRange.getStart() < decimalRange.getEnd(),
+						"Min salary should be less or equal to max salary")
+				.bind(position -> new SalaryRange(position.getMinSalary(), position.getMaxSalary(),
+						position.getCurrencyCode()), (position, salaryRange) -> {
+							position.setMinSalary(salaryRange.getStart());
+							position.setMaxSalary(salaryRange.getEnd());
+							position.setCurrencyCode(salaryRange.getCurrencyCode());
+						});
 		binder.setBean(model);
 	}
 
@@ -123,10 +119,10 @@ public class PositionCreateView extends VerticalLayout {
 		formSetup.addClassNames("content");
 		formSetup.setSizeFull();
 		sheet.add(formSetup);
-		//formCanvas.setAlignItems(Alignment.CENTER);
+		// formCanvas.setAlignItems(Alignment.CENTER);
 		return sheet;
 	}
-	
+
 	private Component getCompleteSheet() {
 		var vl = new VerticalLayout();
 		vl.setSizeFull();
@@ -134,22 +130,23 @@ public class PositionCreateView extends VerticalLayout {
 		vl.add(createPositionBtn);
 		return vl;
 	}
-	
+
 	private Component getNote() {
-		Span note = new Span("First name, Last name and Date of birth are mandantory data and will be automatically created");
+		Span note = new Span(
+				"First name, Last name and Date of birth are mandantory data and will be automatically created");
 		Span iconSpan = new Span();
-		
+
 		Icon icon = VaadinIcon.WARNING.create();
 		icon.getStyle().set("padding", "var(--lumo-space-xs)");
 		iconSpan.add(icon);
-		
+
 		note.addClassNames(LumoUtility.Padding.Horizontal.SMALL);
-		
+
 		iconSpan.getElement().getThemeList().add("badge error");
-		
+
 		return new Span(iconSpan, note);
 	}
-	
+
 	private void setWidth(String width, HasSize... components) {
 		Stream.of(components).forEach(comp -> comp.setWidth(width));
 	}

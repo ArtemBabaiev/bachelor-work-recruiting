@@ -22,7 +22,7 @@ import edu.chnu.recruiting.models.security.User;
 import lombok.Getter;
 
 public class CompanyForm extends VerticalLayout{
-	private Binder<CompanyModel> binder = new BeanValidationBinder<CompanyModel>(CompanyModel.class);
+	private Binder<CompanyFormModel> binder = new BeanValidationBinder<CompanyFormModel>(CompanyFormModel.class);
 
 	private TextField name = new TextField("Company name");
 	private MultiSelectComboBox<User> recruiters = new MultiSelectComboBox<>("Recruiters");
@@ -31,10 +31,10 @@ public class CompanyForm extends VerticalLayout{
 	private Button cancelBtn = new Button("Cancel");
 
 	public CompanyForm() {
-		this(new CompanyModel());
+		this(new CompanyFormModel());
 	}
 	
-	public CompanyForm(CompanyModel model) {
+	public CompanyForm(CompanyFormModel model) {
 		binder.bindInstanceFields(this);
 		configureComponents();
 		
@@ -80,9 +80,9 @@ public class CompanyForm extends VerticalLayout{
 	
 	@Getter
 	public static abstract class CompanyFormEvent extends ComponentEvent<CompanyForm> {
-		private CompanyModel model;
+		private CompanyFormModel model;
 
-		protected CompanyFormEvent(CompanyForm source, CompanyModel model) {
+		protected CompanyFormEvent(CompanyForm source, CompanyFormModel model) {
 			super(source, false);
 			this.model = model;
 		}
@@ -90,7 +90,7 @@ public class CompanyForm extends VerticalLayout{
 
 	public static class SaveEvent extends CompanyFormEvent {
 
-		SaveEvent(CompanyForm source, CompanyModel model) {
+		SaveEvent(CompanyForm source, CompanyFormModel model) {
 			super(source, model);
 		}
 	}

@@ -8,15 +8,18 @@ import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.utils.WizardConverterJson;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter 
+@Setter 
 @Entity
 public class Application {
 	@Id
@@ -33,12 +36,12 @@ public class Application {
 	private String rejectReason;
 	
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Position position;
 	
 	@Convert(converter = WizardConverterJson.class)
 	private Wizard wizardData;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;
 }

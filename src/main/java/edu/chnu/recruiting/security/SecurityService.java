@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.security;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 
+import edu.chnu.recruiting.exceptions.NoAuthorizationException;
 import edu.chnu.recruiting.front.views.HomeView;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.repositories.UserRepository;
@@ -38,7 +40,7 @@ public class SecurityService {
 	}
 	
 	public boolean isAuthenticated() {
-		return this.getAuthenticatedUser() != null;
+		return this.authContext.getAuthenticatedUser(User.class).isPresent();
 	}
 	
 

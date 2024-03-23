@@ -32,7 +32,7 @@ public class CompanyCreateView extends Div {
 	public CompanyCreateView(UnitOfWork uow) {
 		this.companyService = uow.getCompanyService();
 		this.securityService = uow.getSecurityService();
-		this.form = new CompanyForm(new CompanyModel());
+		this.form = new CompanyForm(new CompanyFormModel());
 		setHeightFull();
 		this.form.setHeightFull();
 		this.form.addClassNames(Display.FLEX, JustifyContent.CENTER, AlignItems.CENTER);

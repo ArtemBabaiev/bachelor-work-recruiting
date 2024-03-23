@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PickerRange<T> {
-	private T start;
-	private T end;
+public class SalaryRange {
+	private Double start;
+	private Double end;
+	private String currencyCode;
 }

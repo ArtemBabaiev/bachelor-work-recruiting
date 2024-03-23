@@ -20,4 +20,8 @@ public enum EmploymentType {
 	public static List<String> getAllValues() {
 		return Arrays.stream(EmploymentType.values()).map(EmploymentType::toString).toList();
 	}
+	
+	public static String getLabel(String e) {
+		return EmploymentType.valueOf(e).getLabel();
+	}
 }
