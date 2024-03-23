@@ -21,7 +21,7 @@ public class Company {
 	
 	private String name;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<User> recruiters;
 	
 	@OneToOne(fetch = FetchType.EAGER)

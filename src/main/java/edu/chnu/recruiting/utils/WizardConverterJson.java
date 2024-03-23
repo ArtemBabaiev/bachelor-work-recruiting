@@ -2,21 +2,17 @@ package edu.chnu.recruiting.utils;
 
 import java.io.IOException;
 
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.chnu.recruiting.models.wizard.Wizard;
 import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
 
-@Service
-@Converter(autoApply = true)
-public class JpaConverterJson implements AttributeConverter<Object, String> {
+public class WizardConverterJson implements AttributeConverter<Wizard, String> {
 	private final static ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
-	public String convertToDatabaseColumn(Object meta) {
+	public String convertToDatabaseColumn(Wizard meta) {
 		try {
 			return objectMapper.writeValueAsString(meta);
 		} catch (JsonProcessingException e) {
@@ -25,9 +21,9 @@ public class JpaConverterJson implements AttributeConverter<Object, String> {
 	}
 
 	@Override
-	public Object convertToEntityAttribute(String dbData) {
+	public Wizard convertToEntityAttribute(String dbData) {
 		try {
-			return objectMapper.readValue(dbData, Object.class);
+			return objectMapper.readValue(dbData, Wizard.class);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

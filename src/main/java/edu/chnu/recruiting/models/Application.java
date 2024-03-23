@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.wizard.Wizard;
-import edu.chnu.recruiting.utils.JpaConverterJson;
+import edu.chnu.recruiting.utils.WizardConverterJson;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +36,7 @@ public class Application {
 	@ManyToOne
 	private Position position;
 	
-	@Convert(converter = JpaConverterJson.class)
+	@Convert(converter = WizardConverterJson.class)
 	private Wizard wizardData;
 	
 	@ManyToOne
