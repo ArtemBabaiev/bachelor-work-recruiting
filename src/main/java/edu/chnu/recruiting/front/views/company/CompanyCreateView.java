@@ -32,23 +32,21 @@ public class CompanyCreateView extends Div {
 	public CompanyCreateView(UnitOfWork uow) {
 		this.companyService = uow.getCompanyService();
 		this.securityService = uow.getSecurityService();
-		this.form = new CompanyForm(new CompanyFormModel());
+		this.form = new CompanyForm(new CompanyFormModel(),
+				query -> companyService.provideUsersForForm(query.getFilter().orElse(""),
+						PageRequest.of(query.getPage(), query.getLimit())).stream(),
+				personSearchTerm -> personSearchTerm);
 		setHeightFull();
 		this.form.setHeightFull();
 		this.form.addClassNames(Display.FLEX, JustifyContent.CENTER, AlignItems.CENTER);
-		
+
 		configureComponents();
 	}
 
 	private void configureComponents() {
-		this.form.setUserProvider(
-				query -> companyService.provideUsersForForm(query.getFilter().orElse(""),
-						PageRequest.of(query.getPage(), query.getLimit())).stream(),
-				personSearchTerm -> personSearchTerm);
-
 		this.form.addSaveListener(e -> handleSaveClick(e));
 		this.form.addCancelListener(e -> UI.getCurrent().getPage().getHistory().back());
-		
+
 		add(form);
 	}
 

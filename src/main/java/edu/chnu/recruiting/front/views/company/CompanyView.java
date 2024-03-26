@@ -7,6 +7,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import edu.chnu.recruiting.front.layouts.MainLayout;
+import edu.chnu.recruiting.front.views.viewModels.CompanyViewModel;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.services.CompanyService;
 import jakarta.annotation.security.RolesAllowed;
@@ -19,10 +20,10 @@ public class CompanyView extends Div{
 	private H2 title = new H2();
 	
 	private CompanyService companyService;
-	private CompanyFormModel model;
+	private CompanyViewModel model;
 	public CompanyView(CompanyService companyService) {
 		this.companyService = companyService;
-		this.model = companyService.getModelByCurrentUser();
+		this.model = this.companyService.getCompanyVMByAuthUser();
 		configureComponents();
 		configureGrid();
 		updateGrid();
