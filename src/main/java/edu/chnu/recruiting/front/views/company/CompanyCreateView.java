@@ -16,7 +16,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.company.CompanyForm.SaveEvent;
-import edu.chnu.recruiting.security.SecurityService;
+import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.services.CompanyService;
 import edu.chnu.recruiting.services.UnitOfWork;
 import jakarta.annotation.security.RolesAllowed;
@@ -26,12 +26,12 @@ import jakarta.annotation.security.RolesAllowed;
 @RolesAllowed({ "USER" })
 public class CompanyCreateView extends Div {
 	private CompanyService companyService;
-	private SecurityService securityService;
+	private SecurityContext securityService;
 	private CompanyForm form;
 
 	public CompanyCreateView(UnitOfWork uow) {
 		this.companyService = uow.getCompanyService();
-		this.securityService = uow.getSecurityService();
+		this.securityService = uow.getSecurityContext();
 		this.form = new CompanyForm(new CompanyFormModel(),
 				query -> companyService.provideUsersForForm(query.getFilter().orElse(""),
 						PageRequest.of(query.getPage(), query.getLimit())).stream(),

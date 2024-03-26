@@ -10,8 +10,8 @@ import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.company.CompanyCreateView;
 import edu.chnu.recruiting.front.views.company.CompanyView;
 import edu.chnu.recruiting.models.security.User;
+import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.services.UnitOfWork;
-import edu.chnu.recruiting.services.UserService;
 import edu.chnu.recruiting.utils.constants.StarterRoles;
 import jakarta.annotation.security.PermitAll;
 
@@ -23,13 +23,13 @@ public class ProfileView extends Div{
 	private Button registerCompnanyBtn = new Button("Register company");
 	private Button viewCompnanyBtn = new Button("View company");
 	
-	private UserService userService;
+	private SecurityContext securityContext;
 	
 	private User loggedInUser;
 	
 	public ProfileView(UnitOfWork uow) {
-		this.userService = uow.getUserService();
-		loggedInUser = this.userService.getAuthenticatedUser();
+		this.securityContext = uow.getSecurityContext();
+		loggedInUser = this.securityContext.getAuthenticatedUser();
 		configureComponents();
 		if (loggedInUser != null && !loggedInUser.getRole().getName().equals(StarterRoles.USER.getName())) {
 			add(viewCompnanyBtn);			

@@ -23,15 +23,15 @@ import edu.chnu.recruiting.front.views.company.CompanyView;
 import edu.chnu.recruiting.front.views.position.PositionCreateView;
 import edu.chnu.recruiting.front.views.registration.RegistrationConfirmView;
 import edu.chnu.recruiting.front.views.registration.SignUpView;
-import edu.chnu.recruiting.security.SecurityService;
+import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.utils.PropertiesReader;
 
 public class MainLayout extends AppLayout { 
 
-	private SecurityService securityService;
+	private SecurityContext securityService;
 	private PropertiesReader propertiesReader;
 	
-    public MainLayout(SecurityService securityService, PropertiesReader propertiesReader) {
+    public MainLayout(SecurityContext securityService, PropertiesReader propertiesReader) {
     	this.securityService = securityService;
     	this.propertiesReader = propertiesReader;
         createHeader();
