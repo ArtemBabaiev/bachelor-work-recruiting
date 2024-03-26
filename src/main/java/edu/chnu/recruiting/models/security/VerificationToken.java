@@ -1,8 +1,10 @@
 package edu.chnu.recruiting.models.security;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,9 +14,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter 
+@Setter 
 @Entity
 public class VerificationToken {
 	@Id
@@ -27,14 +31,15 @@ public class VerificationToken {
 	@JoinColumn(nullable = false, name = "user_id")
 	private User user;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date expiryDate;
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime expiryDate;
 
 	public void calculateExpiryDate(final int expiryTimeInMinutes) {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(new Date().getTime());
-		cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-		this.expiryDate =  new Date(cal.getTime().getTime());
+		LocalDateTime now = LocalDateTime.now();
+//		final Calendar cal = Calendar.getInstance();
+//		cal.setTimeInMillis(new Date().getTime());
+//		cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+		this.expiryDate =  now.plusMinutes(expiryTimeInMinutes);
 	}
 	
 	public void updateToken(final String token, int expiryTimeInMinutes) {

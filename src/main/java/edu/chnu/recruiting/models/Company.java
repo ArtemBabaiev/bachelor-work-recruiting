@@ -10,9 +10,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter 
+@Setter 
 @Entity
 public class Company {
 	@Id
@@ -21,7 +23,7 @@ public class Company {
 	
 	private String name;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<User> recruiters;
 	
 	@OneToOne(fetch = FetchType.EAGER)

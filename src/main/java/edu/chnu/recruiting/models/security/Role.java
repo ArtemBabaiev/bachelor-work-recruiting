@@ -1,17 +1,15 @@
 package edu.chnu.recruiting.models.security;
 
-import java.util.Collection;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter 
+@Setter 
 @Entity
 @NoArgsConstructor
 public class Role {
@@ -21,9 +19,6 @@ public class Role {
 	private Long id;
 
 	private String name;
-	
-	@OneToMany(mappedBy = "role")
-	private Collection<User> users;
 	
 	public Role(String name) {
 		this.name = name;

@@ -4,6 +4,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -21,23 +22,20 @@ public class CompanyEditView extends Div {
 
 	public CompanyEditView(CompanyService companyService) {
 		this.companyService = companyService;
-		this.form = new CompanyForm(companyService.getModelByCurrentUser());
+		this.form = new CompanyForm(this.companyService.getCompanyFMByAuthUser(),
+				query -> this.companyService.provideUsersForForm(query.getFilter().orElse(""),
+						PageRequest.of(query.getPage(), query.getLimit())).stream(),
+				personSearchTerm -> personSearchTerm);
 		configureComponents();
 	}
 
 	private void configureComponents() {
-		this.form.setUserProvider(
-				query -> companyService.provideUsersForForm(query.getFilter().orElse(""),
-						PageRequest.of(query.getPage(), query.getLimit())).stream(),
-				personSearchTerm -> personSearchTerm);
-
 		this.form.addSaveListener(e -> handleSaveClick(e));
 		this.form.addSaveListener(e -> UI.getCurrent().getPage().getHistory().back());
 		add(form);
 	}
 
 	private void handleSaveClick(SaveEvent e) {
-		this.companyService.createCompany(e.getModel());
-		UI.getCurrent().navigate(CompanyView.class);
+		Notification.show("Clicked Edit");
 	}
 }

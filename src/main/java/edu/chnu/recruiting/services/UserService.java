@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.events.registration.OnRegistrationCompleteEvent;
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
+import edu.chnu.recruiting.exceptions.NoAuthorizationException;
 import edu.chnu.recruiting.front.views.registration.SignUpModel;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
@@ -69,6 +70,10 @@ public class UserService {
 	}
 	
 	public User getAuthenticatedUser() {
-		return this.userRepository.findByUsername(this.securityService.getAuthenticatedUser().getUsername()).get();
+		var authUser = this.securityService.getAuthenticatedUser();
+		if (authUser == null) {
+			throw new NoAuthorizationException();
+		}
+		return this.userRepository.findByUsername(authUser.getUsername()).get();
 	}
 }

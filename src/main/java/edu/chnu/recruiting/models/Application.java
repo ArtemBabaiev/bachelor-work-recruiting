@@ -1,22 +1,24 @@
 package edu.chnu.recruiting.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.wizard.Wizard;
-import edu.chnu.recruiting.utils.JpaConverterJson;
+import edu.chnu.recruiting.utils.WizardConverterJson;
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter 
+@Setter 
 @Entity
 public class Application {
 	@Id
@@ -26,19 +28,19 @@ public class Application {
 	private String lastName;
 	private String firstName;
 	
-	@Temporal(TemporalType.DATE)
-	private Date dateOfBirth;
+	@Column(columnDefinition = "DATE")
+	private LocalDate dateOfBirth;
 	
 	private String status;
 	private String rejectReason;
 	
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Position position;
 	
-	@Convert(converter = JpaConverterJson.class)
+	@Convert(converter = WizardConverterJson.class)
 	private Wizard wizardData;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;
 }

@@ -31,7 +31,7 @@ public class ProfileView extends Div{
 		this.userService = uow.getUserService();
 		loggedInUser = this.userService.getAuthenticatedUser();
 		configureComponents();
-		if (!loggedInUser.getRole().getName().equals(StarterRoles.USER.getName())) {
+		if (loggedInUser != null && !loggedInUser.getRole().getName().equals(StarterRoles.USER.getName())) {
 			add(viewCompnanyBtn);			
 		} else {
 			add(registerCompnanyBtn);

@@ -1,21 +1,23 @@
 package edu.chnu.recruiting.services;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
-import edu.chnu.recruiting.front.views.company.CompanyModel;
+import edu.chnu.recruiting.front.views.company.CompanyFormModel;
+import edu.chnu.recruiting.front.views.viewModels.CompanyViewModel;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.CompanyRepository;
 import edu.chnu.recruiting.utils.constants.StarterRoles;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CompanyService {
@@ -28,8 +30,11 @@ public class CompanyService {
 
 	@Autowired
 	private RoleService roleService;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 
-	public Company createCompany(CompanyModel model) {
+	public Company createCompany(CompanyFormModel model) {
 		if (companyRepository.existsByName(model.getName())) {
 			throw new AlreadyExistsException("Company Already Exists");
 		}
@@ -54,7 +59,7 @@ public class CompanyService {
 		return company;
 	}
 	
-	public Company updateCompany(CompanyModel model) {
+	public Company updateCompany(CompanyFormModel model) {
 		throw new NotImplementedException();
 	}
 
@@ -62,10 +67,18 @@ public class CompanyService {
 		return this.userService.searchPaginated(username, pageRequest);
 	}
 	
-	public CompanyModel getModelByCurrentUser() {
+	@Transactional
+	public CompanyViewModel getCompanyVMByAuthUser() {
 		User owner = this.userService.getAuthenticatedUser();
 		Company company= this.companyRepository.findByOwner(owner);
-		return map(company);
+		return modelMapper.map(company, CompanyViewModel.class);
+	}
+	
+	@Transactional
+	public CompanyFormModel getCompanyFMByAuthUser() {
+		User owner = this.userService.getAuthenticatedUser();
+		Company company= this.companyRepository.findByOwner(owner);
+		return modelMapper.map(company, CompanyFormModel.class);
 	}
 	
 	public Company getCompanyByUser(User user) {
@@ -73,23 +86,5 @@ public class CompanyService {
 			return this.companyRepository.findByOwner(user);
 		}
 		return this.companyRepository.findByRecruiters(user);
-	}
-	
-	private CompanyModel map(Company company) {
-		CompanyModel model = new CompanyModel();
-		model.setId(company.getId());
-		model.setName(company.getName());
-		model.setOwner(company.getOwner());
-		model.setRecruiters(new HashSet<User>(company.getRecruiters()));
-		return model;
-	}
-	
-	private Company map(CompanyModel model) {
-		Company company = new Company();
-		company.setId(model.getId());
-		company.setName(model.getName());
-		company.setOwner(model.getOwner());
-		company.setRecruiters(model.getRecruiters().stream().toList());
-		return company;
 	}
 }

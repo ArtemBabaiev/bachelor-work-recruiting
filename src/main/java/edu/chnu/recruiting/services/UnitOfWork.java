@@ -20,5 +20,8 @@ public class UnitOfWork {
 	private UserService userService;
 	
 	@Autowired
+	private PositionService positionService;
+	
+	@Autowired
 	private SecurityService securityService;
 }

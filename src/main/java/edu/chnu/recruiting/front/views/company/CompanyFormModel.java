@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CompanyModel {
+public class CompanyFormModel {
 	private Long id;
 	@NotBlank
 	private String name;

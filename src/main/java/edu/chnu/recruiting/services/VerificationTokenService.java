@@ -1,5 +1,6 @@
 package edu.chnu.recruiting.services;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -46,12 +47,11 @@ public class VerificationTokenService {
 	public User confirmRegistration(String token) {
 		VerificationToken verificationToken = this.getVerificationToken(token);
 		
-		final Calendar cal = Calendar.getInstance();
 		if (verificationToken == null) {
 			throw new TokenInvalidException();
 		}
-		
-		if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+		LocalDateTime now = LocalDateTime.now();
+		if ((verificationToken.getExpiryDate().isBefore(now))) {
 			throw new VerificationTokenExpiredException();
 		}
 		User user = verificationToken.getUser();

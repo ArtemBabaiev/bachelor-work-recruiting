@@ -15,6 +15,8 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.listbox.ListBox;
+import com.vaadin.flow.component.messages.MessageInput;
+import com.vaadin.flow.component.messages.MessageInputI18n;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -37,8 +39,7 @@ public class QuestionComponent extends VerticalLayout {
 	Checkbox required = new Checkbox("Required");
 
 	ListBox<String> optionsList = new ListBox<>();
-	TextField optionField = new TextField();
-	Button addOptionButton = new Button("Add");
+	MessageInput optionInput = new MessageInput();
 
 	Checkbox textToSpeech = new Checkbox("Use Text-to-Speech");
 
@@ -71,10 +72,13 @@ public class QuestionComponent extends VerticalLayout {
 		
 		type.setItems(ValueType.values());
 		type.setItemLabelGenerator(v -> v.toString());
-		
-		addOptionButton.addClickListener(click -> {
-			addOption(optionField.getValue());
-			optionField.clear();
+		MessageInputI18n ms = new MessageInputI18n();
+		ms.setMessage("Option");
+		ms.setSend("Add");
+		optionInput.setI18n(ms);
+		optionInput.setClassName(LumoUtility.Padding.NONE);
+		optionInput.addSubmitListener(e -> {
+			addOption(e.getValue());
 		});
 		
 		optionsList.setReadOnly(true);
@@ -122,7 +126,7 @@ public class QuestionComponent extends VerticalLayout {
 		switch (binder.getBean().getType()) {
 		case SELECTION_MULTIPLE:
 		case SELECTION_SINGLE:
-			extra.add(new Text("Options"), new HorizontalLayout(optionField, addOptionButton), optionsList);
+			extra.add(new Text("Options"), optionInput, optionsList);
 			break;
 		case AUDIO:
 			extra.add(textToSpeech);
