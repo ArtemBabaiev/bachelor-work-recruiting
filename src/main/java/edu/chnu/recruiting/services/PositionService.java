@@ -1,5 +1,6 @@
 package edu.chnu.recruiting.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,7 @@ public class PositionService {
 		Company company = companyService.getCompanyByUser(userService.getAuthenticatedUser());
 		position.setWizardData(wizard);
 		position.setCompany(company);
+		position.setDatePosted(LocalDate.now());
 		return positionRepository.save(position);
 
 	}

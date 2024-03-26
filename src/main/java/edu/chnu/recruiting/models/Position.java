@@ -1,6 +1,6 @@
 package edu.chnu.recruiting.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.utils.WizardConverterJson;
@@ -13,8 +13,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,8 +50,8 @@ public class Position {
 	@NotBlank
 	private String employmentType = EmploymentType.FULL_TIME.toString();
 	
-	@Temporal(TemporalType.DATE)
-	private Date datePosted;
+	@Column(columnDefinition = "DATE")
+	private LocalDate datePosted;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Company company;
