@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.front.components.position.FormСreationComponent;
 import edu.chnu.recruiting.front.components.position.SectionComponent;
+import edu.chnu.recruiting.front.components.questions.QuestionComponent;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 
@@ -18,10 +19,13 @@ public class WizardService {
 		Wizard wizard = new Wizard();
 		int sectionIndex = 0;
 		for (SectionComponent sectionComponent : sections) {
+			int questionIndex = 0;
 			WizardStep step = sectionComponent.getStep();
-			step.setOrderIndex(sectionIndex++);
-			step.setId(UUID.randomUUID().toString());
-			sectionComponent.getQuestionsComponents().forEach(q -> step.addField(q.getField()));
+			step.setId(sectionIndex);
+			List<QuestionComponent> questions = sectionComponent.getQuestionsComponents();
+			for (QuestionComponent questionComponent : questions) {
+				step.addField(questionComponent.getField().withId(questionIndex++));
+			}
 			wizard.addStep(step);
 		}
 		return wizard;

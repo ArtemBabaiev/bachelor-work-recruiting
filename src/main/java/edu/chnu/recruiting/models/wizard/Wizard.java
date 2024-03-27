@@ -2,6 +2,7 @@ package edu.chnu.recruiting.models.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -17,4 +18,8 @@ public class Wizard {
 	public void addStep(WizardStep step) {
 		this.steps.add(step);
 	}
+	
+//	public Object getFieldValue(UUID fieldId) {
+//		
+//	}
 }

@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 @JsonInclude(Include.NON_NULL)
 public class WizardField {
+	private Integer id;
 	private String question;
 	private ValueType type;
 	private Object userValue;
@@ -27,6 +28,10 @@ public class WizardField {
 	
 	public void resetOptional() {
 		options.clear();
-		
+	}
+	
+	public WizardField withId(Integer id) {
+		this.setId(id);
+		return this;
 	}
 }

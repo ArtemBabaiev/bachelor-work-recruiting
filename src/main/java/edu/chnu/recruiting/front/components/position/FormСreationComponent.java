@@ -37,6 +37,7 @@ public class FormСreationComponent extends VerticalLayout {
 		}
 		children.remove(index);
 		children.add(index + 1, e.getSource());
+		box.removeAll();
 		box.add(children);
 		return;
 	}
@@ -49,6 +50,7 @@ public class FormСreationComponent extends VerticalLayout {
 		}
 		children.remove(index);
 		children.add(index - 1, e.getSource());
+		box.removeAll();
 		box.add(children);
 		return;
 	}
