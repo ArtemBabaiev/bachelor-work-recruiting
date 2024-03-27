@@ -1,7 +1,6 @@
 package edu.chnu.recruiting.services;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ public class WizardService {
 		for (SectionComponent sectionComponent : sections) {
 			int questionIndex = 0;
 			WizardStep step = sectionComponent.getStep();
-			step.setId(sectionIndex);
+			step.setId(sectionIndex++);
 			List<QuestionComponent> questions = sectionComponent.getQuestionsComponents();
 			for (QuestionComponent questionComponent : questions) {
 				step.addField(questionComponent.getField().withId(questionIndex++));

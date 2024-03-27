@@ -25,4 +25,8 @@ public enum ApplicationStatuses {
 	public static String getLabel(String e) {
 		return ApplicationStatuses.valueOf(e).getLabel();
 	}
+	
+	public static boolean editable(String status) {
+		 return ApplicationStatuses.valueOf(status).equals(PENDING_DATA);
+	}
 }

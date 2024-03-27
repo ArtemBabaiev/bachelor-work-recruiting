@@ -59,4 +59,14 @@ public class ApplicationService {
 		}
 		return app;
 	}
+	
+	public Application saveApplication(Application app, int filledStep) {
+		app.getWizardData().setCurrentStep(filledStep + 1);
+		return this.applicationRepository.save(app);
+	}
+	
+	public Application saveFinalApplication(Application app, int filledStep) {
+		app.setStatus(ApplicationStatuses.PENDING_REVIEW.toString());
+		return this.applicationRepository.save(app);
+	}
 }
