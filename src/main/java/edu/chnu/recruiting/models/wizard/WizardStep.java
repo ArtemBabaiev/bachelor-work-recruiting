@@ -2,10 +2,13 @@ package edu.chnu.recruiting.models.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 
 @Data
+@JsonInclude(Include.NON_NULL)
 public class WizardStep {
 	private String id;
 	private String name;

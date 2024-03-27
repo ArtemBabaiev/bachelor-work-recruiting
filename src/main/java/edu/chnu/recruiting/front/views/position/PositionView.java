@@ -83,10 +83,9 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 
 	private Component getControls() {
 		HorizontalLayout controls = new HorizontalLayout();
+		controls.add(applyBtn);
 		if (positionService.isUserHasAccessToManagePosition(posId)) {
 			controls.add(activationBtn, editBtn);
-		} else {
-			controls.add(applyBtn);
 		}
 		return controls;
 	}

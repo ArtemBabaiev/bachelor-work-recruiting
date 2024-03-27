@@ -35,7 +35,7 @@ public class SecurityContext {
 	public User getAuthenticatedUser() {
 		var optUser = this.getContextUser();
 		if (optUser.isEmpty()) {
-			return null;
+			throw new NoAuthorizationException();
 		}
 		return this.userRepository.findByUsername(optUser.get().getUsername()).orElseThrow(() -> new NoAuthorizationException());
 	}
