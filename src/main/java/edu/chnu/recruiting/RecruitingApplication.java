@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
@@ -20,6 +21,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 @SpringBootApplication
 @EnableAsync
 @Theme(value = "recruiting")
+@Push
 public class RecruitingApplication implements AppShellConfigurator {
 
 	public static void main(String[] args) {

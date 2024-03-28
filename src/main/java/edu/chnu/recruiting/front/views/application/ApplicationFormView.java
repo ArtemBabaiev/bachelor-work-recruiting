@@ -96,7 +96,7 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 	}
 
 	private void handleNextEvent(NextEvent e) {
-		if (e.getStepId() == application.getWizardData().getTotalSteps()) {
+		if (e.getStepId() == application.getWizardData().getTotalSteps() - 1) {
 			application = this.applicationService.saveFinalApplication(application, e.getStepId());
 			UI.getCurrent().navigate(ApplicationView.class, new RouteParam("id", application.getId().toString()));
 		} else {

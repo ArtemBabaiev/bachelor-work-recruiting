@@ -37,6 +37,8 @@ public class WizardField {
 	// in case checkbox, or dropdown list
 	private List<String> options = new ArrayList<String>();
 
+	private String fileName;
+	
 	public void addOption(String option) {
 		this.options.add(option);
 	}
