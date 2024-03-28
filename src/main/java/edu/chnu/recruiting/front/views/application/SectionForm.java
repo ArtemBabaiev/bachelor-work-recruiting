@@ -51,9 +51,14 @@ public class SectionForm extends VerticalLayout {
 	private void initComponent() {
 		binder.setBean(model);
 		binder.addStatusChangeListener(e -> nextBtn.setEnabled(binder.isValid()));
-
-		nextBtn.addClickListener(e -> fireEvent(new NextEvent(this, binder.getBean())));
-		backBtn.addClickListener(e -> fireEvent(new BackEvent(this, binder.getBean())));
+		nextBtn.addClickListener(e -> {
+			closeAllMedias();
+			fireEvent(new NextEvent(this, binder.getBean()));
+		});
+		backBtn.addClickListener(e -> {
+			closeAllMedias();
+			fireEvent(new BackEvent(this, binder.getBean()));
+		});
 		backBtn.setEnabled(model.getId() > 0);
 		backBtn.setVisible(model.getId() > 0);
 
@@ -92,6 +97,14 @@ public class SectionForm extends VerticalLayout {
 			break;
 
 		}
+	}
+	
+	private void closeAllMedias() {
+		this.getChildren().flatMap(c -> c.getChildren()).forEach(c -> {
+			if (c instanceof AudioRecorder ar) {
+				ar.closeMedia();
+			}
+		});
 	}
 
 	private TextField getText(WizardField field) {
