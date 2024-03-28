@@ -21,6 +21,7 @@ import edu.chnu.recruiting.front.views.ProfileView;
 import edu.chnu.recruiting.front.views.company.CompanyCreateView;
 import edu.chnu.recruiting.front.views.company.CompanyView;
 import edu.chnu.recruiting.front.views.position.PositionCreateView;
+import edu.chnu.recruiting.front.views.position.PositionListingView;
 import edu.chnu.recruiting.front.views.registration.RegistrationConfirmView;
 import edu.chnu.recruiting.front.views.registration.SignUpView;
 import edu.chnu.recruiting.security.SecurityContext;
@@ -79,7 +80,8 @@ public class MainLayout extends AppLayout {
     			new SideNavItem("Profile", ProfileView.class),
     			new SideNavItem("Company", CompanyView.class),
     			new SideNavItem("Company-create", CompanyCreateView.class),
-    			new SideNavItem("position-create", PositionCreateView.class)
+    			new SideNavItem("Position-create", PositionCreateView.class),
+    			new SideNavItem("Positions listing", PositionListingView.class)
     			);
 
     	var themeToggle = new Checkbox("Dark theme");

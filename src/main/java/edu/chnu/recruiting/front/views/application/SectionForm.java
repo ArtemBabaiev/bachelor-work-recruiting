@@ -67,7 +67,7 @@ public class SectionForm extends VerticalLayout {
 		for (var field : model.getFields()) {
 			configureField(field);
 		}
-		binder.validate();
+		nextBtn.setEnabled(binder.isValid());
 		add(new HorizontalLayout(backBtn, nextBtn));
 
 	}
@@ -105,6 +105,7 @@ public class SectionForm extends VerticalLayout {
 				ar.closeMedia();
 			}
 		});
+		UI.getCurrent().push();
 	}
 
 	private TextField getText(WizardField field) {
