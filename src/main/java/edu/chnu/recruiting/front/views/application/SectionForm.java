@@ -32,13 +32,10 @@ import com.vaadin.flow.dom.DomEventListener;
 import com.vaadin.flow.shared.Registration;
 
 import edu.chnu.recruiting.front.components.AudioRecorder;
-import edu.chnu.recruiting.front.components.SpeechSynthesis;
 import edu.chnu.recruiting.models.wizard.WizardField;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class SectionForm extends VerticalLayout {
 	private Binder<WizardStep> binder = new BeanValidationBinder<WizardStep>(WizardStep.class);
 	private WizardStep model;
@@ -49,15 +46,14 @@ public class SectionForm extends VerticalLayout {
 	public SectionForm(WizardStep model) {
 		this.model = model;
 		initComponent();
-		log.info("Constructor");
 	}
 
 	private void initComponent() {
 		binder.setBean(model);
 		binder.addStatusChangeListener(e -> nextBtn.setEnabled(binder.isValid()));
 
-		nextBtn.addClickListener(e -> fireEvent(new NextEvent(this, model.getId())));
-		backBtn.addClickListener(e -> fireEvent(new BackEvent(this, model.getId())));
+		nextBtn.addClickListener(e -> fireEvent(new NextEvent(this, binder.getBean())));
+		backBtn.addClickListener(e -> fireEvent(new BackEvent(this, binder.getBean())));
 		backBtn.setEnabled(model.getId() > 0);
 		backBtn.setVisible(model.getId() > 0);
 
@@ -170,7 +166,6 @@ public class SectionForm extends VerticalLayout {
 		singleFileUpload.addSucceededListener(e -> {
 			InputStream fileData = memoryBuffer.getInputStream();
 			try {
-				log.info("Handling upload");
 				field.setUserValue(Base64.getEncoder().encodeToString(fileData.readAllBytes()));
 				field.setFileName(e.getFileName());
 				setCurrentUpload(currentUpload, field.getFileName());
@@ -252,25 +247,25 @@ public class SectionForm extends VerticalLayout {
 
 	@Getter
 	public static abstract class SectionFormEvent extends ComponentEvent<SectionForm> {
-		private int stepId;
+		private WizardStep step;
 
-		protected SectionFormEvent(SectionForm source, int stepId) {
+		protected SectionFormEvent(SectionForm source, WizardStep step) {
 			super(source, false);
-			this.stepId = stepId;
+			this.step = step;
 		}
 	}
 
 	public static class NextEvent extends SectionFormEvent {
 
-		NextEvent(SectionForm source, int stepId) {
-			super(source, stepId);
+		NextEvent(SectionForm source, WizardStep step) {
+			super(source, step);
 		}
 	}
 
 	public static class BackEvent extends SectionFormEvent {
 
-		BackEvent(SectionForm source, int stepId) {
-			super(source, stepId);
+		BackEvent(SectionForm source, WizardStep step) {
+			super(source, step);
 		}
 	}
 }

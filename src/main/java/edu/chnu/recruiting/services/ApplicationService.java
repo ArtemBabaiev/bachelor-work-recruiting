@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.vaadin.flow.router.NotFoundException;
 
-import edu.chnu.recruiting.exceptions.BadRequestException;
 import edu.chnu.recruiting.exceptions.ForbiddenException;
+import edu.chnu.recruiting.exceptions.WizardFinishedException;
 import edu.chnu.recruiting.front.views.apply.ApplicationFormModel;
 import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.wizard.Wizard;
+import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.repositories.ApplicationRepository;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.utils.enums.ApplicationStatuses;
@@ -65,8 +66,27 @@ public class ApplicationService {
 		return this.applicationRepository.save(app);
 	}
 	
-	public Application saveFinalApplication(Application app, int filledStep) {
+	public Application saveFinalApplication(Application app) {
 		app.setStatus(ApplicationStatuses.PENDING_REVIEW.toString());
 		return this.applicationRepository.save(app);
+	}
+	
+	public WizardStep getApplicationStep(UUID applicationId, int stepId) {
+		Wizard wizard = this.getApplication(applicationId).getWizardData();
+		return wizard.getStep(stepId);
+	}
+	
+	public WizardStep saveStepAndGetNext(UUID applicationId, WizardStep step) throws WizardFinishedException {
+		Application app = getApplication(applicationId);
+		Wizard wizard = app.getWizardData();
+		wizard.updateStep(step);
+		int newStep = step.getId() + 1;
+		wizard.setCurrentStep(newStep);
+		if (newStep == wizard.getTotalSteps()) {
+			this.saveFinalApplication(app);
+			throw new WizardFinishedException();
+		} else {
+			return this.applicationRepository.save(app).getWizardData().getStep(newStep);
+		}
 	}
 }

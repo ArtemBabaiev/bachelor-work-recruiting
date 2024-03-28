@@ -28,4 +28,8 @@ public class Wizard {
 	public int getTotalSteps() {
 		return steps.size();
 	}
+	
+	public void updateStep(WizardStep step) {
+		steps.replaceAll(t -> t.getId().equals(step.getId())? step: t);
+	}
 }
