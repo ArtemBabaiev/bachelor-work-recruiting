@@ -16,7 +16,7 @@ import edu.chnu.recruiting.front.views.registration.SignUpModel;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.UserRepository;
-import edu.chnu.recruiting.security.SecurityService;
+import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.utils.constants.StarterRoles;
 
 @Service
@@ -35,7 +35,7 @@ public class UserService {
 	private ApplicationEventPublisher eventPublisher;
 	
 	@Autowired
-	private SecurityService securityService;
+	private SecurityContext securityService;
 	
 	public User registerUser(SignUpModel model) {
 		if (this.userRepository.existsByUsernameOrEmail(model.getUsername(), model.getEmail())) {
@@ -67,13 +67,5 @@ public class UserService {
 		Role userRole = this.roleService.getRoleByName(StarterRoles.USER.getName());
 		var res = this.userRepository.findAllUsernameLikeAndRoleIs(username, userRole.getId(), pageRequest);
 		return res;
-	}
-	
-	public User getAuthenticatedUser() {
-		var authUser = this.securityService.getAuthenticatedUser();
-		if (authUser == null) {
-			throw new NoAuthorizationException();
-		}
-		return this.userRepository.findByUsername(authUser.getUsername()).get();
 	}
 }

@@ -16,6 +16,7 @@ import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.CompanyRepository;
+import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.utils.constants.StarterRoles;
 import jakarta.transaction.Transactional;
 
@@ -25,6 +26,9 @@ public class CompanyService {
 	@Autowired
 	private CompanyRepository companyRepository;
 
+	@Autowired
+	private SecurityContext securityContext;
+	
 	@Autowired
 	private UserService userService;
 
@@ -36,8 +40,10 @@ public class CompanyService {
 
 	public Company createCompany(CompanyFormModel model) {
 		if (companyRepository.existsByName(model.getName())) {
-			throw new AlreadyExistsException("Company Already Exists");
+			throw new AlreadyExistsException("Company with such name already exists");
 		}
+		User companyOwner = securityContext.getAuthenticatedUser();
+		
 		Role recRole = roleService.getRoleByName(StarterRoles.RECRUITER.getName());
 		Role comRole = roleService.getRoleByName(StarterRoles.COMPANY.getName());
 
@@ -46,7 +52,7 @@ public class CompanyService {
 			user.setRole(recRole);
 			recruiters.add(userService.updateUser(user));
 		}
-		User companyOwner = userService.getAuthenticatedUser();
+		
 		companyOwner.setRole(comRole);
 		companyOwner = userService.updateUser(companyOwner);
 
@@ -69,14 +75,14 @@ public class CompanyService {
 	
 	@Transactional
 	public CompanyViewModel getCompanyVMByAuthUser() {
-		User owner = this.userService.getAuthenticatedUser();
+		User owner = this.securityContext.getAuthenticatedUser();
 		Company company= this.companyRepository.findByOwner(owner);
 		return modelMapper.map(company, CompanyViewModel.class);
 	}
 	
 	@Transactional
 	public CompanyFormModel getCompanyFMByAuthUser() {
-		User owner = this.userService.getAuthenticatedUser();
+		User owner = this.securityContext.getAuthenticatedUser();
 		Company company= this.companyRepository.findByOwner(owner);
 		return modelMapper.map(company, CompanyFormModel.class);
 	}

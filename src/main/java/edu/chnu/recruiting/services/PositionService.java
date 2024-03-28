@@ -20,6 +20,7 @@ import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.repositories.PositionRepository;
+import edu.chnu.recruiting.security.SecurityContext;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +32,9 @@ public class PositionService {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private SecurityContext securityContext;
 
 	@Autowired
 	private CompanyService companyService;
@@ -43,7 +47,7 @@ public class PositionService {
 
 	public Position createPosition(Position position, FormСreationComponent formComponent) {
 		Wizard wizard = this.wizardService.createWizard(formComponent);
-		Company company = companyService.getCompanyByUser(userService.getAuthenticatedUser());
+		Company company = companyService.getCompanyByUser(securityContext.getAuthenticatedUser());
 		position.setWizardData(wizard);
 		position.setCompany(company);
 		position.setDatePosted(LocalDate.now());
@@ -59,6 +63,10 @@ public class PositionService {
 	public long countBy(Specification<Position> specification) {
 		return this.positionRepository.count(specification);
 	}
+	
+	public Position getPosition(Long id) {
+		return this.positionRepository.findById(id).orElse(null);
+	}
 
 	public PositionViewModel getPositionVM(Long id) {
 		Position model = this.positionRepository.findById(id)
@@ -68,13 +76,13 @@ public class PositionService {
 	}
 	
 	@Transactional
-	public boolean canCurrenUserManagePosition(Long id) {
-		Position position = this.positionRepository.findById(id).orElse(null);
+	public boolean isUserHasAccessToManagePosition(Long positionId) {
+		Position position = this.positionRepository.findById(positionId).orElse(null);
 		if (position == null) {
 			return false;
 		}
 		try {
-			User user = userService.getAuthenticatedUser();
+			User user = securityContext.getAuthenticatedUser();
 			Company co = position.getCompany();
 			List<Long> ids = co.getRecruiters().stream().map(c -> c.getId()).collect(Collectors.toList());
 			ids.add(co.getOwner().getId());

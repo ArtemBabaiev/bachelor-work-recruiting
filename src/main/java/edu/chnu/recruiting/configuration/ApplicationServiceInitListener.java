@@ -6,7 +6,7 @@ import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.SessionInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 
-import edu.chnu.recruiting.front.CustomErrorHandler;
+import edu.chnu.recruiting.front.exceptionHandlers.CustomErrorHandler;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -18,7 +18,7 @@ public class ApplicationServiceInitListener implements VaadinServiceInitListener
 		event.getSource()
 				.addSessionInitListener(initEvent -> sessionInitHandler(initEvent));
 		event.getSource()
-		.addSessionDestroyListener(destroyEvent -> System.out.println("Session has been destryoed!"));
+		.addSessionDestroyListener(destroyEvent -> log.info("Session has been destryoed!"));
 	}
 
 	private void sessionInitHandler(SessionInitEvent initEvent) {

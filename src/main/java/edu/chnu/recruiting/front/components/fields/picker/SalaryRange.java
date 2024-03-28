@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.components.picker;
+package edu.chnu.recruiting.front.components.fields.picker;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

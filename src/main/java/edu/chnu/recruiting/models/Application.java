@@ -39,6 +39,7 @@ public class Application {
 	private Position position;
 	
 	@Convert(converter = WizardConverterJson.class)
+	@Column(name = "wizard_data", columnDefinition="LONGTEXT")
 	private Wizard wizardData;
 	
 	@ManyToOne(fetch = FetchType.EAGER)

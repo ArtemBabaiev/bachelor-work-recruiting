@@ -16,17 +16,18 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.layouts.MainLayout;
-import edu.chnu.recruiting.front.views.ErrorViews;
 import edu.chnu.recruiting.front.views.apply.ApplyView;
 import edu.chnu.recruiting.front.views.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.services.UnitOfWork;
 import edu.chnu.recruiting.services.UserService;
 import edu.chnu.recruiting.utils.enums.EmploymentType;
+import edu.chnu.recruiting.utils.enums.SessionKeys;
 
 @PageTitle("Positions listing")
 @Route(value = "positions/:posId", layout = MainLayout.class)
@@ -49,24 +50,22 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		this.posId = Long.parseLong(event.getRouteParameters().get("posId").get());
-		try {
-			model = positionService.getPositionVM(posId);
-			initComponent();
-		} catch (NotFoundException e) {
-			add(ErrorViews.get404(e.getMessage()));
-		}
+		model = positionService.getPositionVM(posId);
+		initComponent();
 	}
 
 	private void initComponent() {
 		configureComponents();
 		add(getControls(), getContent());
 	}
-	
+
 	private void configureComponents() {
-		activationBtn.setText(model.getActive()? "Deactivate": "Activate");
+		activationBtn.setText(model.getActive() ? "Deactivate" : "Activate");
 		applyBtn.setEnabled(model.getActive());
-		
+
 		applyBtn.addClickListener(e -> {
+			VaadinSession.getCurrent().getSession().setAttribute(SessionKeys.APPLY_POSITION_ID.toString(),
+					this.model.getId());
 			UI.getCurrent().navigate(ApplyView.class);
 		});
 		activationBtn.addClickListener(e -> {
@@ -84,10 +83,9 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 
 	private Component getControls() {
 		HorizontalLayout controls = new HorizontalLayout();
-		if (positionService.canCurrenUserManagePosition(posId)) {
+		controls.add(applyBtn);
+		if (positionService.isUserHasAccessToManagePosition(posId)) {
 			controls.add(activationBtn, editBtn);
-		} else {
-			controls.add(applyBtn);
 		}
 		return controls;
 	}

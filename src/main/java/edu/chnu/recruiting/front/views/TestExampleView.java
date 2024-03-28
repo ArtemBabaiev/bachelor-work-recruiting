@@ -6,6 +6,8 @@ import java.util.Base64;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -15,42 +17,42 @@ import com.vaadin.flow.router.Route;
 import edu.chnu.recruiting.front.components.AudioRecorder;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
+import lombok.extern.slf4j.Slf4j;
 
-@PageTitle("Audio")
-@Route(value = "audio",layout = MainLayout.class)
+@PageTitle("tests")
+@Route(value = "tests",layout = MainLayout.class)
 @RolesAllowed({"ADMIN"})
-public class AudioExampleView extends HorizontalLayout {
-
-    private TextField name;
-    private Button sayHello;
+@Slf4j
+public class TestExampleView extends HorizontalLayout {
     
     AudioRecorder recorder = new AudioRecorder();
 
-    public AudioExampleView() {
-        name = new TextField("Your name");
-        sayHello = new Button("Say hello");
-        sayHello.addClickListener(e -> {
-            Notification.show("Hello " + name.getValue());
-        });
-        sayHello.addClickShortcut(Key.ENTER);
-
+    public TestExampleView() {
         setMargin(true);
-        setVerticalComponentAlignment(Alignment.END, name, sayHello);
 
+        Button play = new Button(VaadinIcon.PLAY.create(), e -> {
+			getElement().executeJs("""
+					var msg = new SpeechSynthesisUtterance();
+					msg.text = "%s";
+					msg.lang = 'en';
+					window.speechSynthesis.speak(msg);
+					""".formatted("How are you doing?"));
+		});
+        
+        recorder.openMedia();
+        
         recorder.addRecordedListener(e -> {        	
         	try {
+        		log.info("handling recored");
         		FileOutputStream fs = new FileOutputStream(new File("C:/MyData/test.file"));
         		byte[] bytes = e.getRecording();
         		fs.write(bytes);
-				var encoded = Base64.getEncoder().encodeToString(bytes);
-				System.out.println(encoded);
-                //System.out.println(Base64.getDecoder().decode(bytes, bytes));
 			} catch (Exception e2) {
 				System.out.println(e2.getMessage());
 			}
         });
         
-        add(name, sayHello, recorder);
+        add(recorder, play);
     }
 
 }

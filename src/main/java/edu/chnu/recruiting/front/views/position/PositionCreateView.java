@@ -26,8 +26,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import edu.chnu.recruiting.front.components.picker.SalaryRangePicker;
-import edu.chnu.recruiting.front.components.picker.SalaryRange;
+import edu.chnu.recruiting.front.components.fields.picker.SalaryRange;
+import edu.chnu.recruiting.front.components.fields.picker.SalaryRangePicker;
 import edu.chnu.recruiting.front.components.position.FieldsToolbar;
 import edu.chnu.recruiting.front.components.position.FormСreationComponent;
 import edu.chnu.recruiting.front.layouts.MainLayout;

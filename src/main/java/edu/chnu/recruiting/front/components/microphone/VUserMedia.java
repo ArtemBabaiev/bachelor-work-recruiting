@@ -12,161 +12,166 @@ import com.vaadin.flow.shared.Registration;
 
 /**
  * A special video element that streams content from browser camera.
- * <p>During streaming, users can record still or video clips of the stream, that browser send to the server. The data can be accessed using the DataReceiver interface, see {@link #setReceiver(DataReceiver)}.</p>
+ * <p>
+ * During streaming, users can record still or video clips of the stream, that
+ * browser send to the server. The data can be accessed using the DataReceiver
+ * interface, see {@link #setReceiver(DataReceiver)}.
+ * </p>
  */
 @Tag("v-microphone")
 public class VUserMedia extends Component {
 
-    private boolean isOn;
-    private boolean recording;
+	private boolean isOn;
+	private boolean recording;
 
-    public VUserMedia() {
-        getElement().setProperty("volume", 0);
-    }
+	public VUserMedia() {
+		getElement().setProperty("volume", 0);
+	}
 
-    public void setReceiver(DataReceiver receiver) {
-        getElement().setAttribute("target", new StreamReceiver(
-                getElement().getNode(), "microphone", new AudioStreamVariable(receiver)));
-    }
+	public void setReceiver(DataReceiver receiver) {
+		getElement().setAttribute("target",
+				new StreamReceiver(getElement().getNode(), "microphone", new AudioStreamVariable(receiver)));
+	}
 
-    private void fireFinishedEvent(String mime) {
-        fireEvent(new FinishedEvent(this, true, mime));
-    }
+	private void fireFinishedEvent(String mime) {
+		fireEvent(new FinishedEvent(this, true, mime));
+	}
 
-    public void startRecording() {
-        if(!isOn) {
-            throw new IllegalStateException("Media is not on");
-        }
-        recording = true;
-        getElement().executeJs("""
-                let target = this.getAttribute("target");;
-                this.recorder = new MediaRecorder(this.stream);
-                this.recorder.ondataavailable = e => {
-                    let formData = new FormData();
-                    formData.append("data", e.data);
-                    fetch(target, {
-                        method: "post",
-                        body: formData
-                    }).then(response => console.log(response));
-                }
-                this.recorder.start();
-                    """);
-    }
+	public void startRecording(long lengthInMS) {
+		if (!isOn) {
+			throw new IllegalStateException("Media is not on");
+		}
+		recording = true;
+		getElement().executeJs("""
+				let target = this.getAttribute("target");;
+				this.recorder = new MediaRecorder(this.stream);
+				this.recorder.ondataavailable = e => {
+				    let formData = new FormData();
+				    formData.append("data", e.data);
+				    fetch(target, {
+				        method: "post",
+				        body: formData
+				    }).then(response => console.log(response));
+				}
+				this.recorder.start();
+				setTimeout(() => {
+				    if (this.recorder.state === "recording") {
+				        this.recorder.stop();
+				    }
+				}, %s);
+				    """.formatted(lengthInMS));
+	}
 
-    public void stopRecording() {
-        if(!recording) {
-            throw new IllegalStateException("Not recording");
-        }
-        getElement().executeJs("this.recorder.stop()");
-        recording = false;
-    }
+	public void stopRecording() {
+		if (!recording) {
+			throw new IllegalStateException("Not recording");
+		}
+		getElement().executeJs("this.recorder.stop()");
+		recording = false;
+	}
 
-    public void closeMicrophone() {
-        isOn = false;
-        getElement().executeJs("""
-                if(this.stream!=null) {
-                    this.stream.getTracks().forEach( t=> {
-                        t.stop();
-                    });
-                    this.stream = null;
-                }
-                """);
-    }
+	public void closeMedia() {
+		isOn = false;
+		getElement().executeJs("""
+				if(this.stream!=null) {
+				    this.stream.getTracks().forEach( t=> {
+				        t.stop();
+				    });
+				    this.stream = null;
+				}
+				""");
+	}
 
+	public void openMicrophone() {
+		openMedia("{audio:true}");
+	}
 
+	public void openCamera() {
+		openMedia("{audio:true,video:true}");
+	}
 
-    public void openMicrophone() {
-        openMedia("{audio:true}");
-    }
-    
-    public void openCamera() {
-        openMedia("{audio:true,video:true}");
-    }
+	public void openMedia(String optionsJson) {
+		isOn = true;
+		getElement().executeJs("""
+				if(this.stream == null) {
+				    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+				        navigator.mediaDevices.getUserMedia(%s).then(stream => {
+				            this.stream = stream;
+				            this.srcObject = this.stream;
+				        });
+				    }
+				}
+				        """.formatted(optionsJson));
+	}
 
-    public void openMedia(String optionsJson) {
-        isOn = true;
-        getElement().executeJs("""
-                if(this.stream == null) {
-                    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                        navigator.mediaDevices.getUserMedia(%s).then(stream => {
-                            this.stream = stream;
-                            this.srcObject = this.stream;
-                        });
-                    }
-                }
-                        """.formatted(optionsJson));
-    }
+	public boolean isOpen() {
+		return isOn;
+	}
 
-    public boolean isOpen() {
-        return isOn;
-    }
+	public Registration addFinishedListener(ComponentEventListener<FinishedEvent> listener) {
+		return addListener(FinishedEvent.class, listener);
+	}
 
-    public Registration addFinishedListener(ComponentEventListener<FinishedEvent> listener) {
-        return addListener(FinishedEvent.class, listener);
-    }
+	private class AudioStreamVariable implements StreamVariable {
 
+		String mime;
+		DataReceiver receiver;
 
-    private class AudioStreamVariable implements StreamVariable {
+		public AudioStreamVariable(DataReceiver receiver) {
+			this.receiver = receiver;
+		}
 
-        String mime;
-        DataReceiver receiver;
+		@Override
+		public OutputStream getOutputStream() {
+			return receiver.getOutputStream();
+		}
 
-        public AudioStreamVariable(DataReceiver receiver) {
-            this.receiver = receiver;
-        }
+		@Override
+		public boolean isInterrupted() {
+			return false;
+		}
 
+		@Override
+		public boolean listenProgress() {
+			return false;
+		}
 
-        @Override
-        public OutputStream getOutputStream() {
-            return receiver.getOutputStream();
-        }
+		@Override
+		public void onProgress(StreamingProgressEvent arg0) {
 
-        @Override
-        public boolean isInterrupted() {
-            return false;
-        }
+		}
 
-        @Override
-        public boolean listenProgress() {
-            return false;
-        }
+		@Override
+		public void streamingFailed(StreamingErrorEvent arg0) {
 
-        @Override
-        public void onProgress(StreamingProgressEvent arg0) {
+		}
 
-        }
+		@Override
+		public void streamingFinished(StreamingEndEvent arg0) {
+			fireFinishedEvent(mime);
 
-        @Override
-        public void streamingFailed(StreamingErrorEvent arg0) {
+		}
 
-        }
+		@Override
+		public void streamingStarted(StreamingStartEvent arg0) {
+			mime = arg0.getMimeType();
+		}
 
-        @Override
-        public void streamingFinished(StreamingEndEvent arg0) {
-            fireFinishedEvent(mime);
+	}
 
-        }
+	public static class FinishedEvent extends ComponentEvent<VUserMedia> {
 
-        @Override
-        public void streamingStarted(StreamingStartEvent arg0) {
-            mime = arg0.getMimeType();
-        }
+		private String mime;
 
-    }
-    
-    public static class FinishedEvent extends ComponentEvent<VUserMedia>{
+		public FinishedEvent(VUserMedia source, boolean fromClient, String mime) {
+			super(source, fromClient);
+			this.mime = mime;
+		}
 
-        private String mime;
+		public String getMime() {
+			return mime;
+		}
 
-        public FinishedEvent(VUserMedia source, boolean fromClient, String mime) {
-            super(source, fromClient);
-            this.mime =mime;
-        }
-
-        public String getMime() {
-            return mime;
-        }
-
-    }
+	}
 
 }

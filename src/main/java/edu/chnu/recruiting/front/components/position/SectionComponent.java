@@ -88,6 +88,7 @@ public class SectionComponent extends VerticalLayout implements DropTarget<Quest
 		}
 		children.remove(index);
 		children.add(index + 1, e.getSource());
+		box.removeAll();
 		box.add(children);
 		return;
 	}
@@ -100,6 +101,7 @@ public class SectionComponent extends VerticalLayout implements DropTarget<Quest
 		}
 		children.remove(index);
 		children.add(index - 1, e.getSource());
+		box.removeAll();
 		box.add(children);
 		return;
 	}

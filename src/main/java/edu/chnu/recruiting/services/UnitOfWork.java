@@ -3,7 +3,7 @@ package edu.chnu.recruiting.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.chnu.recruiting.security.SecurityService;
+import edu.chnu.recruiting.security.SecurityContext;
 import lombok.Getter;
 
 @Service
@@ -23,5 +23,5 @@ public class UnitOfWork {
 	private PositionService positionService;
 	
 	@Autowired
-	private SecurityService securityService;
+	private SecurityContext securityContext;
 }
