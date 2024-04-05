@@ -35,14 +35,14 @@ public class AudioRecorder extends HorizontalLayout {
 		});
 		add(new HorizontalLayout(startRecording, stopRecording, mic));
 
-		this.makeButtonActive(false, startRecording, stopRecording);
-
+		this.makeButtonActive(false, stopRecording);
+		this.makeButtonActive(true, startRecording);
 		startRecording.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SUCCESS);
 
 		stopRecording.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR);
 
 		startRecording.addClickListener(e -> {
-			mic.startRecording(300_000); // 5 minutes max recording time
+			mic.startRecording("{audio:true}", 300_000); // 5 minutes max recording time
 
 			this.makeButtonActive(false, startRecording);
 			this.makeButtonActive(true, stopRecording);
@@ -59,20 +59,6 @@ public class AudioRecorder extends HorizontalLayout {
 		mic.addFinishedListener(e -> {
 			fireEvent(new RecordedEvent(this, currentRecording.toByteArray()));
 		});
-	}
-
-	public void openMedia() {
-		if (!mic.isOpen()) {
-			mic.openMicrophone();
-			this.makeButtonActive(true, startRecording);
-		}
-	}
-	
-	public void closeMedia() {
-		if (mic.isOpen()) {
-			mic.closeMedia();
-			this.makeButtonActive(false, startRecording);
-		}
 	}
 
 	private void makeButtonActive(boolean value, Button... buttons) {
