@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.position;
+package edu.chnu.recruiting.front.views.management.position;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +31,7 @@ import edu.chnu.recruiting.front.components.fields.picker.SalaryRangePicker;
 import edu.chnu.recruiting.front.components.position.FieldsToolbar;
 import edu.chnu.recruiting.front.components.position.FormСreationComponent;
 import edu.chnu.recruiting.front.layouts.MainLayout;
+import edu.chnu.recruiting.front.views.position.PositionView;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.utils.UiUtils;
@@ -38,7 +39,7 @@ import edu.chnu.recruiting.utils.enums.EmploymentType;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Create Position")
-@Route(value = "position-create", layout = MainLayout.class)
+@Route(value = "management/position-create", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
 public class PositionCreateView extends VerticalLayout {
 	Binder<Position> binder = new BeanValidationBinder<Position>(Position.class);

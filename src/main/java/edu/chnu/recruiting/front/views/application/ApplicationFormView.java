@@ -8,7 +8,6 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteParam;
 
 import edu.chnu.recruiting.exceptions.BadRequestException;
 import edu.chnu.recruiting.exceptions.ForbiddenException;
@@ -17,6 +16,7 @@ import edu.chnu.recruiting.exceptions.WizardFinishedException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.application.SectionForm.BackEvent;
 import edu.chnu.recruiting.front.views.application.SectionForm.NextEvent;
+import edu.chnu.recruiting.front.views.profile.ApplicationsProfileView;
 import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.services.AccessService;
@@ -90,7 +90,7 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 		try {
 			updateSectionComponent(this.applicationService.saveStepAndGetNext(applicationId, e.getStep()));
 		} catch (WizardFinishedException e2) {
-			UI.getCurrent().navigate(ApplicationView.class, new RouteParam("id", applicationId.toString()));
+			UI.getCurrent().navigate(ApplicationsProfileView.class);
 		}
 	}
 }

@@ -20,7 +20,7 @@ import edu.chnu.recruiting.front.views.LoginView;
 import edu.chnu.recruiting.front.views.ProfileView;
 import edu.chnu.recruiting.front.views.company.CompanyCreateView;
 import edu.chnu.recruiting.front.views.company.CompanyView;
-import edu.chnu.recruiting.front.views.position.PositionCreateView;
+import edu.chnu.recruiting.front.views.management.position.PositionCreateView;
 import edu.chnu.recruiting.front.views.position.PositionListingView;
 import edu.chnu.recruiting.front.views.registration.RegistrationConfirmView;
 import edu.chnu.recruiting.front.views.registration.SignUpView;
