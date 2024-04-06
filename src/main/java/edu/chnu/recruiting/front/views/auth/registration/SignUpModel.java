@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.registration;
+package edu.chnu.recruiting.front.views.auth.registration;
 
 import edu.chnu.recruiting.utils.constants.RegexPatterns;
 import jakarta.validation.constraints.Email;
@@ -31,6 +31,4 @@ public class SignUpModel {
 	
 	@NotBlank
 	private String confirmPassword;
-	
-	private boolean asCompany;
 }

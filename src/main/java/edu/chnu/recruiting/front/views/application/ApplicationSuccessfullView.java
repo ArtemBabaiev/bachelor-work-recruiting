@@ -12,7 +12,7 @@ import edu.chnu.recruiting.front.layouts.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
 @Route(value = "Application Successfull", layout = MainLayout.class)
-@PageTitle("application-success")
+@PageTitle("application/success")
 @PermitAll
 public class ApplicationSuccessfullView extends VerticalLayout {
 	public ApplicationSuccessfullView() {

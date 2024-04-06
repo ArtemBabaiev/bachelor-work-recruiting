@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.registration;
+package edu.chnu.recruiting.front.views.auth.registration;
 
 import java.util.stream.Stream;
 
@@ -36,7 +36,6 @@ public class SignUpForm extends VerticalLayout {
 	private TextField email = new TextField("Email");
 	private PasswordField password = new PasswordField("Password");
 	private PasswordField confirmPassword = new PasswordField("Confirm password");
-	private Checkbox asCompany = new Checkbox("Register as Recruiter");
 
 	private Button confirmBtn = new Button("Sign up");
 	private Button cancelBtn = new Button("Cancel");
@@ -59,7 +58,7 @@ public class SignUpForm extends VerticalLayout {
 
 		HorizontalLayout hz = new HorizontalLayout(confirmBtn, cancelBtn);
 
-		add(title, username, email, password, confirmPassword, asCompany, hz);
+		add(title, username, email, password, confirmPassword, hz);
 	}
 
 	private void configureComponents() {

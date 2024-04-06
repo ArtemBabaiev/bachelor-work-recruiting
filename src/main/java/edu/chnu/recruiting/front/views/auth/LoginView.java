@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views;
+package edu.chnu.recruiting.front.views.auth;
 
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
@@ -36,6 +36,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 		i18n.setErrorMessage(errorMessage);
 		login.setI18n(i18n);
 		login.setAction("login");
+		login.setForgotPasswordButtonVisible(false);
 		
 	}
 

@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.company;
+package edu.chnu.recruiting.front.views.management.company;
 
 import org.springframework.data.domain.PageRequest;
 
@@ -9,12 +9,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import edu.chnu.recruiting.front.layouts.MainLayout;
-import edu.chnu.recruiting.front.views.company.CompanyForm.SaveEvent;
+import edu.chnu.recruiting.front.views.management.company.CompanyForm.SaveEvent;
 import edu.chnu.recruiting.services.CompanyService;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Edit Company")
-@Route(value = "company-edit", layout = MainLayout.class)
+@Route(value = "management/company-edit", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY" })
 public class CompanyEditView extends Div {
 	private CompanyService companyService;

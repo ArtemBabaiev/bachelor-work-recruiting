@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.registration;
+package edu.chnu.recruiting.front.views.auth.registration;
 
 import java.util.List;
 

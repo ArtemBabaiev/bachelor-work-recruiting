@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.company;
+package edu.chnu.recruiting.front.views.management.company;
 
 import org.springframework.data.domain.PageRequest;
 
@@ -15,7 +15,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
-import edu.chnu.recruiting.front.views.company.CompanyForm.SaveEvent;
+import edu.chnu.recruiting.front.views.management.company.CompanyForm.SaveEvent;
 import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.services.CompanyService;
@@ -23,7 +23,7 @@ import edu.chnu.recruiting.services.UnitOfWork;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Create Company")
-@Route(value = "company-create", layout = MainLayout.class)
+@Route(value = "management/company-create", layout = MainLayout.class)
 @RolesAllowed({ "USER" })
 public class CompanyCreateView extends Div {
 	private CompanyService companyService;

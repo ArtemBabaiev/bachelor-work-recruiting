@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.registration;
+package edu.chnu.recruiting.front.views.auth.registration;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
@@ -12,8 +12,8 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.views.HomeView;
-import edu.chnu.recruiting.front.views.registration.SignUpForm.CancelEvent;
-import edu.chnu.recruiting.front.views.registration.SignUpForm.SaveEvent;
+import edu.chnu.recruiting.front.views.auth.registration.SignUpForm.CancelEvent;
+import edu.chnu.recruiting.front.views.auth.registration.SignUpForm.SaveEvent;
 import edu.chnu.recruiting.services.UserService;
 
 @Route("sign-up") 

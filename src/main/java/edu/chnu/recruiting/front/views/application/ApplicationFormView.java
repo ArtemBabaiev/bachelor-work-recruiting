@@ -25,7 +25,7 @@ import edu.chnu.recruiting.services.UnitOfWork;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.PermitAll;
 
-@Route(value = "application-form", layout = MainLayout.class)
+@Route(value = "application/form", layout = MainLayout.class)
 @PageTitle("Application Form")
 @PermitAll
 public class ApplicationFormView extends VerticalLayout implements BeforeEnterObserver {

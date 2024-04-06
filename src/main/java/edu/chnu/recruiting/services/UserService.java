@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.events.registration.OnRegistrationCompleteEvent;
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
-import edu.chnu.recruiting.front.views.registration.SignUpModel;
+import edu.chnu.recruiting.front.views.auth.registration.SignUpModel;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.UserRepository;

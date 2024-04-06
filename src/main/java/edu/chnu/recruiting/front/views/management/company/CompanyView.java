@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.company;
+package edu.chnu.recruiting.front.views.management.company;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -13,7 +13,7 @@ import edu.chnu.recruiting.services.CompanyService;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Company")
-@Route(value = "company",layout = MainLayout.class)
+@Route(value = "management/company",layout = MainLayout.class)
 @RolesAllowed({"COMPANY"})
 public class CompanyView extends Div{
 	private Grid<User> grid = new Grid<>(User.class, false);

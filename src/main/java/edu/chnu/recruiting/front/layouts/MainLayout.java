@@ -16,14 +16,14 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 
-import edu.chnu.recruiting.front.views.LoginView;
-import edu.chnu.recruiting.front.views.ProfileView;
-import edu.chnu.recruiting.front.views.company.CompanyCreateView;
-import edu.chnu.recruiting.front.views.company.CompanyView;
+import edu.chnu.recruiting.front.views.auth.LoginView;
+import edu.chnu.recruiting.front.views.auth.registration.RegistrationConfirmView;
+import edu.chnu.recruiting.front.views.auth.registration.SignUpView;
+import edu.chnu.recruiting.front.views.management.company.CompanyCreateView;
+import edu.chnu.recruiting.front.views.management.company.CompanyView;
 import edu.chnu.recruiting.front.views.management.position.PositionCreateView;
 import edu.chnu.recruiting.front.views.position.PositionListingView;
-import edu.chnu.recruiting.front.views.registration.RegistrationConfirmView;
-import edu.chnu.recruiting.front.views.registration.SignUpView;
+import edu.chnu.recruiting.front.views.profile.ProfileView;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.utils.PropertiesReader;
 

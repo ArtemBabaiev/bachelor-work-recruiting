@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.company;
+package edu.chnu.recruiting.front.views.management.company;
 
 import java.util.stream.Stream;
 
