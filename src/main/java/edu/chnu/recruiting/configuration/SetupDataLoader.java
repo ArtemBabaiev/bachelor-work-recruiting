@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.repositories.RoleRepository;
-import edu.chnu.recruiting.utils.constants.StarterRoles;
+import edu.chnu.recruiting.utils.enums.StarterRoles;
 import jakarta.transaction.Transactional;
 
 @Component

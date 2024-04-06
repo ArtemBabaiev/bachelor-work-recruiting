@@ -1,6 +1,5 @@
 package edu.chnu.recruiting.services;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -12,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.vaadin.flow.router.NotFoundException;
-
 import edu.chnu.recruiting.exceptions.ForbiddenException;
 import edu.chnu.recruiting.exceptions.WizardFinishedException;
 import edu.chnu.recruiting.models.Application;
@@ -22,7 +19,6 @@ import edu.chnu.recruiting.models.formModels.ApplicationFormModel;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.ApplicationGridVM;
 import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
-import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.repositories.ApplicationRepository;
@@ -66,12 +62,7 @@ public class ApplicationService {
 	}
 
 	public Application getApplicationForm(UUID id) {
-		Application app = this.applicationRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("Application not found"));
-		if (!securityContext.getAuthenticatedUser().getId().equals(app.getUser().getId())) {
-			throw new ForbiddenException();
-		}
-		return app;
+		return this.applicationRepository.findById(id).orElse(null);
 	}
 
 	public Application saveApplication(Application app, int filledStep) {

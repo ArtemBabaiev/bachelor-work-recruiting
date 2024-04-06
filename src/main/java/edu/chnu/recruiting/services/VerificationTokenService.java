@@ -1,7 +1,6 @@
 package edu.chnu.recruiting.services;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +43,9 @@ public class VerificationTokenService {
 		return tokenRepository.findByToken(VerificationToken);
 	}
 
-	public User confirmRegistration(String token) {
+	public User confirmRegistration(String token) throws TokenInvalidException, VerificationTokenExpiredException {
 		VerificationToken verificationToken = this.getVerificationToken(token);
-		
+
 		if (verificationToken == null) {
 			throw new TokenInvalidException();
 		}

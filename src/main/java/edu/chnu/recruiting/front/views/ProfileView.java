@@ -12,7 +12,7 @@ import edu.chnu.recruiting.front.views.company.CompanyView;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.services.UnitOfWork;
-import edu.chnu.recruiting.utils.constants.StarterRoles;
+import edu.chnu.recruiting.utils.enums.StarterRoles;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Profile")

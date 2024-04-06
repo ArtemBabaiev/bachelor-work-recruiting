@@ -17,7 +17,7 @@ import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.CompanyViewModel;
 import edu.chnu.recruiting.repositories.CompanyRepository;
 import edu.chnu.recruiting.security.SecurityContext;
-import edu.chnu.recruiting.utils.constants.StarterRoles;
+import edu.chnu.recruiting.utils.enums.StarterRoles;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -38,7 +38,7 @@ public class CompanyService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	public Company createCompany(CompanyFormModel model) {
+	public Company createCompany(CompanyFormModel model) throws AlreadyExistsException {
 		if (companyRepository.existsByName(model.getName())) {
 			throw new AlreadyExistsException("Company with such name already exists");
 		}

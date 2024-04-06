@@ -3,6 +3,7 @@ package edu.chnu.recruiting.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
 import edu.chnu.recruiting.security.SecurityContext;
@@ -18,5 +19,9 @@ public class AccessService {
 	public boolean canUserManageApplication(ApplicationViewModel model) {
 		Company comp = this.companyService.getCompanyByUser(this.securityContext.getAuthenticatedUser());
 		return model.getPositionCompanyId().equals(comp.getId());
+	}
+	
+	public boolean canUserEditApplication(Application application) {
+		return securityContext.getAuthenticatedUser().getId().equals(application.getUser().getId());
 	}
 }

@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.utils.constants;
+package edu.chnu.recruiting.utils.enums;
 
 import lombok.Getter;
 
