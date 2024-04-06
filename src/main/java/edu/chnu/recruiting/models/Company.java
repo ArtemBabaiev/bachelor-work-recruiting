@@ -23,6 +23,16 @@ public class Company {
 	
 	private String name;
 	
+	private String description;
+	
+	private String industry;
+	
+	private String contactPhone;
+	
+	private String email;
+	
+	private String address;
+	
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<User> recruiters;
 	

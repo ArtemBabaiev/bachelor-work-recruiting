@@ -5,8 +5,11 @@ import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.Company;
+import edu.chnu.recruiting.models.formModels.CompanyFormModel;
+import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
 import edu.chnu.recruiting.security.SecurityContext;
+import edu.chnu.recruiting.utils.enums.StarterRoles;
 
 @Service
 public class AccessService {
@@ -23,5 +26,10 @@ public class AccessService {
 	
 	public boolean canUserEditApplication(Application application) {
 		return securityContext.getAuthenticatedUser().getId().equals(application.getUser().getId());
+	}
+	
+	public boolean canUserEditCompany(CompanyFormModel model) {
+		User user = this.securityContext.getAuthenticatedUser();
+		return model.getOwner().getId().equals(user.getId());
 	}
 }

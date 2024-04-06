@@ -8,49 +8,51 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.provider.CallbackDataProvider.FetchCallback;
-import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.shared.Registration;
 
 import edu.chnu.recruiting.models.formModels.CompanyFormModel;
-import edu.chnu.recruiting.models.security.User;
 import lombok.Getter;
 
 public class CompanyForm extends VerticalLayout {
 	private Binder<CompanyFormModel> binder = new BeanValidationBinder<CompanyFormModel>(CompanyFormModel.class);
 
 	private TextField name = new TextField("Company name");
-	private MultiSelectComboBox<User> recruiters = new MultiSelectComboBox<>("Recruiters");
-
+	private TextArea description = new TextArea("About us/Description");
+	private TextField industry = new TextField("Industry(-ies)");
+	private TextField contactPhone = new TextField("Contact phone");
+	private EmailField email = new EmailField("Contact email");
+	private TextField address = new TextField("Address");
+	
 	private Button createBtn = new Button("Save");
 	private Button cancelBtn = new Button("Cancel");
 
-	public CompanyForm(CompanyFormModel model, FetchCallback<User, String> fetchCallback,
-			SerializableFunction<String, String> filterConverter) {
+	public CompanyForm(CompanyFormModel model) {
 		binder.bindInstanceFields(this);
 		configureComponents();
-		this.recruiters.setItemsWithFilterConverter(fetchCallback, filterConverter);
+		
 		binder.addStatusChangeListener(e -> createBtn.setEnabled(binder.isValid()));
 		binder.setBean(model);
 
-		add(name, recruiters, new HorizontalLayout(cancelBtn, createBtn));
+		add(name, description, industry, contactPhone, email, address,
+				new HorizontalLayout(cancelBtn, createBtn));
 
 	}
 
 	private void configureComponents() {
-		this.setSize(name, recruiters);
-
-		recruiters.setItemLabelGenerator(User::getUsername);
+		this.setWidth("30vw", name, description, industry, contactPhone, email, address);
 
 		createBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		cancelBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
+		contactPhone.setAllowedCharPattern("[0-9()+-]");
+		
 		createBtn.addClickListener(e -> handleCreateClick(e));
 		cancelBtn.addClickListener(e -> fireEvent(new CancelEvent(this)));
 	}
@@ -60,8 +62,8 @@ public class CompanyForm extends VerticalLayout {
 			fireEvent(new SaveEvent(this, binder.getBean()));
 	}
 
-	private void setSize(HasSize... components) {
-		Stream.of(components).forEach(comp -> comp.setWidth("315px"));
+	private void setWidth(String width, HasSize... components) {
+		Stream.of(components).forEach(comp -> comp.setWidth(width));
 	}
 
 	public Registration addSaveListener(ComponentEventListener<SaveEvent> listener) {

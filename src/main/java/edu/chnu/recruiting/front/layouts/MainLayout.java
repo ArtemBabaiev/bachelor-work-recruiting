@@ -19,7 +19,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import edu.chnu.recruiting.front.views.auth.LoginView;
 import edu.chnu.recruiting.front.views.auth.registration.RegistrationConfirmView;
 import edu.chnu.recruiting.front.views.auth.registration.SignUpView;
-import edu.chnu.recruiting.front.views.management.company.CompanyCreateView;
+import edu.chnu.recruiting.front.views.management.company.CompanyFormView;
 import edu.chnu.recruiting.front.views.management.company.CompanyView;
 import edu.chnu.recruiting.front.views.management.position.PositionCreateView;
 import edu.chnu.recruiting.front.views.position.PositionListingView;
@@ -79,7 +79,7 @@ public class MainLayout extends AppLayout {
     			new SideNavItem("Confirmation", RegistrationConfirmView.class),
     			new SideNavItem("Profile", ProfileView.class),
     			new SideNavItem("Company", CompanyView.class),
-    			new SideNavItem("Company-create", CompanyCreateView.class),
+    			new SideNavItem("Company Form", CompanyFormView.class),
     			new SideNavItem("Position-create", PositionCreateView.class),
     			new SideNavItem("Positions listing", PositionListingView.class)
     			);
