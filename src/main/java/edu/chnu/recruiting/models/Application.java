@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import edu.chnu.recruiting.models.security.User;
@@ -34,6 +35,11 @@ public class Application {
 	private String status;
 	private String rejectReason;
 	
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime startedAt;
+	
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime submittedAt;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Position position;

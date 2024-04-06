@@ -2,10 +2,10 @@ spring:
   application:
     name: Recruiting App
   datasource: 
-    url: jdbc:mariadb://localhost:3306/bachelor-recruiting?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/bachelor-recruiting?createDatabaseIfNotExist=true
     username: root
     password: password
-    driver-class-name: org.mariadb.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     #show-sql: true
     hibernate:
@@ -13,8 +13,8 @@ spring:
     database-platform: 
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MariaDBDialect
-        globally_quoted_identifiers: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        #globally_quoted_identifiers: true
   mail:
     host: smtp.gmail.com
     port: 587

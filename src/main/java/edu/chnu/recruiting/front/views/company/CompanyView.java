@@ -7,8 +7,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import edu.chnu.recruiting.front.layouts.MainLayout;
-import edu.chnu.recruiting.front.views.viewModels.CompanyViewModel;
 import edu.chnu.recruiting.models.security.User;
+import edu.chnu.recruiting.models.viewModels.CompanyViewModel;
 import edu.chnu.recruiting.services.CompanyService;
 import jakarta.annotation.security.RolesAllowed;
 

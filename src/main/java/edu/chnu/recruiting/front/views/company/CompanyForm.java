@@ -18,6 +18,7 @@ import com.vaadin.flow.data.provider.CallbackDataProvider.FetchCallback;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.shared.Registration;
 
+import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.models.security.User;
 import lombok.Getter;
 

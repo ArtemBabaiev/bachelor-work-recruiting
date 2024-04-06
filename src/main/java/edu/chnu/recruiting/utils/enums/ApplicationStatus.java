@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public enum ApplicationStatuses {
+public enum ApplicationStatus {
 	PENDING_DATA("pending data"),
 	PENDING_REVIEW("pending review"),
 	ACCEPTED("accepted"),
@@ -14,19 +14,19 @@ public enum ApplicationStatuses {
 	
 	private String label;
 	
-	private ApplicationStatuses(String label) {
+	private ApplicationStatus(String label) {
 		this.label = label;
 	}
 	
 	public static List<String> getAllValues() {
-		return Arrays.stream(ApplicationStatuses.values()).map(ApplicationStatuses::toString).toList();
+		return Arrays.stream(ApplicationStatus.values()).map(ApplicationStatus::toString).toList();
 	}
 	
 	public static String getLabel(String e) {
-		return ApplicationStatuses.valueOf(e).getLabel();
+		return ApplicationStatus.valueOf(e).getLabel();
 	}
 	
 	public static boolean editable(String status) {
-		 return ApplicationStatuses.valueOf(status).equals(PENDING_DATA);
+		 return ApplicationStatus.valueOf(status).equals(PENDING_DATA);
 	}
 }

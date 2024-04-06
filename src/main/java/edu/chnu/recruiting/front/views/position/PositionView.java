@@ -22,7 +22,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.apply.ApplyView;
-import edu.chnu.recruiting.front.views.viewModels.PositionViewModel;
+import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.services.UnitOfWork;
 import edu.chnu.recruiting.services.UserService;

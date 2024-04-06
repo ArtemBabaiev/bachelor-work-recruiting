@@ -24,4 +24,10 @@ public class UnitOfWork {
 	
 	@Autowired
 	private SecurityContext securityContext;
+	
+	@Autowired
+	private ApplicationService applicationService;
+	
+	@Autowired
+	private AccessService accessService;
 }

@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.company;
+package edu.chnu.recruiting.models.formModels;
 
 import java.util.HashSet;
 import java.util.Set;

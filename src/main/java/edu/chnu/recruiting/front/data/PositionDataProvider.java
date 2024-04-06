@@ -8,8 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import com.vaadin.flow.data.provider.AbstractBackEndDataProvider;
 import com.vaadin.flow.data.provider.Query;
 
-import edu.chnu.recruiting.front.views.viewModels.PositionViewModel;
 import edu.chnu.recruiting.models.Position;
+import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.utils.VaadinToSpring;
 

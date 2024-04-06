@@ -1,5 +1,7 @@
 package edu.chnu.recruiting.repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
 
 @Repository
@@ -17,6 +20,7 @@ public interface PositionRepository extends JpaRepository<Position, Long>, JpaSp
 
 	Page<Position> findByNameContains(String name, Pageable page);
 
+	List<Position> findByCompany(Company company);
 	
 	@Modifying
 	@Query("UPDATE Position p SET p.active = :uActive WHERE p.id = :sId")

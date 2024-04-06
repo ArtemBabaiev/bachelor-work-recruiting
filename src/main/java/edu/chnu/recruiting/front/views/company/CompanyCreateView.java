@@ -16,6 +16,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.company.CompanyForm.SaveEvent;
+import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.services.CompanyService;
 import edu.chnu.recruiting.services.UnitOfWork;

@@ -19,7 +19,7 @@ import edu.chnu.recruiting.front.views.application.SectionForm.NextEvent;
 import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.services.ApplicationService;
-import edu.chnu.recruiting.utils.enums.ApplicationStatuses;
+import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.PermitAll;
 
 @Route(value = "application-form", layout = MainLayout.class)
@@ -44,8 +44,8 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 			throw new BadRequestException();
 		}
 		applicationId = UUID.fromString(optId.get());
-		Application application = this.applicationService.getApplication(applicationId);
-		if (!ApplicationStatuses.editable(application.getStatus())) {
+		Application application = this.applicationService.getApplicationForm(applicationId);
+		if (!ApplicationStatus.editable(application.getStatus())) {
 			throw new ApplicationNonEditableException();
 		}
 		if (application.getWizardData().getCurrentStep() == null) {

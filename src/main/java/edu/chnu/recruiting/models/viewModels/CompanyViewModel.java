@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.views.viewModels;
+package edu.chnu.recruiting.models.viewModels;
 
 import java.util.List;
 

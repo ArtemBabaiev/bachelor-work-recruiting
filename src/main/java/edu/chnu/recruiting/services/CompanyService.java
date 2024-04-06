@@ -10,11 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
-import edu.chnu.recruiting.front.views.company.CompanyFormModel;
-import edu.chnu.recruiting.front.views.viewModels.CompanyViewModel;
 import edu.chnu.recruiting.models.Company;
+import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
+import edu.chnu.recruiting.models.viewModels.CompanyViewModel;
 import edu.chnu.recruiting.repositories.CompanyRepository;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.utils.constants.StarterRoles;
