@@ -17,7 +17,7 @@ import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.formModels.ApplicationFormModel;
 import edu.chnu.recruiting.models.security.User;
-import edu.chnu.recruiting.models.viewModels.ApplicationGridVM;
+import edu.chnu.recruiting.models.viewModels.ApplicationMgmtGridVM;
 import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.models.wizard.WizardStep;
@@ -95,9 +95,13 @@ public class ApplicationService {
 		}
 	}
 
-	public List<ApplicationGridVM> getAllBy(Specification<Application> specification, Pageable page) {
-		return this.applicationRepository.findAll(specification, page).getContent().stream()
-				.map(e -> modelMapper.map(e, ApplicationGridVM.class)).collect(Collectors.toList());
+	public List<Application> getAllBy(Specification<Application> specification, Pageable page) {
+		return this.applicationRepository.findAll(specification, page).getContent();
+	}
+
+	public <T> List<T> getAllBy(Specification<Application> specification, Pageable page, Class<T> modelType) {
+		return getAllBy(specification, page).stream().map(e -> modelMapper.map(e, modelType))
+				.collect(Collectors.toList());
 	}
 
 	public long countBy(Specification<Application> specification) {

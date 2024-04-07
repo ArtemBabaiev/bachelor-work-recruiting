@@ -7,9 +7,9 @@ import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.specification.GenericSpecification;
 import edu.chnu.recruiting.specification.SearchCriteria;
 
-public class ApplicationFilter {
-	private SearchCriteria firstName = new SearchCriteria("firstName", ":", "");
-	private SearchCriteria lastName = new SearchCriteria("lastName", ":", "");
+public class ApplicationMgmtFilter implements IFilter<Application>{
+	private SearchCriteria firstName = new SearchCriteria("firstName", "like", "");
+	private SearchCriteria lastName = new SearchCriteria("lastName", "like", "");
 	private SearchCriteria position = new SearchCriteria("position", ":", null);
 	private SearchCriteria status = new SearchCriteria("status", "!=", null);
 	

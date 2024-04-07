@@ -2,50 +2,37 @@ package edu.chnu.recruiting.front.views.profile;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import edu.chnu.recruiting.front.layouts.MainLayout;
-import edu.chnu.recruiting.front.views.management.company.CompanyCreateView;
-import edu.chnu.recruiting.front.views.management.company.CompanyView;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.services.UnitOfWork;
-import edu.chnu.recruiting.utils.enums.StarterRoles;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Profile")
-@Route(value = "profile",layout = MainLayout.class)
+@Route(value = "profile/account", layout = MainLayout.class)
 @PermitAll
-public class ProfileView extends Div{
+public class ProfileView extends VerticalLayout {
 
-	private Button registerCompnanyBtn = new Button("Register company");
-	private Button viewCompnanyBtn = new Button("View company");
-	
+	private ProfileMenuComponent menuBar = new ProfileMenuComponent();
+
 	private SecurityContext securityContext;
-	
+
 	private User loggedInUser;
-	
+
 	public ProfileView(UnitOfWork uow) {
 		this.securityContext = uow.getSecurityContext();
 		loggedInUser = this.securityContext.getAuthenticatedUser();
-		configureComponents();
-		if (loggedInUser != null && !loggedInUser.getRole().getName().equals(StarterRoles.USER.getName())) {
-			add(viewCompnanyBtn);			
-		} else {
-			add(registerCompnanyBtn);
-		}
+		add(menuBar, new H2(loggedInUser.getUsername()));
 	}
 
-	private void configureComponents() {
-		registerCompnanyBtn.addClickListener(e -> {
-			UI.getCurrent().navigate(CompanyCreateView.class);
-		});
-		
-		viewCompnanyBtn.addClickListener(e -> {
-			UI.getCurrent().navigate(CompanyView.class);
-		});
-		
-	}
 }

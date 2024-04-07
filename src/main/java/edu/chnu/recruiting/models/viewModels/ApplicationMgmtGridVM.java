@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ApplicationGridVM {
+public class ApplicationMgmtGridVM {
 	
 	private UUID id;
 	private String lastName;

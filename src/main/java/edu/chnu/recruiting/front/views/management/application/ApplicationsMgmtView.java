@@ -17,13 +17,15 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParameters;
 
 import edu.chnu.recruiting.front.data.ApplicationDataProvider;
-import edu.chnu.recruiting.front.data.ApplicationFilter;
+import edu.chnu.recruiting.front.data.ApplicationMgmtFilter;
+import edu.chnu.recruiting.front.data.IFilter;
 import edu.chnu.recruiting.front.data.PositionDataProvider;
 import edu.chnu.recruiting.front.data.PositionFilter;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.TestExampleView;
+import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.Position;
-import edu.chnu.recruiting.models.viewModels.ApplicationGridVM;
+import edu.chnu.recruiting.models.viewModels.ApplicationMgmtGridVM;
 import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.ApplicationService;
 import edu.chnu.recruiting.services.PositionService;
@@ -39,10 +41,10 @@ public class ApplicationsMgmtView extends VerticalLayout {
 	private PositionService positionService;
 	private ApplicationService applicationService;
 
-	private Grid<ApplicationGridVM> grid;
-	private ApplicationDataProvider dataProvider;
-	private ApplicationFilter applicatinoFilter = new ApplicationFilter();
-	private ConfigurableFilterDataProvider<ApplicationGridVM, Void, ApplicationFilter> filterDataProvider;
+	private Grid<ApplicationMgmtGridVM> grid;
+	private ApplicationDataProvider<ApplicationMgmtGridVM> dataProvider;
+	private ApplicationMgmtFilter applicatinoFilter = new ApplicationMgmtFilter();
+	private ConfigurableFilterDataProvider<ApplicationMgmtGridVM, Void, IFilter<Application>> filterDataProvider;
 
 	private TextField nameSearch = new TextField();
 	private ComboBox<Position> positionsBox = new ComboBox<Position>();
@@ -52,8 +54,8 @@ public class ApplicationsMgmtView extends VerticalLayout {
 		this.applicationService = uow.getApplicationService();
 		this.positionService = uow.getPositionService();
 
-		grid = new Grid<>(ApplicationGridVM.class, false);
-		dataProvider = new ApplicationDataProvider(this.applicationService);
+		grid = new Grid<>(ApplicationMgmtGridVM.class, false);
+		dataProvider = new ApplicationDataProvider<ApplicationMgmtGridVM>(this.applicationService, ApplicationMgmtGridVM.class);
 		filterDataProvider = dataProvider.withConfigurableFilter();
 		filterDataProvider.setFilter(applicatinoFilter);
 
@@ -101,32 +103,9 @@ public class ApplicationsMgmtView extends VerticalLayout {
 		grid.addColumn(p -> p.getLastName(), "lastName").setHeader("Last name");
 		grid.addColumn(p -> p.getStartedAt(), "startedAt").setHeader("Started at");
 		grid.addColumn(p -> p.getSubmittedAt(), "submittedAt").setHeader("Submitted at");
-		grid.addComponentColumn(p -> getStatusBadge(p.getStatus())).setHeader("Status");
+		grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");
 		grid.addComponentColumn(p -> new Button("Details", e -> UI.getCurrent().navigate(ApplicationMgmtView.class,
 				new RouteParameters("appId", p.getId().toString()))));
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
-	}
-
-	private Component getStatusBadge(String status) {
-		Span badge = null;
-		switch (ApplicationStatus.valueOf(status)) {
-		case ACCEPTED:
-			badge = new Span(ApplicationStatus.ACCEPTED.getLabel());
-			badge.getElement().getThemeList().add("badge success");
-			break;
-		case PENDING_DATA:
-			badge = new Span(ApplicationStatus.ACCEPTED.getLabel());
-			badge.getElement().getThemeList().add("badge contrast");
-			break;
-		case PENDING_REVIEW:
-			badge = new Span(ApplicationStatus.PENDING_REVIEW.getLabel());
-			badge.getElement().getThemeList().add("badge");
-			break;
-		case REJECTED:
-			badge = new Span(ApplicationStatus.REJECTED.getLabel());
-			badge.getElement().getThemeList().add("badge error");
-			break;
-		}
-		return badge;
 	}
 }
