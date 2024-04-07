@@ -1,5 +1,5 @@
 package edu.chnu.recruiting.exceptions;
 
-public class VerificationTokenExpiredException extends RuntimeException{
+public class VerificationTokenExpiredException extends Exception{
 
 }

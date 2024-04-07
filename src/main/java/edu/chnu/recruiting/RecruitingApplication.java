@@ -2,6 +2,8 @@ package edu.chnu.recruiting;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
@@ -20,8 +22,9 @@ import com.vaadin.flow.theme.lumo.Lumo;
 
 @SpringBootApplication
 @EnableAsync
-@Theme(value = "recruiting")
+@Theme(value = "recruiting", variant = Lumo.DARK)
 @Push
+@EntityScan(basePackageClasses = { RecruitingApplication.class, Jsr310JpaConverters.class })
 public class RecruitingApplication implements AppShellConfigurator {
 
 	public static void main(String[] args) {

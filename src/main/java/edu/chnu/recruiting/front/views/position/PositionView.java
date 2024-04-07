@@ -20,9 +20,11 @@ import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import edu.chnu.recruiting.exceptions.BadRequestException;
+import edu.chnu.recruiting.exceptions.ResourceNotFoundException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.apply.ApplyView;
-import edu.chnu.recruiting.front.views.viewModels.PositionViewModel;
+import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.services.UnitOfWork;
 import edu.chnu.recruiting.services.UserService;
@@ -49,8 +51,17 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
-		this.posId = Long.parseLong(event.getRouteParameters().get("posId").get());
-		model = positionService.getPositionVM(posId);
+		try {
+			this.posId = Long.parseLong(event.getRouteParameters().get("posId").get());
+			model = positionService.getPositionVM(posId);
+		} catch (Exception e) {
+			event.rerouteToError(BadRequestException.class);
+			return;
+		}
+		if (model == null) {
+			event.rerouteToError(ResourceNotFoundException.class);
+			return;
+		}
 		initComponent();
 	}
 

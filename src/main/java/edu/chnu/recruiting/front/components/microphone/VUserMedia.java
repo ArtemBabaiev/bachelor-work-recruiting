@@ -21,7 +21,6 @@ import com.vaadin.flow.shared.Registration;
 @Tag("v-microphone")
 public class VUserMedia extends Component {
 
-	private boolean isOn;
 	private boolean recording;
 
 	public VUserMedia() {
@@ -37,42 +36,47 @@ public class VUserMedia extends Component {
 		fireEvent(new FinishedEvent(this, true, mime));
 	}
 
-	public void startRecording(long lengthInMS) {
-		if (!isOn) {
-			throw new IllegalStateException("Media is not on");
-		}
+	public void startRecording(String optionsJson, long lengthInMS) {
 		recording = true;
 		getElement().executeJs("""
-				let target = this.getAttribute("target");;
-				this.recorder = new MediaRecorder(this.stream);
-				this.recorder.ondataavailable = e => {
-				    let formData = new FormData();
-				    formData.append("data", e.data);
-				    fetch(target, {
-				        method: "post",
-				        body: formData
-				    }).then(response => console.log(response));
-				}
-				this.recorder.start();
-				setTimeout(() => {
-				    if (this.recorder.state === "recording") {
-				        this.recorder.stop();
+				if (this.stream == null) {
+				    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+				        navigator.mediaDevices.getUserMedia(%s).then(stream => {
+				            this.stream = stream;
+				            let target = this.getAttribute("target");;
+				            this.recorder = new MediaRecorder(this.stream);
+				            this.recorder.ondataavailable = e => {
+				                let formData = new FormData();
+				                formData.append("data", e.data);
+				                fetch(target, {
+				                    method: "post",
+				                    body: formData
+				                }).then(response => console.log(response));
+				            }
+				            this.recorder.start();
+				            setTimeout(() => {
+				                if (this.recorder.state === "recording") {
+				                    this.recorder.stop();
+				                    if (this.stream != null) {
+				                        this.stream.getTracks().forEach(t => {
+				                            t.stop();
+				                        });
+				                        this.stream = null;
+				                    }
+				                }
+				            }, %s);
+				        });
 				    }
-				}, %s);
-				    """.formatted(lengthInMS));
+				}
+								    """.formatted(optionsJson, lengthInMS));
 	}
 
 	public void stopRecording() {
 		if (!recording) {
 			throw new IllegalStateException("Not recording");
 		}
-		getElement().executeJs("this.recorder.stop()");
-		recording = false;
-	}
-
-	public void closeMedia() {
-		isOn = false;
 		getElement().executeJs("""
+				this.recorder.stop()
 				if(this.stream!=null) {
 				    this.stream.getTracks().forEach( t=> {
 				        t.stop();
@@ -80,33 +84,9 @@ public class VUserMedia extends Component {
 				    this.stream = null;
 				}
 				""");
+		recording = false;
 	}
 
-	public void openMicrophone() {
-		openMedia("{audio:true}");
-	}
-
-	public void openCamera() {
-		openMedia("{audio:true,video:true}");
-	}
-
-	public void openMedia(String optionsJson) {
-		isOn = true;
-		getElement().executeJs("""
-				if(this.stream == null) {
-				    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-				        navigator.mediaDevices.getUserMedia(%s).then(stream => {
-				            this.stream = stream;
-				            this.srcObject = this.stream;
-				        });
-				    }
-				}
-				        """.formatted(optionsJson));
-	}
-
-	public boolean isOpen() {
-		return isOn;
-	}
 
 	public Registration addFinishedListener(ComponentEventListener<FinishedEvent> listener) {
 		return addListener(FinishedEvent.class, listener);

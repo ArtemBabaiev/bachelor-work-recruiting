@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.services;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,29 +11,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.vaadin.flow.router.NotFoundException;
-
 import edu.chnu.recruiting.exceptions.NoAuthorizationException;
 import edu.chnu.recruiting.front.components.position.FormСreationComponent;
-import edu.chnu.recruiting.front.views.viewModels.PositionViewModel;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.security.User;
+import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.repositories.PositionRepository;
 import edu.chnu.recruiting.security.SecurityContext;
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class PositionService {
 	@Autowired
 	private WizardService wizardService;
 
-	@Autowired
-	private UserService userService;
-	
 	@Autowired
 	private SecurityContext securityContext;
 
@@ -54,27 +48,28 @@ public class PositionService {
 		return positionRepository.save(position);
 
 	}
-	
-	public List<PositionViewModel> getAllBy(Specification<Position> specification, Pageable page){
+
+	public List<PositionViewModel> getAllBy(Specification<Position> specification, Pageable page) {
 		return this.positionRepository.findAll(specification, page).getContent().stream()
 				.map(e -> modelMapper.map(e, PositionViewModel.class)).collect(Collectors.toList());
 	}
-	
+
 	public long countBy(Specification<Position> specification) {
 		return this.positionRepository.count(specification);
 	}
-	
+
 	public Position getPosition(Long id) {
 		return this.positionRepository.findById(id).orElse(null);
 	}
 
 	public PositionViewModel getPositionVM(Long id) {
-		Position model = this.positionRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("Position not found"));
-		PositionViewModel vm = modelMapper.map(model, PositionViewModel.class);
-		return vm;
+		Position model = this.positionRepository.findById(id).orElse(null);
+		if (model == null) {
+			return null;
+		}
+		return modelMapper.map(model, PositionViewModel.class);
 	}
-	
+
 	@Transactional
 	public boolean isUserHasAccessToManagePosition(Long positionId) {
 		Position position = this.positionRepository.findById(positionId).orElse(null);
@@ -91,14 +86,19 @@ public class PositionService {
 			return false;
 		}
 	}
-	
+
 	@Transactional
 	public void deactivatePosition(Long id) {
 		this.positionRepository.setActiveWhereId(id, false);
 	}
-	
+
 	@Transactional
 	public void activatePosition(Long id) {
 		this.positionRepository.setActiveWhereId(id, true);
+	}
+
+	public Collection<Position> getByCurrentCompany() {
+		Company comp = this.companyService.getCompanyByUser(this.securityContext.getAuthenticatedUser());
+		return this.positionRepository.findByCompany(comp);
 	}
 }

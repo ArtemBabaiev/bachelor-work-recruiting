@@ -25,10 +25,10 @@ public class WizardField {
 			@JsonSubTypes.Type(value = LocalDate.class, name = "DATE") ,
 			@JsonSubTypes.Type(value = Double.class, name = "NUMBER") ,
 			@JsonSubTypes.Type(value = String.class, name = "TEXT") ,
-			@JsonSubTypes.Type(value = String.class, name = "AUDIO") ,
+			@JsonSubTypes.Type(value = byte[].class, name = "AUDIO") ,
 			@JsonSubTypes.Type(value = String.class, name = "SELECTION_SINGLE") ,
 			@JsonSubTypes.Type(value = Set.class, name = "SELECTION_MULTIPLE") ,
-			@JsonSubTypes.Type(value = String.class, name = "UPLOAD")
+			@JsonSubTypes.Type(value = byte[].class, name = "UPLOAD")
 			})
 	private Object userValue;
 	private boolean required = false;

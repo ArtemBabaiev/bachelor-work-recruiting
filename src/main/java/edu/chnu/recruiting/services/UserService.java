@@ -1,7 +1,6 @@
 package edu.chnu.recruiting.services;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -11,13 +10,11 @@ import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.events.registration.OnRegistrationCompleteEvent;
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
-import edu.chnu.recruiting.exceptions.NoAuthorizationException;
-import edu.chnu.recruiting.front.views.registration.SignUpModel;
+import edu.chnu.recruiting.front.views.auth.registration.SignUpModel;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.UserRepository;
-import edu.chnu.recruiting.security.SecurityContext;
-import edu.chnu.recruiting.utils.constants.StarterRoles;
+import edu.chnu.recruiting.utils.enums.StarterRoles;
 
 @Service
 public class UserService {
@@ -30,14 +27,11 @@ public class UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
-	
-	@Autowired
-	private SecurityContext securityService;
-	
-	public User registerUser(SignUpModel model) {
+
+	public User registerUser(SignUpModel model) throws AlreadyExistsException {
 		if (this.userRepository.existsByUsernameOrEmail(model.getUsername(), model.getEmail())) {
 			throw new AlreadyExistsException("User with such email/username already in use");
 		}
@@ -50,20 +44,20 @@ public class UserService {
 		user.setRole(this.roleService.getRoleByName(StarterRoles.USER.getName()));
 
 		user = this.userRepository.save(user);
-		
+
 		eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
 		return user;
 	}
-	
+
 	public User updateUser(User user) {
 		return this.userRepository.save(user);
 	}
-	
-	public List<User> getAllUsers(){
+
+	public List<User> getAllUsers() {
 		return this.userRepository.findAll();
 	}
-	
-	public List<User> searchPaginated(String username, PageRequest pageRequest){
+
+	public List<User> searchPaginated(String username, PageRequest pageRequest) {
 		Role userRole = this.roleService.getRoleByName(StarterRoles.USER.getName());
 		var res = this.userRepository.findAllUsernameLikeAndRoleIs(username, userRole.getId(), pageRequest);
 		return res;

@@ -1,29 +1,26 @@
 package edu.chnu.recruiting.models;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 import edu.chnu.recruiting.models.security.User;
-import edu.chnu.recruiting.models.wizard.Wizard;
-import edu.chnu.recruiting.utils.WizardConverterJson;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter 
 @Setter 
-@Entity
+@MappedSuperclass
 public class Application {
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
 	private String lastName;
 	private String firstName;
@@ -34,13 +31,14 @@ public class Application {
 	private String status;
 	private String rejectReason;
 	
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime startedAt;
+	
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime submittedAt;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Position position;
-	
-	@Convert(converter = WizardConverterJson.class)
-	@Column(name = "wizard_data", columnDefinition="LONGTEXT")
-	private Wizard wizardData;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;

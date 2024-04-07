@@ -2,15 +2,10 @@ package edu.chnu.recruiting.front.views;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Base64;
 
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -38,8 +33,6 @@ public class TestExampleView extends HorizontalLayout {
 					window.speechSynthesis.speak(msg);
 					""".formatted("How are you doing?"));
 		});
-        
-        recorder.openMedia();
         
         recorder.addRecordedListener(e -> {        	
         	try {

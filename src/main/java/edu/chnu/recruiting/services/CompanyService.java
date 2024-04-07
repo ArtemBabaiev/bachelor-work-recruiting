@@ -1,23 +1,21 @@
 package edu.chnu.recruiting.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
-import edu.chnu.recruiting.front.views.company.CompanyFormModel;
-import edu.chnu.recruiting.front.views.viewModels.CompanyViewModel;
 import edu.chnu.recruiting.models.Company;
+import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
+import edu.chnu.recruiting.models.viewModels.CompanyViewModel;
 import edu.chnu.recruiting.repositories.CompanyRepository;
 import edu.chnu.recruiting.security.SecurityContext;
-import edu.chnu.recruiting.utils.constants.StarterRoles;
+import edu.chnu.recruiting.utils.enums.StarterRoles;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -37,36 +35,26 @@ public class CompanyService {
 	
 	@Autowired
 	private ModelMapper modelMapper;
-
-	public Company createCompany(CompanyFormModel model) {
+	
+	public Company updateCompany(CompanyFormModel model) {
+		Company entity = this.companyRepository.findById(model.getId()).orElse(null);
+		modelMapper.map(model, entity);
+		return this.companyRepository.save(entity);
+	}
+	
+	public Company createCompany(CompanyFormModel model) throws AlreadyExistsException {
 		if (companyRepository.existsByName(model.getName())) {
 			throw new AlreadyExistsException("Company with such name already exists");
 		}
 		User companyOwner = securityContext.getAuthenticatedUser();
-		
-		Role recRole = roleService.getRoleByName(StarterRoles.RECRUITER.getName());
 		Role comRole = roleService.getRoleByName(StarterRoles.COMPANY.getName());
-
-		List<User> recruiters = new ArrayList<User>();
-		for (User user : model.getRecruiters()) {
-			user.setRole(recRole);
-			recruiters.add(userService.updateUser(user));
-		}
-		
 		companyOwner.setRole(comRole);
 		companyOwner = userService.updateUser(companyOwner);
-
-		Company company = new Company();
-		company.setName(model.getName());
-		company.setRecruiters(recruiters);
+		
+		Company company = modelMapper.map(model, Company.class);
 		company.setOwner(companyOwner);
-
-		company = this.companyRepository.save(company);
-		return company;
-	}
-	
-	public Company updateCompany(CompanyFormModel model) {
-		throw new NotImplementedException();
+		
+		return this.companyRepository.save(company);
 	}
 
 	public List<User> provideUsersForForm(String username, PageRequest pageRequest) {
@@ -75,15 +63,18 @@ public class CompanyService {
 	
 	@Transactional
 	public CompanyViewModel getCompanyVMByAuthUser() {
-		User owner = this.securityContext.getAuthenticatedUser();
-		Company company= this.companyRepository.findByOwner(owner);
+		User user = this.securityContext.getAuthenticatedUser();
+		Company company= this.getCompanyByUser(user);
 		return modelMapper.map(company, CompanyViewModel.class);
 	}
 	
 	@Transactional
 	public CompanyFormModel getCompanyFMByAuthUser() {
 		User owner = this.securityContext.getAuthenticatedUser();
-		Company company= this.companyRepository.findByOwner(owner);
+		Company company= this.getCompanyByUser(owner);
+		if (company == null) {
+			return null;
+		}
 		return modelMapper.map(company, CompanyFormModel.class);
 	}
 	

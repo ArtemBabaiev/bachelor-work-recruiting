@@ -1,52 +1,64 @@
 package edu.chnu.recruiting.front.views.application;
 
-import java.util.UUID;
-
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteParam;
 
-import edu.chnu.recruiting.exceptions.ApplicationNonEditableException;
 import edu.chnu.recruiting.exceptions.BadRequestException;
+import edu.chnu.recruiting.exceptions.ForbiddenException;
+import edu.chnu.recruiting.exceptions.ResourceNotFoundException;
 import edu.chnu.recruiting.exceptions.WizardFinishedException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.application.SectionForm.BackEvent;
 import edu.chnu.recruiting.front.views.application.SectionForm.NextEvent;
-import edu.chnu.recruiting.models.Application;
+import edu.chnu.recruiting.front.views.profile.ApplicationsProfileView;
+import edu.chnu.recruiting.models.ApplicationFull;
 import edu.chnu.recruiting.models.wizard.WizardStep;
+import edu.chnu.recruiting.services.AccessService;
 import edu.chnu.recruiting.services.ApplicationService;
-import edu.chnu.recruiting.utils.enums.ApplicationStatuses;
+import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.PermitAll;
 
-@Route(value = "application-form", layout = MainLayout.class)
+@Route(value = "application/form", layout = MainLayout.class)
 @PageTitle("Application Form")
 @PermitAll
 public class ApplicationFormView extends VerticalLayout implements BeforeEnterObserver {
 
 	private ApplicationService applicationService;
+	private AccessService accessService;
 
-	private UUID applicationId;
+	private Long applicationId;
 
 	private SectionForm currentSection;
 
-	public ApplicationFormView(ApplicationService applicationService) {
-		this.applicationService = applicationService;
+	public ApplicationFormView(UnitOfWork uow) {
+		this.applicationService = uow.getApplicationService();
+		this.accessService = uow.getAccessService();
 	}
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
-		var optId = event.getLocation().getQueryParameters().getSingleParameter("id");
-		if (optId.isEmpty()) {
-			throw new BadRequestException();
+		try {
+			var optId = event.getLocation().getQueryParameters().getSingleParameter("id");
+			applicationId =Long.parseLong(optId.get());
+		} catch (Exception e) {
+			event.rerouteToError(BadRequestException.class);
+			return;
 		}
-		applicationId = UUID.fromString(optId.get());
-		Application application = this.applicationService.getApplication(applicationId);
-		if (!ApplicationStatuses.editable(application.getStatus())) {
-			throw new ApplicationNonEditableException();
+
+		ApplicationFull application = this.applicationService.getApplicationForm(applicationId);
+		if (application == null) {
+			event.rerouteToError(ResourceNotFoundException.class);
+			return;
+		}
+		if (!this.accessService.canUserEditApplication(application)
+				|| !application.getStatus().equals(ApplicationStatus.PENDING_DATA.toString())) {
+			event.rerouteToError(ForbiddenException.class);
+			return;
 		}
 		if (application.getWizardData().getCurrentStep() == null) {
 			updateSectionComponent(application.getWizardData().getStep(0));
@@ -74,9 +86,9 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 
 	private void handleNextEvent(NextEvent e) {
 		try {
-			updateSectionComponent(this.applicationService.saveStepAndGetNext(applicationId, e.getStep())) ;
+			updateSectionComponent(this.applicationService.saveStepAndGetNext(applicationId, e.getStep()));
 		} catch (WizardFinishedException e2) {
-			UI.getCurrent().navigate(ApplicationView.class, new RouteParam("id", applicationId.toString()));
+			UI.getCurrent().navigate(ApplicationsProfileView.class);
 		}
 	}
 }

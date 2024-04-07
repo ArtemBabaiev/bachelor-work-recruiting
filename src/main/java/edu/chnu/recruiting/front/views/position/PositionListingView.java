@@ -19,7 +19,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import edu.chnu.recruiting.front.data.PositionDataProvider;
 import edu.chnu.recruiting.front.data.PositionFilter;
 import edu.chnu.recruiting.front.layouts.MainLayout;
-import edu.chnu.recruiting.front.views.viewModels.PositionViewModel;
+import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.utils.enums.EmploymentType;
 

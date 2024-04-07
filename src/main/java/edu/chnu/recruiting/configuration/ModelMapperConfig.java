@@ -4,10 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import edu.chnu.recruiting.front.views.viewModels.CompanyViewModel;
-import edu.chnu.recruiting.front.views.viewModels.PositionViewModel;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
+import edu.chnu.recruiting.models.viewModels.CompanyViewModel;
+import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 
 @Configuration
 public class ModelMapperConfig {

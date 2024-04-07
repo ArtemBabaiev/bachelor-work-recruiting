@@ -19,9 +19,10 @@ import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.application.ApplicationFormView;
 import edu.chnu.recruiting.front.views.application.ApplicationSuccessfullView;
 import edu.chnu.recruiting.models.Application;
+import edu.chnu.recruiting.models.formModels.ApplicationFormModel;
 import edu.chnu.recruiting.services.ApplicationService;
 import edu.chnu.recruiting.utils.UiUtils;
-import edu.chnu.recruiting.utils.enums.ApplicationStatuses;
+import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import edu.chnu.recruiting.utils.enums.SessionKeys;
 import jakarta.annotation.security.PermitAll;
 
@@ -74,7 +75,7 @@ public class ApplyView extends VerticalLayout {
 
 	private void handleContinueClick(ClickEvent<Button> e) {
 		Application app = this.applicationService.apply(binder.getBean(), positionId);
-		if (app.getStatus().equals(ApplicationStatuses.PENDING_DATA.toString())) {
+		if (app.getStatus().equals(ApplicationStatus.PENDING_DATA.toString())) {
 			UI.getCurrent().navigate(ApplicationFormView.class, QueryParameters.of("id", app.getId().toString()));
 		} else {
 			UI.getCurrent().navigate(ApplicationSuccessfullView.class);

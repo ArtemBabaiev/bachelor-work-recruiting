@@ -3,13 +3,11 @@ package edu.chnu.recruiting.front.views.application;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.Set;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -52,11 +50,9 @@ public class SectionForm extends VerticalLayout {
 		binder.setBean(model);
 		binder.addStatusChangeListener(e -> nextBtn.setEnabled(binder.isValid()));
 		nextBtn.addClickListener(e -> {
-			closeAllMedias();
 			fireEvent(new NextEvent(this, binder.getBean()));
 		});
 		backBtn.addClickListener(e -> {
-			closeAllMedias();
 			fireEvent(new BackEvent(this, binder.getBean()));
 		});
 		backBtn.setEnabled(model.getId() > 0);
@@ -97,15 +93,6 @@ public class SectionForm extends VerticalLayout {
 			break;
 
 		}
-	}
-	
-	private void closeAllMedias() {
-		this.getChildren().flatMap(c -> c.getChildren()).forEach(c -> {
-			if (c instanceof AudioRecorder ar) {
-				ar.closeMedia();
-			}
-		});
-		UI.getCurrent().push();
 	}
 
 	private TextField getText(WizardField field) {
@@ -180,7 +167,7 @@ public class SectionForm extends VerticalLayout {
 		singleFileUpload.addSucceededListener(e -> {
 			InputStream fileData = memoryBuffer.getInputStream();
 			try {
-				field.setUserValue(Base64.getEncoder().encodeToString(fileData.readAllBytes()));
+				field.setUserValue(fileData.readAllBytes());
 				field.setFileName(e.getFileName());
 				setCurrentUpload(currentUpload, field.getFileName());
 				binder.validate();
@@ -207,11 +194,9 @@ public class SectionForm extends VerticalLayout {
 
 	private Component getAudio(WizardField field) {
 		AudioRecorder recorder = new AudioRecorder();
-		recorder.openMedia();
 		recorder.addRecordedListener(e -> {		
-			field.setUserValue(Base64.getEncoder().encodeToString(e.getRecording()));
+			field.setUserValue(e.getRecording());
 			binder.validate();
-			UI.getCurrent().push();
 		});
 
 		if (field.isRequired()) {
