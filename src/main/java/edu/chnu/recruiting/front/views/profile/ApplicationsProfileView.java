@@ -15,7 +15,7 @@ import edu.chnu.recruiting.front.data.ApplicationDataProvider;
 import edu.chnu.recruiting.front.data.ApplicationProfileFilter;
 import edu.chnu.recruiting.front.data.IFilter;
 import edu.chnu.recruiting.front.layouts.MainLayout;
-import edu.chnu.recruiting.models.Application;
+import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.ApplicationProfileGridVM;
 import edu.chnu.recruiting.services.ApplicationService;
@@ -33,7 +33,7 @@ public class ApplicationsProfileView extends VerticalLayout {
 	private Grid<ApplicationProfileGridVM> grid;
 	private ApplicationDataProvider<ApplicationProfileGridVM> dataProvider;
 	private ApplicationProfileFilter applicatinoFilter;
-	private ConfigurableFilterDataProvider<ApplicationProfileGridVM, Void, IFilter<Application>> filterDataProvider;
+	private ConfigurableFilterDataProvider<ApplicationProfileGridVM, Void, IFilter<ApplicationSummary>> filterDataProvider;
 	
 	private TextField nameSearch = new TextField();
 	private ComboBox<String> statusBox = new ComboBox<String>();

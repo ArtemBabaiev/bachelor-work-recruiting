@@ -1,7 +1,6 @@
 package edu.chnu.recruiting.front.views.management.position;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
 
 import com.vaadin.flow.component.Component;

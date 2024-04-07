@@ -2,12 +2,12 @@ package edu.chnu.recruiting.front.data;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import edu.chnu.recruiting.models.Application;
+import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.specification.GenericSpecification;
 import edu.chnu.recruiting.specification.SearchCriteria;
 
-public class ApplicationMgmtFilter implements IFilter<Application>{
+public class ApplicationMgmtFilter implements IFilter<ApplicationSummary>{
 	private SearchCriteria firstName = new SearchCriteria("firstName", "like", "");
 	private SearchCriteria lastName = new SearchCriteria("lastName", "like", "");
 	private SearchCriteria position = new SearchCriteria("position", ":", null);
@@ -31,11 +31,11 @@ public class ApplicationMgmtFilter implements IFilter<Application>{
 		}
 	}
 
-	public Specification<Application> getSpecification() {
-		return GenericSpecification.<Application>of(firstName)
-				.or(GenericSpecification.<Application>of(lastName))
-				.and(GenericSpecification.<Application>of(status))
-				.and(GenericSpecification.<Application>of(position))
+	public Specification<ApplicationSummary> getSpecification() {
+		return GenericSpecification.<ApplicationSummary>of(firstName)
+				.or(GenericSpecification.<ApplicationSummary>of(lastName))
+				.and(GenericSpecification.<ApplicationSummary>of(status))
+				.and(GenericSpecification.<ApplicationSummary>of(position))
 				;
 	}
 }

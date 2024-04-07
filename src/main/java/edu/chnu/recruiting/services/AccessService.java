@@ -9,7 +9,6 @@ import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
 import edu.chnu.recruiting.security.SecurityContext;
-import edu.chnu.recruiting.utils.enums.StarterRoles;
 
 @Service
 public class AccessService {

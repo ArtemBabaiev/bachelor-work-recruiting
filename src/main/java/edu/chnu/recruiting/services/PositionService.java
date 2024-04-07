@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.vaadin.flow.router.NotFoundException;
-
 import edu.chnu.recruiting.exceptions.NoAuthorizationException;
 import edu.chnu.recruiting.front.components.position.FormСreationComponent;
 import edu.chnu.recruiting.models.Company;
@@ -23,16 +21,11 @@ import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.repositories.PositionRepository;
 import edu.chnu.recruiting.security.SecurityContext;
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class PositionService {
 	@Autowired
 	private WizardService wizardService;
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private SecurityContext securityContext;

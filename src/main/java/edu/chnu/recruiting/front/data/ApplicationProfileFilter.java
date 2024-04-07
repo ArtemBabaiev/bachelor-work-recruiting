@@ -2,13 +2,13 @@ package edu.chnu.recruiting.front.data;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import edu.chnu.recruiting.models.Application;
+import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.specification.GenericSpecification;
 import edu.chnu.recruiting.specification.JoinSearchCriteria;
 import edu.chnu.recruiting.specification.SearchCriteria;
 
-public class ApplicationProfileFilter implements IFilter<Application>{
+public class ApplicationProfileFilter implements IFilter<ApplicationSummary>{
 	private JoinSearchCriteria positionName = new JoinSearchCriteria("position", "name", "like", null);
 	private SearchCriteria status = new SearchCriteria("status", "!=", null);
 	private SearchCriteria user = new SearchCriteria("user", ":", null);
@@ -30,10 +30,10 @@ public class ApplicationProfileFilter implements IFilter<Application>{
 	}
 
 	@Override
-	public Specification<Application> getSpecification() {
-		 return GenericSpecification.<Application>of(user)
-			.and(GenericSpecification.<Application>of(status))
-			.and(GenericSpecification.<Application>of(positionName));
+	public Specification<ApplicationSummary> getSpecification() {
+		 return GenericSpecification.<ApplicationSummary>of(user)
+			.and(GenericSpecification.<ApplicationSummary>of(status))
+			.and(GenericSpecification.<ApplicationSummary>of(positionName));
 	}
 
 }

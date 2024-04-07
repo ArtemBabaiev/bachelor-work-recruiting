@@ -1,11 +1,9 @@
 package edu.chnu.recruiting.front.views.management.application;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -19,20 +17,15 @@ import com.vaadin.flow.router.RouteParameters;
 import edu.chnu.recruiting.front.data.ApplicationDataProvider;
 import edu.chnu.recruiting.front.data.ApplicationMgmtFilter;
 import edu.chnu.recruiting.front.data.IFilter;
-import edu.chnu.recruiting.front.data.PositionDataProvider;
-import edu.chnu.recruiting.front.data.PositionFilter;
 import edu.chnu.recruiting.front.layouts.MainLayout;
-import edu.chnu.recruiting.front.views.TestExampleView;
-import edu.chnu.recruiting.models.Application;
+import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.viewModels.ApplicationMgmtGridVM;
-import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.ApplicationService;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.services.UnitOfWork;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.RolesAllowed;
-import lombok.extern.slf4j.Slf4j;
 
 @PageTitle("Applications")
 @Route(value = "management/applications", layout = MainLayout.class)
@@ -44,7 +37,7 @@ public class ApplicationsMgmtView extends VerticalLayout {
 	private Grid<ApplicationMgmtGridVM> grid;
 	private ApplicationDataProvider<ApplicationMgmtGridVM> dataProvider;
 	private ApplicationMgmtFilter applicatinoFilter = new ApplicationMgmtFilter();
-	private ConfigurableFilterDataProvider<ApplicationMgmtGridVM, Void, IFilter<Application>> filterDataProvider;
+	private ConfigurableFilterDataProvider<ApplicationMgmtGridVM, Void, IFilter<ApplicationSummary>> filterDataProvider;
 
 	private TextField nameSearch = new TextField();
 	private ComboBox<Position> positionsBox = new ComboBox<Position>();

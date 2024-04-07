@@ -1,7 +1,5 @@
 package edu.chnu.recruiting.front.views.application;
 
-import java.util.UUID;
-
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -17,7 +15,7 @@ import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.application.SectionForm.BackEvent;
 import edu.chnu.recruiting.front.views.application.SectionForm.NextEvent;
 import edu.chnu.recruiting.front.views.profile.ApplicationsProfileView;
-import edu.chnu.recruiting.models.Application;
+import edu.chnu.recruiting.models.ApplicationFull;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.services.AccessService;
 import edu.chnu.recruiting.services.ApplicationService;
@@ -33,7 +31,7 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 	private ApplicationService applicationService;
 	private AccessService accessService;
 
-	private UUID applicationId;
+	private Long applicationId;
 
 	private SectionForm currentSection;
 
@@ -46,13 +44,13 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 	public void beforeEnter(BeforeEnterEvent event) {
 		try {
 			var optId = event.getLocation().getQueryParameters().getSingleParameter("id");
-			applicationId = UUID.fromString(optId.get());
+			applicationId =Long.parseLong(optId.get());
 		} catch (Exception e) {
 			event.rerouteToError(BadRequestException.class);
 			return;
 		}
 
-		Application application = this.applicationService.getApplicationForm(applicationId);
+		ApplicationFull application = this.applicationService.getApplicationForm(applicationId);
 		if (application == null) {
 			event.rerouteToError(ResourceNotFoundException.class);
 			return;

@@ -1,12 +1,9 @@
 package edu.chnu.recruiting.front.views.profile;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.sidenav.SideNavItem;
-import com.vaadin.flow.router.RouteConfiguration;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 
 public class ProfileMenuComponent extends MenuBar {
 	MenuItem account;

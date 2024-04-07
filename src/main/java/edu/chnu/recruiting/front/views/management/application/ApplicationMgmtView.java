@@ -2,7 +2,6 @@ package edu.chnu.recruiting.front.views.management.application;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -42,7 +41,7 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 	private ApplicationService applicationService;
 	private AccessService accessService;
 
-	private UUID appId;
+	private Long appId;
 
 	private ApplicationViewModel model;
 
@@ -54,7 +53,7 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		try {
-			this.appId = UUID.fromString(event.getRouteParameters().get("appId").get());
+			this.appId = Long.parseLong(event.getRouteParameters().get("appId").get());
 			model = applicationService.getApplicationVM(appId);
 		} catch (Exception e) {
 			event.rerouteToError(BadRequestException.class);

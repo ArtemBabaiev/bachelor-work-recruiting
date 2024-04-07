@@ -56,7 +56,7 @@ public class Position {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Company company;
 
-	@Column(name = "wizard_data", columnDefinition="LONGTEXT")
+	@Column(name = "wizard_data", columnDefinition="JSON")
 	@Convert(converter = WizardConverterJson.class)
 	private Wizard wizardData;
 }

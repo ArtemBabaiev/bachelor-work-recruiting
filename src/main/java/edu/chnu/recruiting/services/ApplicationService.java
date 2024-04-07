@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import edu.chnu.recruiting.exceptions.ForbiddenException;
 import edu.chnu.recruiting.exceptions.WizardFinishedException;
 import edu.chnu.recruiting.models.Application;
+import edu.chnu.recruiting.models.ApplicationFull;
+import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.formModels.ApplicationFormModel;
 import edu.chnu.recruiting.models.security.User;
@@ -21,6 +23,7 @@ import edu.chnu.recruiting.models.viewModels.ApplicationMgmtGridVM;
 import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.models.wizard.WizardStep;
+import edu.chnu.recruiting.repositories.ApplicationFullRepository;
 import edu.chnu.recruiting.repositories.ApplicationRepository;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
@@ -30,6 +33,9 @@ import jakarta.transaction.Transactional;
 public class ApplicationService {
 	@Autowired
 	private ApplicationRepository applicationRepository;
+	
+	@Autowired
+	private ApplicationFullRepository appFullRepository;
 
 	@Autowired
 	private PositionService positionService;
@@ -46,7 +52,7 @@ public class ApplicationService {
 		if (!position.getActive()) {
 			throw new ForbiddenException();
 		}
-		Application entity = modelMapper.map(model, Application.class);
+		ApplicationFull entity = modelMapper.map(model, ApplicationFull.class);
 		entity.setUser(user);
 		entity.setPosition(position);
 		entity.setWizardData(position.getWizardData());
@@ -58,31 +64,31 @@ public class ApplicationService {
 			entity.setStatus(ApplicationStatus.PENDING_REVIEW.toString());
 			entity.setSubmittedAt(LocalDateTime.now());
 		}
-		return this.applicationRepository.save(entity);
+		return this.appFullRepository.save(entity);
 	}
 
-	public Application getApplicationForm(UUID id) {
-		return this.applicationRepository.findById(id).orElse(null);
+	public ApplicationFull getApplicationForm(Long id) {
+		return this.appFullRepository.findById(id).orElse(null);
 	}
 
-	public Application saveApplication(Application app, int filledStep) {
+	public Application saveApplication(ApplicationFull app, int filledStep) {
 		app.getWizardData().setCurrentStep(filledStep + 1);
-		return this.applicationRepository.save(app);
+		return this.appFullRepository.save(app);
 	}
 
-	public Application saveFinalApplication(Application app) {
+	public Application saveFinalApplication(ApplicationFull app) {
 		app.setStatus(ApplicationStatus.PENDING_REVIEW.toString());
 		app.setSubmittedAt(LocalDateTime.now());
-		return this.applicationRepository.save(app);
+		return this.appFullRepository.save(app);
 	}
 
-	public WizardStep getApplicationStep(UUID applicationId, int stepId) {
+	public WizardStep getApplicationStep(Long applicationId, int stepId) {
 		Wizard wizard = this.getApplicationForm(applicationId).getWizardData();
 		return wizard.getStep(stepId);
 	}
 
-	public WizardStep saveStepAndGetNext(UUID applicationId, WizardStep step) throws WizardFinishedException {
-		Application app = getApplicationForm(applicationId);
+	public WizardStep saveStepAndGetNext(Long applicationId, WizardStep step) throws WizardFinishedException {
+		ApplicationFull app = getApplicationForm(applicationId);
 		Wizard wizard = app.getWizardData();
 		wizard.updateStep(step);
 		int newStep = step.getId() + 1;
@@ -91,24 +97,24 @@ public class ApplicationService {
 			this.saveFinalApplication(app);
 			throw new WizardFinishedException();
 		} else {
-			return this.applicationRepository.save(app).getWizardData().getStep(newStep);
+			return this.appFullRepository.save(app).getWizardData().getStep(newStep);
 		}
 	}
 
-	public List<Application> getAllBy(Specification<Application> specification, Pageable page) {
+	public List<ApplicationSummary> getAllBy(Specification<ApplicationSummary> specification, Pageable page) {
 		return this.applicationRepository.findAll(specification, page).getContent();
 	}
 
-	public <T> List<T> getAllBy(Specification<Application> specification, Pageable page, Class<T> modelType) {
+	public <T> List<T> getAllBy(Specification<ApplicationSummary> specification, Pageable page, Class<T> modelType) {
 		return getAllBy(specification, page).stream().map(e -> modelMapper.map(e, modelType))
 				.collect(Collectors.toList());
 	}
 
-	public long countBy(Specification<Application> specification) {
+	public long countBy(Specification<ApplicationSummary> specification) {
 		return this.applicationRepository.count(specification);
 	}
 
-	public ApplicationViewModel getApplicationVM(UUID id) {
+	public ApplicationViewModel getApplicationVM(Long id) {
 		var entity = this.applicationRepository.findById(id).orElse(null);
 		if (entity == null) {
 			return null;
@@ -117,12 +123,12 @@ public class ApplicationService {
 	}
 
 	@Transactional
-	public void acceptApplication(UUID id) {
+	public void acceptApplication(Long id) {
 		this.applicationRepository.updateStatus(id, ApplicationStatus.ACCEPTED.toString());
 	}
 
 	@Transactional
-	public void rejectApplication(UUID id, String rejectReason) {
+	public void rejectApplication(Long id, String rejectReason) {
 		this.applicationRepository.updateStatusAndReason(id, ApplicationStatus.REJECTED.toString(), rejectReason);
 	}
 
