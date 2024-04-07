@@ -42,6 +42,7 @@ public class ApplicationsProfileView extends VerticalLayout {
 	public ApplicationsProfileView(UnitOfWork uow) {
 		this.applicationService = uow.getApplicationService();
 		this.loggedInUser = uow.getSecurityContext().getAuthenticatedUser();
+		menuBar.showAdditionalItems(loggedInUser);
 		
 		grid = new Grid<>(ApplicationProfileGridVM.class, false);
 		dataProvider = new ApplicationDataProvider<ApplicationProfileGridVM>(this.applicationService, ApplicationProfileGridVM.class);

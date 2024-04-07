@@ -25,6 +25,7 @@ public class ProfileView extends VerticalLayout {
 	public ProfileView(UnitOfWork uow) {
 		this.securityContext = uow.getSecurityContext();
 		loggedInUser = this.securityContext.getAuthenticatedUser();
+		menuBar.showAdditionalItems(loggedInUser);
 		add(menuBar, new H2(loggedInUser.getUsername()));
 	}
 
