@@ -5,21 +5,16 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
-import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 
 import edu.chnu.recruiting.front.views.auth.LoginView;
-import edu.chnu.recruiting.front.views.auth.registration.RegistrationConfirmView;
 import edu.chnu.recruiting.front.views.auth.registration.SignUpView;
-import edu.chnu.recruiting.front.views.management.company.CompanyFormView;
 import edu.chnu.recruiting.front.views.management.company.CompanyView;
 import edu.chnu.recruiting.front.views.management.position.PositionCreateView;
 import edu.chnu.recruiting.front.views.position.PositionListingView;
@@ -43,13 +38,12 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1(propertiesReader.getApplicationName());
         Button authBtn = new Button();
         authBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        authBtn.addClassName(Margin.MEDIUM);
+        //authBtn.addClassName(Margin.MEDIUM);
         logo.addClassNames(
-            LumoUtility.FontSize.LARGE, 
-            LumoUtility.Margin.MEDIUM);
+            LumoUtility.FontSize.LARGE);
         
 
-        var header = new HorizontalLayout(new DrawerToggle(), logo ); 
+        var header = new HorizontalLayout(new DrawerToggle(), logo, authBtn); 
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER); 
         header.expand(logo);
         header.setWidthFull();
@@ -63,9 +57,9 @@ public class MainLayout extends AppLayout {
 		} else {
 			authBtn.setText("Log in");
 			authBtn.addClickListener(e -> UI.getCurrent().navigate(LoginView.class));
+			header.add(new Button("Sign Up", e -> UI.getCurrent().navigate(SignUpView.class)));
 		}
-        
-        addToNavbar(header, authBtn); 
+        addToNavbar(header); 
 
     }
 
@@ -74,28 +68,13 @@ public class MainLayout extends AppLayout {
     	VerticalLayout vLayout = new VerticalLayout();
     	SideNav nav = new SideNav();
     	nav.addItem(
-    			new SideNavItem("Login", LoginView.class),
-    			new SideNavItem("Sign-up", SignUpView.class),
-    			new SideNavItem("Confirmation", RegistrationConfirmView.class),
     			new SideNavItem("Profile", ProfileView.class),
+    			new SideNavItem("Positions listing", PositionListingView.class),
     			new SideNavItem("Company", CompanyView.class),
-    			new SideNavItem("Company Form", CompanyFormView.class),
-    			new SideNavItem("Position-create", PositionCreateView.class),
-    			new SideNavItem("Positions listing", PositionListingView.class)
+    			new SideNavItem("Position-create", PositionCreateView.class)
     			);
 
-    	var themeToggle = new Checkbox("Dark theme");
-    	 themeToggle.addValueChangeListener(e -> {
-             setTheme(e.getValue());
-         });
-    	
-    	vLayout.add(nav, themeToggle);
+    	vLayout.add(nav);
         addToDrawer(vLayout);
-    }
-    
-    private void setTheme(boolean dark) {
-        var js = "document.documentElement.setAttribute('theme', $0)";
-
-        getElement().executeJs(js, dark ? Lumo.DARK : Lumo.LIGHT);
     }
 }

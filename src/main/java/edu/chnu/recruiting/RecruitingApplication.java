@@ -22,7 +22,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 
 @SpringBootApplication
 @EnableAsync
-@Theme(value = "recruiting")
+@Theme(value = "recruiting", variant = Lumo.DARK)
 @Push
 @EntityScan(basePackageClasses = { RecruitingApplication.class, Jsr310JpaConverters.class })
 public class RecruitingApplication implements AppShellConfigurator {

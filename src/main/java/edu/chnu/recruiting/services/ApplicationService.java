@@ -2,7 +2,6 @@ package edu.chnu.recruiting.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -19,7 +18,6 @@ import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.formModels.ApplicationFormModel;
 import edu.chnu.recruiting.models.security.User;
-import edu.chnu.recruiting.models.viewModels.ApplicationMgmtGridVM;
 import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.models.wizard.WizardStep;
@@ -115,7 +113,7 @@ public class ApplicationService {
 	}
 
 	public ApplicationViewModel getApplicationVM(Long id) {
-		var entity = this.applicationRepository.findById(id).orElse(null);
+		var entity = this.appFullRepository.findById(id).orElse(null);
 		if (entity == null) {
 			return null;
 		}

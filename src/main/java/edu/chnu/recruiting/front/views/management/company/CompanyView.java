@@ -1,8 +1,10 @@
 package edu.chnu.recruiting.front.views.management.company;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -15,9 +17,10 @@ import jakarta.annotation.security.RolesAllowed;
 @PageTitle("Company")
 @Route(value = "management/company",layout = MainLayout.class)
 @RolesAllowed({"COMPANY"})
-public class CompanyView extends Div{
+public class CompanyView extends VerticalLayout {
 	private Grid<User> grid = new Grid<>(User.class, false);
 	private H2 title = new H2();
+	private Button editBtn = new Button("Edit company info", e -> UI.getCurrent().navigate(CompanyFormView.class));
 	
 	private CompanyService companyService;
 	private CompanyViewModel model;
@@ -27,7 +30,7 @@ public class CompanyView extends Div{
 		configureComponents();
 		configureGrid();
 		updateGrid();
-		add(title, grid);
+		add(editBtn, title, grid);
 	}
 	private void configureComponents() {
 		title.setText(model.getName());
