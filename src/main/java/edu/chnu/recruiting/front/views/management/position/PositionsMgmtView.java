@@ -5,6 +5,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -33,7 +34,7 @@ import jakarta.annotation.security.RolesAllowed;
 @PageTitle("Positions")
 @Route(value = "management/positions", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
-public class PositionsMgmtView extends VerticalLayout{
+public class PositionsMgmtView extends VerticalLayout {
 	private Grid<PositionViewModel> grid;
 	private PositionDataProvider dataProvider;
 	private PositionMgmtFilter positionFilter;
@@ -41,8 +42,9 @@ public class PositionsMgmtView extends VerticalLayout{
 
 	private PositionService positionService;
 	private Company companyEntity;
-	
+
 	private TextField nameSearch = new TextField();
+	private Button createPositionBtn = new Button("Create new position");
 
 	public PositionsMgmtView(UnitOfWork uow) {
 		this.positionService = uow.getPositionService();
@@ -52,15 +54,19 @@ public class PositionsMgmtView extends VerticalLayout{
 		positionFilter = new PositionMgmtFilter(companyEntity);
 		filterDataProvider = dataProvider.withConfigurableFilter();
 		filterDataProvider.setFilter(positionFilter);
-		
+
 		setSizeFull();
-		
+
 		configureGrid();
 		configureComponents();
 
-		HorizontalLayout filters = new HorizontalLayout(nameSearch);
-		filters.setAlignItems(Alignment.BASELINE);
-		add(filters, grid);
+		Div filters = new Div(nameSearch);
+		HorizontalLayout controls = new HorizontalLayout(filters);
+		controls.setWidthFull();
+		controls.expand(filters);
+		controls.add(createPositionBtn);
+		controls.setAlignItems(Alignment.BASELINE);
+		add(controls, grid);
 	}
 
 	private void configureComponents() {
@@ -73,6 +79,7 @@ public class PositionsMgmtView extends VerticalLayout{
 		});
 		nameSearch.setClearButtonVisible(true);
 
+		createPositionBtn.addClickListener(e -> UI.getCurrent().navigate(PositionCreateView.class));
 	}
 
 	private void configureGrid() {
@@ -83,31 +90,33 @@ public class PositionsMgmtView extends VerticalLayout{
 		grid.addColumn(p -> p.getDatePosted(), "datePosted").setHeader("Posted at");
 		grid.addComponentColumn(p -> getActiveBadge(p)).setHeader("Active");
 		grid.addComponentColumn(p -> getControls(p));
-		
+
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 		grid.setItems(filterDataProvider);
 
 	}
-	
+
 	private Component getControls(PositionViewModel model) {
-		return new HorizontalLayout(this.getActivationButton(model), this.getShowApplicationsButton(model), this.getDetailsButton(model));
+		return new HorizontalLayout(this.getActivationButton(model), this.getShowApplicationsButton(model),
+				this.getDetailsButton(model));
 	}
-	
+
 	private Component getShowApplicationsButton(PositionViewModel model) {
 		Button btn = new Button("Show applications");
 		btn.addClickListener(e -> {
-			UI.getCurrent().navigate(ApplicationsMgmtView.class, QueryParameters.of("position", model.getId().toString()));
+			UI.getCurrent().navigate(ApplicationsMgmtView.class,
+					QueryParameters.of("position", model.getId().toString()));
 		});
 		return btn;
 	}
-	
+
 	private Component getActivationButton(PositionViewModel model) {
 		Button activationBtn = new Button();
 		if (model.getActive()) {
 			activationBtn.setText("Deactivate");
 			activationBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		} else {
-			activationBtn.setText("Activate");			
+			activationBtn.setText("Activate");
 			activationBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 		}
 		activationBtn.addClickListener(e -> {
