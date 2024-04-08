@@ -11,8 +11,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
-@Route(value = "Application Successfull", layout = MainLayout.class)
-@PageTitle("application/success")
+@PageTitle("Application Successfull")
+@Route(value = "application/success", layout = MainLayout.class)
 @PermitAll
 public class ApplicationSuccessfullView extends VerticalLayout {
 	public ApplicationSuccessfullView() {

@@ -1,7 +1,6 @@
 package edu.chnu.recruiting.services;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,7 +96,7 @@ public class PositionService {
 		this.positionRepository.setActiveWhereId(id, true);
 	}
 
-	public Collection<Position> getByCurrentCompany() {
+	public List<Position> getByCurrentCompany() {
 		Company comp = this.companyService.getCompanyByUser(this.securityContext.getAuthenticatedUser());
 		return this.positionRepository.findByCompany(comp);
 	}
