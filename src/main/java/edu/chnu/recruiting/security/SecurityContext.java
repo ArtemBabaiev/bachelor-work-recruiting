@@ -39,5 +39,13 @@ public class SecurityContext {
 		}
 		return this.userRepository.findByUsername(optUser.get().getUsername()).orElseThrow(() -> new NoAuthorizationException());
 	}
+	
+	public User getAuthenticatedUserSilent() {
+		var optUser = this.getContextUser();
+		if (optUser.isEmpty()) {
+			return null;
+		}
+		return this.userRepository.findByUsername(optUser.get().getUsername()).orElse(null);
+	}
 
 }

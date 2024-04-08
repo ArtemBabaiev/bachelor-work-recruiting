@@ -17,14 +17,14 @@ import jakarta.annotation.security.RolesAllowed;
 @PageTitle("Company")
 @Route(value = "management/company",layout = MainLayout.class)
 @RolesAllowed({"COMPANY"})
-public class CompanyView extends VerticalLayout {
+public class CompanyMgmtView extends VerticalLayout {
 	private Grid<User> grid = new Grid<>(User.class, false);
 	private H2 title = new H2();
 	private Button editBtn = new Button("Edit company info", e -> UI.getCurrent().navigate(CompanyFormView.class));
 	
 	private CompanyService companyService;
 	private CompanyViewModel model;
-	public CompanyView(CompanyService companyService) {
+	public CompanyMgmtView(CompanyService companyService) {
 		this.companyService = companyService;
 		this.model = this.companyService.getCompanyVMByAuthUser();
 		configureComponents();

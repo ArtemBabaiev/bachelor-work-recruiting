@@ -3,6 +3,7 @@ package edu.chnu.recruiting.models;
 import java.util.List;
 
 import edu.chnu.recruiting.models.security.User;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +24,7 @@ public class Company {
 	
 	private String name;
 	
+	@Column(columnDefinition = "TEXT")
 	private String description;
 	
 	private String industry;

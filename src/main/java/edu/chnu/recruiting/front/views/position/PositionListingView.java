@@ -16,9 +16,11 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
+import edu.chnu.recruiting.front.data.IFilter;
 import edu.chnu.recruiting.front.data.PositionDataProvider;
 import edu.chnu.recruiting.front.data.PositionFilter;
 import edu.chnu.recruiting.front.layouts.MainLayout;
+import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.utils.enums.EmploymentType;
@@ -31,7 +33,7 @@ public class PositionListingView extends VerticalLayout {
 	private Grid<PositionViewModel> grid;
 	private PositionDataProvider dataProvider;
 	private PositionFilter positionFilter = new PositionFilter();
-	private ConfigurableFilterDataProvider<PositionViewModel, Void, PositionFilter> filterDataProvider;
+	private ConfigurableFilterDataProvider<PositionViewModel, Void, IFilter<Position>> filterDataProvider;
 
 	private PositionService positionService;
 	private TextField nameSearch = new TextField();

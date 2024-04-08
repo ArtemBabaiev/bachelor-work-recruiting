@@ -1,5 +1,7 @@
 package edu.chnu.recruiting.front.views.management.application;
 
+import java.util.List;
+
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -10,6 +12,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParameters;
@@ -30,7 +34,7 @@ import jakarta.annotation.security.RolesAllowed;
 @PageTitle("Applications")
 @Route(value = "management/applications", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
-public class ApplicationsMgmtView extends VerticalLayout {
+public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterObserver{
 	private PositionService positionService;
 	private ApplicationService applicationService;
 
@@ -38,11 +42,13 @@ public class ApplicationsMgmtView extends VerticalLayout {
 	private ApplicationDataProvider<ApplicationMgmtGridVM> dataProvider;
 	private ApplicationMgmtFilter applicatinoFilter = new ApplicationMgmtFilter();
 	private ConfigurableFilterDataProvider<ApplicationMgmtGridVM, Void, IFilter<ApplicationSummary>> filterDataProvider;
-
+	
 	private TextField nameSearch = new TextField();
 	private ComboBox<Position> positionsBox = new ComboBox<Position>();
 	private ComboBox<String> statusBox = new ComboBox<String>();
 
+	private Long qPositionId = null;
+	
 	public ApplicationsMgmtView(UnitOfWork uow) {
 		this.applicationService = uow.getApplicationService();
 		this.positionService = uow.getPositionService();
@@ -52,6 +58,19 @@ public class ApplicationsMgmtView extends VerticalLayout {
 		filterDataProvider = dataProvider.withConfigurableFilter();
 		filterDataProvider.setFilter(applicatinoFilter);
 
+		
+	}
+	
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		
+		try {
+			qPositionId = Long.parseLong(event.getLocation().getQueryParameters().getSingleParameter("position").get());
+		} catch (Exception e) {}
+		initComponent();
+	}
+	
+	private void initComponent() {
 		setSizeFull();
 
 		configureGrid();
@@ -70,9 +89,15 @@ public class ApplicationsMgmtView extends VerticalLayout {
 		});
 		statusBox.setPlaceholder("Status");
 
-		positionsBox.setItems(this.positionService.getByCurrentCompany());
+		
+		List<Position> positionItems = this.positionService.getByCurrentCompany();
+		positionsBox.setItems(positionItems);
 		positionsBox.setItemLabelGenerator(p -> p.getName());
 		positionsBox.setPlaceholder("Position");
+		positionsBox.addValueChangeListener(e -> {
+			applicatinoFilter.setPosition(e.getValue());
+			filterDataProvider.refreshAll();
+		});
 
 		nameSearch.setPlaceholder("Candidate name");
 		nameSearch.setClearButtonVisible(true);
@@ -82,13 +107,13 @@ public class ApplicationsMgmtView extends VerticalLayout {
 			filterDataProvider.refreshAll();
 		});
 
-		positionsBox.addValueChangeListener(e -> {
-			applicatinoFilter.setPosition(e.getValue());
-			filterDataProvider.refreshAll();
-		});
 
 		grid.setItems(filterDataProvider);
-
+		
+		var optPos = positionItems.stream().filter(p -> p.getId().equals(qPositionId)).findFirst();
+		if (optPos.isPresent()) {
+			positionsBox.setValue(optPos.get());
+		}
 	}
 
 	private void configureGrid() {

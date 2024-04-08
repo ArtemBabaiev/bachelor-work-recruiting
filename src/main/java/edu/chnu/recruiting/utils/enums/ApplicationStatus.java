@@ -34,7 +34,7 @@ public enum ApplicationStatus {
 			badge.getElement().getThemeList().add("badge success");
 			break;
 		case PENDING_DATA:
-			badge = new Span(ApplicationStatus.ACCEPTED.getLabel());
+			badge = new Span(ApplicationStatus.PENDING_DATA.getLabel());
 			badge.getElement().getThemeList().add("badge contrast");
 			break;
 		case PENDING_REVIEW:
