@@ -1,5 +1,8 @@
 package edu.chnu.recruiting.front.views.profile;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
@@ -9,12 +12,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 
 import edu.chnu.recruiting.front.data.ApplicationDataProvider;
 import edu.chnu.recruiting.front.data.ApplicationProfileFilter;
 import edu.chnu.recruiting.front.data.IFilter;
 import edu.chnu.recruiting.front.layouts.MainLayout;
+import edu.chnu.recruiting.front.views.application.ApplicationFormView;
 import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.ApplicationProfileGridVM;
@@ -63,6 +68,7 @@ public class ApplicationsProfileView extends VerticalLayout {
 		grid.addColumn(p -> p.getSubmittedAt(), "submittedAt").setHeader("Submitted at");
 		grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");
 		grid.addColumn(p -> p.getRejectReason()).setSortable(false).setHeader("Reject reason");
+		grid.addComponentColumn(p -> getContinueApplication(p));
 		grid.setItems(filterDataProvider);
 	}
 
@@ -84,8 +90,16 @@ public class ApplicationsProfileView extends VerticalLayout {
 			filterDataProvider.refreshAll();
 		});
 
-
-		
-
+	}
+	
+	private Component getContinueApplication(ApplicationProfileGridVM app) {
+		if (!app.getStatus().equals(ApplicationStatus.PENDING_DATA.toString())) {
+			return null;
+		}
+		Button btn = new Button("Continue");
+		btn.addClickListener(e -> 
+			UI.getCurrent().navigate(ApplicationFormView.class, QueryParameters.of("id", app.getId().toString()))
+		);
+		return btn;
 	}
 }

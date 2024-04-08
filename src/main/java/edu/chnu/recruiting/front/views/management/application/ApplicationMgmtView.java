@@ -121,6 +121,10 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 		for (var step : wizard.getSteps()) {
 			List<FieldDataComponent> fs = new ArrayList<SectionDataComponent.FieldDataComponent>();
 			for (var field : step.getFields()) {
+				if (field.getUserValue() == null) {
+					fs.add(new FieldDataComponent(field.getQuestion(), field.getUserValue()));
+					continue;
+				}
 				switch (field.getType()) {
 				case AUDIO:
 					fs.add(new FieldDataComponent(field.getQuestion(), new AudioTag((byte[]) field.getUserValue())));

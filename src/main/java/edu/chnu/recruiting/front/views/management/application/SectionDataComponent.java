@@ -33,7 +33,7 @@ public class SectionDataComponent extends VerticalLayout {
 			if (answerTxt instanceof Collection<?> col) {	
 				answer = new Paragraph(String.join(", ", (Collection<String>) col));
 			} else {
-				answer = new Paragraph(answerTxt.toString());
+				answer = new Paragraph(answerTxt == null? "": answerTxt.toString());
 			}
 			add(question, answer);
 		}

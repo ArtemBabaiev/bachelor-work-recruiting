@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApplicationProfileGridVM {
+	private Long id;
 	private String positionName;
 	private String status;
 	private LocalDateTime submittedAt;
