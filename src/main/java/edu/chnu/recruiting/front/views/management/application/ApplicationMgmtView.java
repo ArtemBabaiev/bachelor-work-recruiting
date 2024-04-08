@@ -9,10 +9,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -79,7 +77,7 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 
 	private Component getControls() {
 		HorizontalLayout controls = new HorizontalLayout();
-		Div d = new Div(getStatusBadge());
+		Div d = new Div(ApplicationStatus.getBadge(model.getStatus()));
 		controls.addAndExpand(d);
 		Button acceptBtn = new Button("Accept", e -> {
 			this.applicationService.acceptApplication(appId);
@@ -140,32 +138,6 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 			}
 			add(new SectionDataComponent(step.getName(), fs));
 		}
-	}
-
-	private Component getStatusBadge() {
-		Span badge = null;
-		switch (ApplicationStatus.valueOf(model.getStatus())) {
-		case ACCEPTED:
-			badge = new Span(ApplicationStatus.ACCEPTED.getLabel());
-			badge.getElement().getThemeList().add("badge success primary");
-			break;
-		case PENDING_DATA:
-			badge = new Span(ApplicationStatus.ACCEPTED.getLabel());
-			badge.getElement().getThemeList().add("badge contrast primary");
-			break;
-		case PENDING_REVIEW:
-			badge = new Span(ApplicationStatus.PENDING_REVIEW.getLabel());
-			badge.getElement().getThemeList().add("badge primary");
-			break;
-		case REJECTED:
-			badge = new Span(ApplicationStatus.REJECTED.getLabel());
-			badge.getElement().getThemeList().add("badge error primary");
-			Tooltip.forComponent(badge).withText(model.getRejectReason())
-					.withPosition(Tooltip.TooltipPosition.TOP_START);
-			break;
-		}
-		badge.setText("Status: " + badge.getText());
-		return badge;
 	}
 
 }
