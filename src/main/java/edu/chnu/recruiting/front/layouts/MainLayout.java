@@ -19,7 +19,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.chnu.recruiting.front.views.auth.LoginView;
 import edu.chnu.recruiting.front.views.auth.registration.SignUpView;
 import edu.chnu.recruiting.front.views.management.application.ApplicationsMgmtView;
-import edu.chnu.recruiting.front.views.management.company.CompanyView;
+import edu.chnu.recruiting.front.views.management.company.CompanyMgmtView;
 import edu.chnu.recruiting.front.views.management.position.PositionsMgmtView;
 import edu.chnu.recruiting.front.views.position.PositionListingView;
 import edu.chnu.recruiting.front.views.profile.ProfileView;
@@ -106,7 +106,7 @@ public class MainLayout extends AppLayout {
 	}
 
 	private void setOwnerNavigation(SideNav nav) {
-		nav.addItem(new SideNavItem("Company Managment", CompanyView.class));
+		nav.addItem(new SideNavItem("Company Managment", CompanyMgmtView.class));
 		nav.addItem(new SideNavItem("Positions Managment", PositionsMgmtView.class));
 		nav.addItem(new SideNavItem("Applications Managment", ApplicationsMgmtView.class));
 	}
