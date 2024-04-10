@@ -54,7 +54,7 @@ public class QuestionComponent extends VerticalLayout {
 	public QuestionComponent(ValueType type) {
 		field.setType(type);
 		binder.bindInstanceFields(this);
-		getStyle().set("border", "solid");
+		addClassNames(LumoUtility.Background.BASE, LumoUtility.BorderRadius.LARGE);
 		configureComponent();
 		binder.setBean(field);
 		setExtra();

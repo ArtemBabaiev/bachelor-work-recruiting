@@ -52,8 +52,7 @@ public class PositionCreateView extends VerticalLayout {
 	TextField location = new TextField("Location");
 	ComboBox<String> employmentType = new ComboBox<>("Employment type");
 	SalaryRangePicker salaryRange = new SalaryRangePicker("Salary range");
-
-	FieldsToolbar toolbar = new FieldsToolbar();
+	
 	FormСreationComponent form = new FormСreationComponent();
 
 	Button createPositionBtn = new Button("Create position");
@@ -74,8 +73,6 @@ public class PositionCreateView extends VerticalLayout {
 	}
 
 	private void configureComponents() {
-		UiUtils.setValueChangeMode(ValueChangeMode.EAGER, name, description, department, location);
-		form.setWidthFull();
 		employmentType.setItems(Arrays.stream(EmploymentType.values()).map(EmploymentType::toString).toList());
 		employmentType.setItemLabelGenerator(i -> EmploymentType.valueOf(i).getLabel());
 
@@ -107,19 +104,14 @@ public class PositionCreateView extends VerticalLayout {
 		infoSheet.setSizeFull();
 		infoSheet.setAlignItems(Alignment.CENTER);
 		infoSheet.add(name, description, department, location, employmentType, salaryRange);
+		UiUtils.setValueChangeMode(ValueChangeMode.EAGER, name, description, department, location);
 		this.setWidth("40vw", name, description, department, location, employmentType, salaryRange);
 		return infoSheet;
 	}
 
 	private Component getFormSheet() {
-		VerticalLayout sheet = new VerticalLayout();
-		VerticalLayout formCanvas = new VerticalLayout(getNote(), form);
-		HorizontalLayout formSetup = new HorizontalLayout(formCanvas, toolbar);
-		toolbar.setWidth("350px");
-		formSetup.addClassNames("content");
-		formSetup.setSizeFull();
-		sheet.add(formSetup);
-		// formCanvas.setAlignItems(Alignment.CENTER);
+		VerticalLayout sheet = new VerticalLayout(getNote(), form);
+		sheet.setSizeFull();
 		return sheet;
 	}
 

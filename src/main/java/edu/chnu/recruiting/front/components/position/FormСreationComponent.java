@@ -7,16 +7,20 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.components.position.SectionComponent.DownSectionEvent;
 import edu.chnu.recruiting.front.components.position.SectionComponent.UpSectionEvent;
 
 public class FormСreationComponent extends VerticalLayout {
-	Div box = new Div();
+	VerticalLayout box = new VerticalLayout();
 	Button addSectionBtn = new Button("Add section");
 	public FormСreationComponent() {
 		addSectionBtn.addClickListener(e -> handleAddSectionClick(e));
-		box.setSizeFull();
+		this.setWidthFull();
+		box.setWidth("50%");
+		box.addClassNames(LumoUtility.Margin.NONE, LumoUtility.Padding.NONE);
+		this.setAlignItems(Alignment.CENTER);
 		add(box, addSectionBtn);
 	}
 	
