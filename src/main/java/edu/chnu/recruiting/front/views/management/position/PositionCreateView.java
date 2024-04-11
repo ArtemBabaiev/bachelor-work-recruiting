@@ -11,7 +11,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
@@ -27,9 +26,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.components.fields.picker.SalaryRange;
 import edu.chnu.recruiting.front.components.fields.picker.SalaryRangePicker;
-import edu.chnu.recruiting.front.components.position.FieldsToolbar;
-import edu.chnu.recruiting.front.components.position.FormСreationComponent;
 import edu.chnu.recruiting.front.layouts.MainLayout;
+import edu.chnu.recruiting.front.views.management.position.components.FormСreationComponent;
 import edu.chnu.recruiting.front.views.position.PositionView;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.services.PositionService;
