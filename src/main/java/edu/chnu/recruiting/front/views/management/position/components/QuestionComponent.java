@@ -1,11 +1,9 @@
-package edu.chnu.recruiting.front.components.questions;
+package edu.chnu.recruiting.front.views.management.position.components;
 
 import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -14,12 +12,12 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.messages.MessageInputI18n;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -38,12 +36,12 @@ public class QuestionComponent extends VerticalLayout {
 	TextField question = new TextField("Question");
 	Checkbox required = new Checkbox("Required");
 
-	ListBox<String> optionsList = new ListBox<>();
+	VirtualList<String> optionsList = new VirtualList<>();
 	MessageInput optionInput = new MessageInput();
 
 	Checkbox textToSpeech = new Checkbox("Use Text-to-Speech");
 
-	HorizontalLayout header = new HorizontalLayout();
+	HorizontalLayout controls = new HorizontalLayout();
 	VerticalLayout info = new VerticalLayout();
 	VerticalLayout extra = new VerticalLayout();
 
@@ -54,11 +52,11 @@ public class QuestionComponent extends VerticalLayout {
 	public QuestionComponent(ValueType type) {
 		field.setType(type);
 		binder.bindInstanceFields(this);
-		getStyle().set("border", "solid");
+		addClassNames(LumoUtility.Background.BASE, LumoUtility.BorderRadius.LARGE);
 		configureComponent();
 		binder.setBean(field);
 		setExtra();
-		add(configureAndGetBox());
+		configureDisplayed();
 	}
 
 	private void configureComponent() {
@@ -80,43 +78,48 @@ public class QuestionComponent extends VerticalLayout {
 		optionInput.addSubmitListener(e -> {
 			addOption(e.getValue());
 		});
-		
-		optionsList.setReadOnly(true);
+		optionsList.setHeight("150px");
+		optionsList.setWidthFull();
 		optionsList.setRenderer(new ComponentRenderer<>(option -> {
 		    HorizontalLayout row = new HorizontalLayout();
 		    row.setAlignItems(Alignment.BASELINE);
 		    
 		    Span opt = new Span(option);
 		    Button removeBtn = new Button(new Icon(VaadinIcon.CLOSE));
+		    removeBtn.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
 		    removeBtn.addClickListener(e -> removeOption(option));
-		    row.add(opt, removeBtn);
+		    row.add(removeBtn, opt);
+		    row.addClassNames(LumoUtility.Border.BOTTOM);
 		    return row;
 		}));
 	}
 
-	private Component configureAndGetBox() {
-		VerticalLayout box = new VerticalLayout();
-		header.add(type, getControls());
-		header.setAlignItems(Alignment.BASELINE);
-		header.setJustifyContentMode(JustifyContentMode.BETWEEN);
-
-		info.add(question, required);
-
-		this.removeSpacing(box, header, info, extra);
-		this.setFullSize(box, header, info, extra);
-
-		box.add(header, info, extra);
-
-		return box;
-	}
-
-	private Component getControls() {
-		HorizontalLayout controls = new HorizontalLayout();
-		closeBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
-		upBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
-		downBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
+	private void configureDisplayed() {
+		this.setSpacing(false);
+		this.addClassNames(LumoUtility.Padding.NONE, LumoUtility.Margin.NONE);
+		
+		controls.addClassNames(LumoUtility.Padding.NONE, LumoUtility.Margin.NONE);
+		controls.setWidthFull();
+		controls.setJustifyContentMode(JustifyContentMode.END);
 		controls.add(downBtn, upBtn, closeBtn);
-		return controls;
+		controls.setSpacing(false);
+		
+		closeBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR,
+				ButtonVariant.LUMO_TERTIARY);
+		upBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
+		downBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
+
+		HorizontalLayout hzl = new HorizontalLayout(question, type);
+		hzl.addClassNames(LumoUtility.Padding.NONE, LumoUtility.Margin.NONE);
+		hzl.setWidthFull();
+		hzl.expand(question);
+		
+		info.addClassNames(LumoUtility.Padding.Top.NONE);
+		info.add(hzl, required);
+
+		extra.addClassNames(LumoUtility.Padding.Top.NONE);
+		
+		add(controls, info, extra);
 	}
 
 	private void setExtra() {
@@ -131,13 +134,6 @@ public class QuestionComponent extends VerticalLayout {
 		case AUDIO:
 			extra.add(textToSpeech);
 			break;
-		}
-	}
-
-	private void removeSpacing(HasStyle... components) {
-		for (HasStyle hasStyle : components) {
-			hasStyle.addClassNames(LumoUtility.Padding.NONE);
-			hasStyle.addClassNames(LumoUtility.Margin.NONE);
 		}
 	}
 

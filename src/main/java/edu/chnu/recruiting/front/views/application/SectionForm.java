@@ -13,6 +13,7 @@ import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -63,7 +64,7 @@ public class SectionForm extends VerticalLayout {
 		for (var field : model.getFields()) {
 			configureField(field);
 		}
-		nextBtn.setEnabled(binder.isValid());
+		nextBtn.setEnabled(binder.isValid());;
 		add(new HorizontalLayout(backBtn, nextBtn));
 
 	}
@@ -163,7 +164,8 @@ public class SectionForm extends VerticalLayout {
 		Upload singleFileUpload = new Upload(memoryBuffer);
 		Span currentUpload = new Span();
 		setCurrentUpload(currentUpload, field.getFileName());
-		Span question = new Span(field.getQuestion() + (field.isRequired() ? "*" : ""));
+		H4 question = new H4(field.getQuestion() + (field.isRequired() ? "*" : ""));
+		Span maxSizeMessage = new Span("Maximum file size: 20 MB");
 		singleFileUpload.addSucceededListener(e -> {
 			InputStream fileData = memoryBuffer.getInputStream();
 			try {
@@ -183,9 +185,8 @@ public class SectionForm extends VerticalLayout {
 				binder.validate();
 			}
 		});
-		// 100 MebiBytes
-		singleFileUpload.setMaxFileSize(104_857_600);
-		Div content = new Div(question, singleFileUpload, currentUpload);
+		singleFileUpload.setMaxFileSize(20_971_520);
+		Div content = new Div(question, maxSizeMessage, singleFileUpload, currentUpload);
 		if (field.isRequired()) {
 			binder.withValidator(step -> step.getFieldValue(field.getId()) != null, "File upload is required");
 		}

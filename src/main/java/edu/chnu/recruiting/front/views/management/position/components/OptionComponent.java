@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.front.components.position;
+package edu.chnu.recruiting.front.views.management.position.components;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;

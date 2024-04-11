@@ -11,7 +11,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
@@ -27,9 +26,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.components.fields.picker.SalaryRange;
 import edu.chnu.recruiting.front.components.fields.picker.SalaryRangePicker;
-import edu.chnu.recruiting.front.components.position.FieldsToolbar;
-import edu.chnu.recruiting.front.components.position.FormСreationComponent;
 import edu.chnu.recruiting.front.layouts.MainLayout;
+import edu.chnu.recruiting.front.views.management.position.components.FormСreationComponent;
 import edu.chnu.recruiting.front.views.position.PositionView;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.services.PositionService;
@@ -52,8 +50,7 @@ public class PositionCreateView extends VerticalLayout {
 	TextField location = new TextField("Location");
 	ComboBox<String> employmentType = new ComboBox<>("Employment type");
 	SalaryRangePicker salaryRange = new SalaryRangePicker("Salary range");
-
-	FieldsToolbar toolbar = new FieldsToolbar();
+	
 	FormСreationComponent form = new FormСreationComponent();
 
 	Button createPositionBtn = new Button("Create position");
@@ -74,8 +71,6 @@ public class PositionCreateView extends VerticalLayout {
 	}
 
 	private void configureComponents() {
-		UiUtils.setValueChangeMode(ValueChangeMode.EAGER, name, description, department, location);
-		form.setWidthFull();
 		employmentType.setItems(Arrays.stream(EmploymentType.values()).map(EmploymentType::toString).toList());
 		employmentType.setItemLabelGenerator(i -> EmploymentType.valueOf(i).getLabel());
 
@@ -107,19 +102,14 @@ public class PositionCreateView extends VerticalLayout {
 		infoSheet.setSizeFull();
 		infoSheet.setAlignItems(Alignment.CENTER);
 		infoSheet.add(name, description, department, location, employmentType, salaryRange);
+		UiUtils.setValueChangeMode(ValueChangeMode.EAGER, name, description, department, location);
 		this.setWidth("40vw", name, description, department, location, employmentType, salaryRange);
 		return infoSheet;
 	}
 
 	private Component getFormSheet() {
-		VerticalLayout sheet = new VerticalLayout();
-		VerticalLayout formCanvas = new VerticalLayout(getNote(), form);
-		HorizontalLayout formSetup = new HorizontalLayout(formCanvas, toolbar);
-		toolbar.setWidth("350px");
-		formSetup.addClassNames("content");
-		formSetup.setSizeFull();
-		sheet.add(formSetup);
-		// formCanvas.setAlignItems(Alignment.CENTER);
+		VerticalLayout sheet = new VerticalLayout(getNote(), form);
+		sheet.setSizeFull();
 		return sheet;
 	}
 

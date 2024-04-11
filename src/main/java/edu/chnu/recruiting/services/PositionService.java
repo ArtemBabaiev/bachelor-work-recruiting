@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.exceptions.NoAuthorizationException;
-import edu.chnu.recruiting.front.components.position.FormСreationComponent;
+import edu.chnu.recruiting.front.views.management.position.components.FormСreationComponent;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.security.User;
