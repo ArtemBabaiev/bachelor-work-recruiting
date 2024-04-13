@@ -10,6 +10,7 @@ import com.vaadin.flow.server.StreamResource;
 public class AudioTag extends Component {
 	public AudioTag(byte[] src) {
 		getElement().setAttribute("controls", true);
+		getElement().setAttribute("controlsList", "nodownload");
 		this.setSource(src);
 	}
 

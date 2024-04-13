@@ -19,8 +19,8 @@ import edu.chnu.recruiting.front.components.microphone.VUserMedia;
 @Tag("audio-recorder")
 public class AudioRecorder extends HorizontalLayout {
 	VUserMedia mic;
-	Button startRecording = new Button(new Icon(VaadinIcon.CIRCLE));
-	Button stopRecording = new Button(new Icon(VaadinIcon.STOP));
+	Button startRecording = new Button("Start recording", new Icon(VaadinIcon.CIRCLE));
+	Button stopRecording = new Button("Stop recording",new Icon(VaadinIcon.STOP));
 	ByteArrayOutputStream currentRecording;
 	boolean recordingInProcess = false;
 
@@ -37,9 +37,9 @@ public class AudioRecorder extends HorizontalLayout {
 
 		this.makeButtonActive(false, stopRecording);
 		this.makeButtonActive(true, startRecording);
-		startRecording.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SUCCESS);
+		startRecording.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
-		stopRecording.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR);
+		stopRecording.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
 		startRecording.addClickListener(e -> {
 			mic.startRecording("{audio:true}", 300_000); // 5 minutes max recording time

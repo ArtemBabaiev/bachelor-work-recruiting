@@ -49,7 +49,7 @@ public class TestExampleView extends HorizontalLayout {
         Button playTts = new Button("Play tts", e ->{
         	try {
         		FileOutputStream fs = new FileOutputStream(new File("C:/MyData/tts.file"));
-        		byte[] bytes = ttsService.test();
+        		byte[] bytes = ttsService.getSpeech("You have performed text-to-speech conversion");
         		fs.write(bytes);
 			} catch (Exception e2) {
 				System.out.println(e2.getMessage());

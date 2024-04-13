@@ -29,8 +29,10 @@ import com.vaadin.flow.data.binder.Binder.BindingBuilder;
 import com.vaadin.flow.dom.DomEvent;
 import com.vaadin.flow.dom.DomEventListener;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.components.AudioRecorder;
+import edu.chnu.recruiting.front.components.AudioTag;
 import edu.chnu.recruiting.models.wizard.WizardField;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 import lombok.Getter;
@@ -203,29 +205,17 @@ public class SectionForm extends VerticalLayout {
 		if (field.isRequired()) {
 			binder.withValidator(step -> step.getFieldValue(field.getId()) != null, "Audio is required");
 		}
-		Div question = new Div();
+		VerticalLayout question = new VerticalLayout();
+		question.addClassNames(LumoUtility.Padding.NONE);
 		if (field.isTextToSpeech()) {
-			Button play = new Button("Play question", VaadinIcon.PLAY.create(), e -> {
-				getElement().executeJs("""
-						var msg = new SpeechSynthesisUtterance();
-						msg.text = "%s";
-						msg.lang = 'en';
-						window.speechSynthesis.speak(msg);
-						""".formatted(field.getQuestion()));
-			});
-			Button noSound = new Button("Cant hear question?");
-			noSound.addClickListener(e -> {
-				question.remove(play);
-				question.add(new Span(field.getQuestion()));
-				noSound.setEnabled(false);
-				noSound.setVisible(false);
-			});
-			question.add(play, noSound);
+			AudioTag audio = new AudioTag(field.getSpeech());
+			question.add(new Span("Click play to hear the question"), audio);
 
 		} else {
 			question.add(new Span(field.getQuestion()));
 		}
-		return new Div(question, recorder);
+		question.add(recorder);
+		return question;
 	}
 
 	private void setCurrentUpload(Span message, String name) {
