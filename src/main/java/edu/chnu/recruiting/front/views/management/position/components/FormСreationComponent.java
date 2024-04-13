@@ -5,23 +5,24 @@ import java.util.stream.Collectors;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.views.management.position.components.SectionComponent.DownSectionEvent;
 import edu.chnu.recruiting.front.views.management.position.components.SectionComponent.UpSectionEvent;
 
+@CssImport("./themes/recruiting/styles.css")
 public class FormСreationComponent extends VerticalLayout {
 	VerticalLayout box = new VerticalLayout();
 	Button addSectionBtn = new Button("Add section");
 	public FormСreationComponent() {
 		addSectionBtn.addClickListener(e -> handleAddSectionClick(e));
 		this.setWidthFull();
-		box.setWidth("50%");
-		box.addClassNames(LumoUtility.Margin.NONE, LumoUtility.Padding.NONE);
+		box.setSizeUndefined();
+		box.addClassNames("resizable", LumoUtility.Margin.NONE, LumoUtility.Padding.NONE);
 		this.setAlignItems(Alignment.CENTER);
 		add(box, addSectionBtn);
-		box.add();
 	}
 	
 	private void handleAddSectionClick(ClickEvent<Button> e) {

@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.front.views.management.position.components;
 
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasSize;
@@ -66,10 +67,14 @@ public class QuestionComponent extends VerticalLayout {
 		upBtn.addClickListener(e -> handleUpClick(e));
 		downBtn.addClickListener(e -> handleDownClick(e));
 		question.setValueChangeMode(ValueChangeMode.EAGER);
-		question.setWidth("315px");
 		
 		type.setItems(ValueType.values());
-		type.setItemLabelGenerator(v -> v.toString());
+		type.setItemLabelGenerator(v -> v.getLabel());
+		type.setRenderer(new ComponentRenderer<Component, ValueType>(v -> {
+			var icon = v.getIcon().create();
+			icon.getStyle().set("padding", "var(--lumo-space-xs)");
+			return new Span(icon,  new Span(v.getLabel()));
+		}));
 		MessageInputI18n ms = new MessageInputI18n();
 		ms.setMessage("Option");
 		ms.setSend("Add");
@@ -112,7 +117,9 @@ public class QuestionComponent extends VerticalLayout {
 		HorizontalLayout hzl = new HorizontalLayout(question, type);
 		hzl.addClassNames(LumoUtility.Padding.NONE, LumoUtility.Margin.NONE);
 		hzl.setWidthFull();
-		hzl.expand(question);
+		//hzl.expand(question);
+		hzl.setFlexGrow(2, question);
+		hzl.setFlexGrow(1, type);
 		
 		info.addClassNames(LumoUtility.Padding.Top.NONE);
 		info.add(hzl, required);

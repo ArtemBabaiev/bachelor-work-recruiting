@@ -28,7 +28,6 @@ import edu.chnu.recruiting.utils.enums.EmploymentType;
 @PageTitle("Positions listing")
 @Route(value = "positions", layout = MainLayout.class)
 @AnonymousAllowed
-@CssImport(value = "./themes/recruiting/styles.css", themeFor = "vaadin-grid")
 public class PositionListingView extends VerticalLayout {
 	private Grid<PositionViewModel> grid;
 	private PositionDataProvider dataProvider;
