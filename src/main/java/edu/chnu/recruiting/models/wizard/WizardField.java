@@ -18,8 +18,11 @@ import lombok.Data;
 @JsonInclude(Include.NON_NULL)
 public class WizardField {
 	private Integer id;
+	
 	private String question;
+	
 	private ValueType type;
+	
 	@JsonTypeInfo(use = Id.NAME, property = "type", include = As.EXTERNAL_PROPERTY)
 	@JsonSubTypes(value = { 
 			@JsonSubTypes.Type(value = LocalDate.class, name = "DATE") ,
@@ -38,6 +41,8 @@ public class WizardField {
 	private List<String> options = new ArrayList<String>();
 
 	private String fileName;
+	
+	private byte[] speech;
 	
 	public void addOption(String option) {
 		this.options.add(option);

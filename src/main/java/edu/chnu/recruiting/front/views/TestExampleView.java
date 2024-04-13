@@ -11,6 +11,7 @@ import com.vaadin.flow.router.Route;
 
 import edu.chnu.recruiting.front.components.AudioRecorder;
 import edu.chnu.recruiting.front.layouts.MainLayout;
+import edu.chnu.recruiting.services.GcTextToSpeechService;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +23,7 @@ public class TestExampleView extends HorizontalLayout {
     
     AudioRecorder recorder = new AudioRecorder();
 
-    public TestExampleView() {
+    public TestExampleView(GcTextToSpeechService ttsService) {
         setMargin(true);
 
         Button play = new Button(VaadinIcon.PLAY.create(), e -> {
@@ -45,7 +46,17 @@ public class TestExampleView extends HorizontalLayout {
 			}
         });
         
-        add(recorder, play);
+        Button playTts = new Button("Play tts", e ->{
+        	try {
+        		FileOutputStream fs = new FileOutputStream(new File("C:/MyData/tts.file"));
+        		byte[] bytes = ttsService.getSpeech("You have performed text-to-speech conversion");
+        		fs.write(bytes);
+			} catch (Exception e2) {
+				System.out.println(e2.getMessage());
+			}
+        });
+        
+        add(recorder, play, playTts);
     }
 
 }
