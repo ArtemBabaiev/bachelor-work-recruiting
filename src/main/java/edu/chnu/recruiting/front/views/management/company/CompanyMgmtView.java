@@ -26,10 +26,10 @@ public class CompanyMgmtView extends VerticalLayout {
 	private CompanyViewModel model;
 	public CompanyMgmtView(CompanyService companyService) {
 		this.companyService = companyService;
-		this.model = this.companyService.getCompanyVMByAuthUser();
+		
+		updateGrid();
 		configureComponents();
 		configureGrid();
-		updateGrid();
 		add(editBtn, title, grid);
 	}
 	private void configureComponents() {
@@ -44,6 +44,7 @@ public class CompanyMgmtView extends VerticalLayout {
 	}
 	
 	private void updateGrid() {
+		this.model = this.companyService.getCompanyByAuthUser(CompanyViewModel.class);
 		var users = model.getRecruiters();
 		users.add(model.getOwner());
 		grid.setItems(users);

@@ -39,7 +39,7 @@ public class CompanyFormView extends VerticalLayout implements BeforeEnterObserv
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
-		CompanyFormModel model = this.companyService.getCompanyFMByAuthUser();
+		CompanyFormModel model = this.companyService.getCompanyByAuthUser(CompanyFormModel.class);
 		if (model != null && !this.accessService.canUserEditCompany(model)) {
 			event.rerouteToError(ForbiddenException.class);
 		}
