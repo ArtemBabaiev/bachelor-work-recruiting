@@ -1,5 +1,8 @@
 package edu.chnu.recruiting.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,6 +10,7 @@ import org.springframework.stereotype.Service;
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.formModels.CompanyFormModel;
+import edu.chnu.recruiting.models.formModels.RecruiterFormModel;
 import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.CompanyRepository;
@@ -68,5 +72,23 @@ public class CompanyService {
 			return this.companyRepository.findByOwner(user);
 		}
 		return this.companyRepository.findByRecruiters(user);
+	}
+	
+	@Transactional
+	public List<User> getCompanyRecruiters(Long companyId){
+		return new ArrayList<User>(this.companyRepository.findById(companyId).get().getRecruiters());
+	}
+	
+	@Transactional
+	public void saveRecruiter(Long companyId, RecruiterFormModel model) throws AlreadyExistsException {
+		Company company = this.companyRepository.findById(companyId).get();
+		User rec;
+		if (model.getId() == null) {
+			rec = this.userService.createRecruiter(model);
+			company.getRecruiters().add(rec);
+			this.companyRepository.save(company);
+		} else {
+			rec = this.userService.updateRecruiter(model);
+		}
 	}
 }

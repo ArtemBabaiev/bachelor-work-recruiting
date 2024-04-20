@@ -56,6 +56,10 @@ public class CompanyForm extends VerticalLayout {
 		createBtn.addClickListener(e -> handleCreateClick(e));
 		cancelBtn.addClickListener(e -> fireEvent(new CancelEvent(this)));
 	}
+	
+	public void setBean(CompanyFormModel bean) {
+		binder.setBean(bean);
+	}
 
 	private void handleCreateClick(ClickEvent<Button> e) {
 		if (binder.isValid())

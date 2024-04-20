@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -59,7 +60,7 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 
 	private void initComponent() {
 		configureComponents();
-		add(getContent());
+		add(getControls(), getContent());
 	}
 
 	private void configureComponents() {
@@ -82,6 +83,12 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 		content.add(getDetailsFor("Department", model.getDepartment()));
 		content.add(getDetailsFor("Salary", getSalaryRepresentation()));
 		return content;
+	}
+
+	private Component getControls() {
+		HorizontalLayout controls = new HorizontalLayout();
+		controls.add(applyBtn);
+		return controls;
 	}
 
 	private Details getDetailsFor(String label, String value) {
