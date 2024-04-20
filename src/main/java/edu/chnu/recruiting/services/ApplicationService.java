@@ -18,7 +18,6 @@ import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.formModels.ApplicationFormModel;
 import edu.chnu.recruiting.models.security.User;
-import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.repositories.ApplicationFullRepository;
@@ -31,7 +30,7 @@ import jakarta.transaction.Transactional;
 public class ApplicationService {
 	@Autowired
 	private ApplicationRepository applicationRepository;
-	
+
 	@Autowired
 	private ApplicationFullRepository appFullRepository;
 
@@ -67,11 +66,6 @@ public class ApplicationService {
 
 	public ApplicationFull getApplicationForm(Long id) {
 		return this.appFullRepository.findById(id).orElse(null);
-	}
-
-	public Application saveApplication(ApplicationFull app, int filledStep) {
-		app.getWizardData().setCurrentStep(filledStep + 1);
-		return this.appFullRepository.save(app);
 	}
 
 	public Application saveFinalApplication(ApplicationFull app) {
@@ -112,12 +106,12 @@ public class ApplicationService {
 		return this.applicationRepository.count(specification);
 	}
 
-	public ApplicationViewModel getApplicationVM(Long id) {
+	public <T> T getApplicationFull(Long id, Class<T> modelType) {
 		var entity = this.appFullRepository.findById(id).orElse(null);
 		if (entity == null) {
 			return null;
 		}
-		return modelMapper.map(entity, ApplicationViewModel.class);
+		return modelMapper.map(entity, modelType);
 	}
 
 	@Transactional

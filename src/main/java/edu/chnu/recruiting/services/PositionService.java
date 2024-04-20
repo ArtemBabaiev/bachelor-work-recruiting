@@ -10,11 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import edu.chnu.recruiting.exceptions.NoAuthorizationException;
 import edu.chnu.recruiting.front.views.management.position.components.FormСreationComponent;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
-import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.repositories.PositionRepository;
@@ -61,29 +59,12 @@ public class PositionService {
 		return this.positionRepository.findById(id).orElse(null);
 	}
 
-	public PositionViewModel getPositionVM(Long id) {
+	public <T> T getPosition(Long id, Class<T> modelType) {
 		Position model = this.positionRepository.findById(id).orElse(null);
 		if (model == null) {
 			return null;
 		}
-		return modelMapper.map(model, PositionViewModel.class);
-	}
-
-	@Transactional
-	public boolean isUserHasAccessToManagePosition(Long positionId) {
-		Position position = this.positionRepository.findById(positionId).orElse(null);
-		if (position == null) {
-			return false;
-		}
-		try {
-			User user = securityContext.getAuthenticatedUser();
-			Company co = position.getCompany();
-			List<Long> ids = co.getRecruiters().stream().map(c -> c.getId()).collect(Collectors.toList());
-			ids.add(co.getOwner().getId());
-			return ids.contains(user.getId());
-		} catch (NoAuthorizationException e) {
-			return false;
-		}
+		return modelMapper.map(model, modelType);
 	}
 
 	@Transactional

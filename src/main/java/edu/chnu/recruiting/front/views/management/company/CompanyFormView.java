@@ -18,7 +18,7 @@ import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.services.AccessService;
 import edu.chnu.recruiting.services.CompanyService;
-import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.services.ServiceManager;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Create Company")
@@ -31,7 +31,7 @@ public class CompanyFormView extends VerticalLayout implements BeforeEnterObserv
 	
 	private CompanyForm form;
 	
-	public CompanyFormView(UnitOfWork uow) {
+	public CompanyFormView(ServiceManager uow) {
 		this.companyService = uow.getCompanyService();
 		this.accessService = uow.getAccessService();
 		this.securityContext = uow.getSecurityContext();

@@ -24,7 +24,7 @@ import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.ApplicationProfileGridVM;
 import edu.chnu.recruiting.services.ApplicationService;
-import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.PermitAll;
 
@@ -44,7 +44,7 @@ public class ApplicationsProfileView extends VerticalLayout {
 	private ComboBox<String> statusBox = new ComboBox<String>();
 	private ProfileMenuComponent menuBar = new ProfileMenuComponent();
 
-	public ApplicationsProfileView(UnitOfWork uow) {
+	public ApplicationsProfileView(ServiceManager uow) {
 		this.applicationService = uow.getApplicationService();
 		this.loggedInUser = uow.getSecurityContext().getAuthenticatedUser();
 		menuBar.showAdditionalItems(loggedInUser);

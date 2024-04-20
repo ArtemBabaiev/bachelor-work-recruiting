@@ -27,7 +27,7 @@ import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.viewModels.ApplicationMgmtGridVM;
 import edu.chnu.recruiting.services.ApplicationService;
 import edu.chnu.recruiting.services.PositionService;
-import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.RolesAllowed;
 
@@ -49,7 +49,7 @@ public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterO
 
 	private Long qPositionId = null;
 	
-	public ApplicationsMgmtView(UnitOfWork uow) {
+	public ApplicationsMgmtView(ServiceManager uow) {
 		this.applicationService = uow.getApplicationService();
 		this.positionService = uow.getPositionService();
 

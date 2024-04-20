@@ -1,17 +1,13 @@
 package edu.chnu.recruiting.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.events.registration.OnRegistrationCompleteEvent;
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.views.auth.registration.SignUpModel;
-import edu.chnu.recruiting.models.security.Role;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.UserRepository;
 import edu.chnu.recruiting.utils.enums.StarterRoles;
@@ -51,15 +47,5 @@ public class UserService {
 
 	public User updateUser(User user) {
 		return this.userRepository.save(user);
-	}
-
-	public List<User> getAllUsers() {
-		return this.userRepository.findAll();
-	}
-
-	public List<User> searchPaginated(String username, PageRequest pageRequest) {
-		Role userRole = this.roleService.getRoleByName(StarterRoles.USER.getName());
-		var res = this.userRepository.findAllUsernameLikeAndRoleIs(username, userRole.getId(), pageRequest);
-		return res;
 	}
 }

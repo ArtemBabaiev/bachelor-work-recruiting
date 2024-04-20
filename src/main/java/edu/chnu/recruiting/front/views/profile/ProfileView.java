@@ -8,7 +8,7 @@ import com.vaadin.flow.router.Route;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.security.SecurityContext;
-import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.services.ServiceManager;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Profile")
@@ -22,7 +22,7 @@ public class ProfileView extends VerticalLayout {
 
 	private User loggedInUser;
 
-	public ProfileView(UnitOfWork uow) {
+	public ProfileView(ServiceManager uow) {
 		this.securityContext = uow.getSecurityContext();
 		loggedInUser = this.securityContext.getAuthenticatedUser();
 		menuBar.showAdditionalItems(loggedInUser);

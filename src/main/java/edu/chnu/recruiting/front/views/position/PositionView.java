@@ -6,8 +6,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -23,7 +21,7 @@ import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.apply.ApplyView;
 import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.PositionService;
-import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.utils.enums.EmploymentType;
 import edu.chnu.recruiting.utils.enums.SessionKeys;
 
@@ -36,12 +34,10 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 	private PositionViewModel model;
 
 	private Button applyBtn = new Button("Apply");
-	private Button activationBtn = new Button();
-	private Button editBtn = new Button("Edit");
 
 	private PositionService positionService;
 
-	public PositionView(UnitOfWork uow) {
+	public PositionView(ServiceManager uow) {
 		this.positionService = uow.getPositionService();
 	}
 
@@ -49,7 +45,7 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 	public void beforeEnter(BeforeEnterEvent event) {
 		try {
 			this.posId = Long.parseLong(event.getRouteParameters().get("posId").get());
-			model = positionService.getPositionVM(posId);
+			model = positionService.getPosition(posId, PositionViewModel.class);
 		} catch (Exception e) {
 			event.rerouteToError(BadRequestException.class);
 			return;
@@ -63,11 +59,10 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 
 	private void initComponent() {
 		configureComponents();
-		add(getControls(), getContent());
+		add(getContent());
 	}
 
 	private void configureComponents() {
-		activationBtn.setText(model.getActive() ? "Deactivate" : "Activate");
 		applyBtn.setEnabled(model.getActive());
 
 		applyBtn.addClickListener(e -> {
@@ -75,26 +70,6 @@ public class PositionView extends VerticalLayout implements BeforeEnterObserver 
 					this.model.getId());
 			UI.getCurrent().navigate(ApplyView.class);
 		});
-		activationBtn.addClickListener(e -> {
-			if (model.getActive()) {
-				positionService.deactivatePosition(model.getId());
-			} else {
-				positionService.activatePosition(model.getId());
-			}
-			UI.getCurrent().getPage().reload();
-		});
-		editBtn.addClickListener(e -> {
-			Notification.show("Edit click");
-		});
-	}
-
-	private Component getControls() {
-		HorizontalLayout controls = new HorizontalLayout();
-		controls.add(applyBtn);
-		if (positionService.isUserHasAccessToManagePosition(posId)) {
-			controls.add(activationBtn, editBtn);
-		}
-		return controls;
 	}
 
 	private Component getContent() {

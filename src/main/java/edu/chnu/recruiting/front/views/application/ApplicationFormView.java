@@ -19,7 +19,7 @@ import edu.chnu.recruiting.models.ApplicationFull;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.services.AccessService;
 import edu.chnu.recruiting.services.ApplicationService;
-import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.PermitAll;
 
@@ -35,7 +35,7 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 
 	private SectionForm currentSection;
 
-	public ApplicationFormView(UnitOfWork uow) {
+	public ApplicationFormView(ServiceManager uow) {
 		this.applicationService = uow.getApplicationService();
 		this.accessService = uow.getAccessService();
 	}

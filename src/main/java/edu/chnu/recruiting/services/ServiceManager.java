@@ -8,26 +8,26 @@ import lombok.Getter;
 
 @Service
 @Getter
-public class UnitOfWork {
-	
+public class ServiceManager {
+
 	@Autowired
 	private CompanyService companyService;
-	
+
 	@Autowired
 	private RoleService roleService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private PositionService positionService;
-	
+
 	@Autowired
 	private SecurityContext securityContext;
-	
+
 	@Autowired
 	private ApplicationService applicationService;
-	
+
 	@Autowired
 	private AccessService accessService;
 }
