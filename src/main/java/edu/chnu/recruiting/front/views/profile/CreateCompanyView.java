@@ -10,42 +10,34 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
-import edu.chnu.recruiting.exceptions.ForbiddenException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.management.company.CompanyForm;
 import edu.chnu.recruiting.front.views.management.company.CompanyForm.SaveEvent;
 import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.security.SecurityContext;
-import edu.chnu.recruiting.services.AccessService;
 import edu.chnu.recruiting.services.CompanyService;
 import edu.chnu.recruiting.services.ServiceManager;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Create Company")
 @Route(value = "profile/create-company", layout = MainLayout.class)
-@PermitAll
-public class CompanyFormView extends ProfileView implements BeforeEnterObserver {
+@RolesAllowed({ "USER" })
+public class CreateCompanyView extends ProfileView implements BeforeEnterObserver {
 	private SecurityContext securityContext;
 	private CompanyService companyService;
-	private AccessService accessService;
 
 	private CompanyForm form;
 
-	public CompanyFormView(ServiceManager uow) {
+	public CreateCompanyView(ServiceManager uow) {
 		super(uow.getSecurityContext().getAuthenticatedUser());
 		this.companyService = uow.getCompanyService();
-		this.accessService = uow.getAccessService();
 		this.securityContext = uow.getSecurityContext();
 	}
 
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
-		CompanyFormModel model = this.companyService.getCompanyByAuthUser(CompanyFormModel.class);
-		if (model != null && !this.accessService.canUserEditCompany(model)) {
-			event.rerouteToError(ForbiddenException.class);
-		}
 
-		this.form = new CompanyForm(model == null ? new CompanyFormModel() : model);
+		this.form = new CompanyForm(new CompanyFormModel());
 
 		initComponent();
 	}

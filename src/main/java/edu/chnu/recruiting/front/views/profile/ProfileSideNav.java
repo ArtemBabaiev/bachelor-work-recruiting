@@ -15,7 +15,7 @@ public class ProfileSideNav extends SideNav {
 		if (user.getRole().getName().equals(StarterRoles.COMPANY.getName())) {
 			this.addItem(new SideNavItem("Company Management", CompanyMgmtView.class));
 		} else if (user.getRole().getName().equals(StarterRoles.USER.getName())) {
-			this.addItem(new SideNavItem("Create Company", CompanyFormView.class));
+			this.addItem(new SideNavItem("Create Company", CreateCompanyView.class));
 		}
 	}
 }
