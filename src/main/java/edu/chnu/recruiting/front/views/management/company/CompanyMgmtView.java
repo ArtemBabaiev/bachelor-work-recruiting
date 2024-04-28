@@ -186,8 +186,7 @@ public class CompanyMgmtView extends SplitLayout {
 				UI.getCurrent().getPage().reload();
 			}
 		} catch (AlreadyExistsException ex) {
-			Notification notification = Notification.show(ex.getMessage(), 5000, Position.BOTTOM_STRETCH);
-			notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+			Notification.show(ex.getMessage(), 5000, Position.BOTTOM_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
 		}
 	}
 
