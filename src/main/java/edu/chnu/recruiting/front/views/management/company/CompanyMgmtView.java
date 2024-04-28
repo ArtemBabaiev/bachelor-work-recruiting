@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
@@ -69,6 +70,7 @@ public class CompanyMgmtView extends SplitLayout {
 
 	private Component getCompanyContent() {
 		companyForm.setSizeFull();
+		companyForm.addClassNames(LumoUtility.Padding.MEDIUM);
 		return companyForm;
 	}
 
