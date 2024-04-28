@@ -2,8 +2,6 @@ package edu.chnu.recruiting.front.views.position;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -36,7 +34,6 @@ public class PositionListingView extends VerticalLayout {
 
 	private PositionService positionService;
 	private TextField nameSearch = new TextField();
-	private Checkbox activeSearch = new Checkbox("Only Active");
 
 	public PositionListingView(PositionService positionService) {
 		this.positionService = positionService;
@@ -50,7 +47,7 @@ public class PositionListingView extends VerticalLayout {
 		configureGrid();
 		configureComponents();
 
-		HorizontalLayout filters = new HorizontalLayout(nameSearch, activeSearch);
+		HorizontalLayout filters = new HorizontalLayout(nameSearch);
 		filters.setAlignItems(Alignment.BASELINE);
 		add(filters, grid);
 	}
@@ -64,11 +61,6 @@ public class PositionListingView extends VerticalLayout {
 			filterDataProvider.refreshAll();
 		});
 
-		activeSearch.addValueChangeListener(e -> {
-			positionFilter.setActiveCriteria(e.getValue());
-			filterDataProvider.refreshAll();
-		});
-
 	}
 
 	private void configureGrid() {
@@ -76,10 +68,10 @@ public class PositionListingView extends VerticalLayout {
 
 		grid.addColumn(p -> p.getName(), "name").setHeader("Name");
 		grid.addColumn(p -> p.getCompanyName(), "companyName").setHeader("Company");
+		grid.addColumn(p -> p.getDepartment(), "department").setHeader("Department");
 		grid.addColumn(p -> EmploymentType.getLabel(p.getEmploymentType()), "employmentType")
 				.setHeader("Employment Type");
 		grid.addColumn(p -> p.getDatePosted(), "datePosted").setHeader("Posted at");
-		grid.addComponentColumn(p -> getActiveBadge(p)).setHeader("Active");
 		grid.addComponentColumn(p -> getDetailsButton(p));
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 		
@@ -92,18 +84,5 @@ public class PositionListingView extends VerticalLayout {
 		btn.setIconAfterText(true);
 		btn.addClickListener(e -> UI.getCurrent().navigate(PositionView.class, new RouteParam("posId", p.getId())));
 		return btn;
-	}
-
-	private Icon getActiveBadge(PositionViewModel p) {
-		Icon icon;
-		if (p.getActive()) {
-			icon = VaadinIcon.CHECK.create();
-			icon.getElement().getThemeList().add("badge success");
-		} else {
-			icon = VaadinIcon.CLOSE_SMALL.create();
-			icon.getElement().getThemeList().add("badge error");
-		}
-		icon.getStyle().set("padding", "var(--lumo-space-xs");
-		return icon;
 	}
 }

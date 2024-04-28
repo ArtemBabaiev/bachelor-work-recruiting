@@ -12,18 +12,10 @@ import lombok.Setter;
 @Setter
 public class PositionFilter implements IFilter<Position>{
 	private SearchCriteria name = new SearchCriteria("name", "like", "");
-	private SearchCriteria activeOnly = new SearchCriteria("active", "!=", null);
+	private SearchCriteria activeOnly = new SearchCriteria("active", ":", true);
 
 	public void setNameCriteria(String value) {
 		this.name.setValue(value);
-	}
-
-	public void setActiveCriteria(Boolean value) {
-		if (value) {
-			activeOnly.setValue(!value);
-		} else {
-			activeOnly.setValue(null);
-		}
 	}
 
 	public Specification<Position> getSpecification() {
