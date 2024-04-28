@@ -27,7 +27,7 @@ import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.PositionService;
-import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.utils.enums.EmploymentType;
 import jakarta.annotation.security.RolesAllowed;
 
@@ -46,7 +46,7 @@ public class PositionsMgmtView extends VerticalLayout {
 	private TextField nameSearch = new TextField();
 	private Button createPositionBtn = new Button("Create new position");
 
-	public PositionsMgmtView(UnitOfWork uow) {
+	public PositionsMgmtView(ServiceManager uow) {
 		this.positionService = uow.getPositionService();
 		companyEntity = uow.getCompanyService().getCompanyByUser(uow.getSecurityContext().getAuthenticatedUser());
 		grid = new Grid<>(PositionViewModel.class, false);

@@ -24,11 +24,11 @@ import edu.chnu.recruiting.services.ApplicationService;
 import edu.chnu.recruiting.utils.UiUtils;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import edu.chnu.recruiting.utils.enums.SessionKeys;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Apply")
 @Route(value = "apply", layout = MainLayout.class)
-@PermitAll
+@RolesAllowed({"USER"})
 public class ApplyView extends VerticalLayout {
 	private Binder<ApplicationFormModel> binder = new BeanValidationBinder<ApplicationFormModel>(
 			ApplicationFormModel.class);

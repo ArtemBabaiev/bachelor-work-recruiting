@@ -24,14 +24,14 @@ import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.ApplicationProfileGridVM;
 import edu.chnu.recruiting.services.ApplicationService;
-import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.PermitAll;
 
 @Route(value = "profile/applications", layout = MainLayout.class)
 @PageTitle("Profile-Applications")
 @PermitAll
-public class ApplicationsProfileView extends VerticalLayout {
+public class ApplicationsProfileView extends ProfileView {
 	private ApplicationService applicationService;
 	private User loggedInUser;
 	
@@ -42,12 +42,11 @@ public class ApplicationsProfileView extends VerticalLayout {
 	
 	private TextField nameSearch = new TextField();
 	private ComboBox<String> statusBox = new ComboBox<String>();
-	private ProfileMenuComponent menuBar = new ProfileMenuComponent();
 
-	public ApplicationsProfileView(UnitOfWork uow) {
+	public ApplicationsProfileView(ServiceManager uow) {
+		super(uow.getSecurityContext().getAuthenticatedUser());
 		this.applicationService = uow.getApplicationService();
 		this.loggedInUser = uow.getSecurityContext().getAuthenticatedUser();
-		menuBar.showAdditionalItems(loggedInUser);
 		
 		grid = new Grid<>(ApplicationProfileGridVM.class, false);
 		dataProvider = new ApplicationDataProvider<ApplicationProfileGridVM>(this.applicationService, ApplicationProfileGridVM.class);
@@ -59,8 +58,16 @@ public class ApplicationsProfileView extends VerticalLayout {
 
 		configureGrid();
 		configureComponents();
-
-		add(menuBar, new HorizontalLayout(nameSearch, statusBox), grid);
+		
+		setContent(getContent());
+	}
+	
+	private Component getContent() {
+		VerticalLayout content = new VerticalLayout();
+		content.add(new HorizontalLayout(nameSearch, statusBox));
+		content.add(grid);
+		content.setSizeFull();
+		return content;
 	}
 
 	private void configureGrid() {

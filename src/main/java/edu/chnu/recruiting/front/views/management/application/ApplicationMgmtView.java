@@ -28,7 +28,7 @@ import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.services.AccessService;
 import edu.chnu.recruiting.services.ApplicationService;
-import edu.chnu.recruiting.services.UnitOfWork;
+import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.RolesAllowed;
 
@@ -43,7 +43,7 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 
 	private ApplicationViewModel model;
 
-	public ApplicationMgmtView(UnitOfWork uow) {
+	public ApplicationMgmtView(ServiceManager uow) {
 		this.applicationService = uow.getApplicationService();
 		this.accessService = uow.getAccessService();
 	}
@@ -52,7 +52,7 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 	public void beforeEnter(BeforeEnterEvent event) {
 		try {
 			this.appId = Long.parseLong(event.getRouteParameters().get("appId").get());
-			model = applicationService.getApplicationVM(appId);
+			model = applicationService.getApplicationFull(appId, ApplicationViewModel.class);
 		} catch (Exception e) {
 			event.rerouteToError(BadRequestException.class);
 			return;

@@ -14,19 +14,19 @@ import edu.chnu.recruiting.security.SecurityContext;
 public class AccessService {
 	@Autowired
 	private SecurityContext securityContext;
-	
+
 	@Autowired
 	private CompanyService companyService;
-	
+
 	public boolean canUserManageApplication(ApplicationViewModel model) {
 		Company comp = this.companyService.getCompanyByUser(this.securityContext.getAuthenticatedUser());
 		return model.getPositionCompanyId().equals(comp.getId());
 	}
-	
+
 	public boolean canUserEditApplication(Application application) {
 		return securityContext.getAuthenticatedUser().getId().equals(application.getUser().getId());
 	}
-	
+
 	public boolean canUserEditCompany(CompanyFormModel model) {
 		User user = this.securityContext.getAuthenticatedUser();
 		return model.getOwner().getId().equals(user.getId());

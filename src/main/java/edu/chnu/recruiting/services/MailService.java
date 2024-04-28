@@ -15,10 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MailService {
 	@Autowired
 	private JavaMailSenderImpl mailSender;
-	
+
 	@Value("${spring.mail.from:}")
 	private String from;
-	
 
 	public void sendVerificationEmail(String to, String token) {
 		String contextPath = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();

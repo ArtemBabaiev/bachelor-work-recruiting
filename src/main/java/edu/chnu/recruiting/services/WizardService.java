@@ -19,7 +19,7 @@ public class WizardService {
 
 	@Autowired
 	private GcTextToSpeechService ttsService;
-	
+
 	public Wizard createWizard(FormСreationComponent form) {
 		List<SectionComponent> sections = form.getSections();
 		Wizard wizard = new Wizard();
@@ -37,7 +37,7 @@ public class WizardService {
 					} catch (IOException e) {
 						log.error("Error occured getting getting speech for field", e);
 						field.setSpeech(new byte[0]);
-					}					
+					}
 				}
 				step.addField(questionComponent.getField().withId(questionIndex++));
 			}

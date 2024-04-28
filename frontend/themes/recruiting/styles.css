@@ -20,3 +20,9 @@ td.disabled-grid-row {
 		width: 100%;
 	}
 }
+
+@media all and (max-width: 1100px) {
+	.list-view.editing .toolbar, .list-view.editing .user-grid {
+		display: none;
+	}
+}
