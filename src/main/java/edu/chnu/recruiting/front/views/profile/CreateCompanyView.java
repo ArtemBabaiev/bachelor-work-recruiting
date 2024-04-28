@@ -8,6 +8,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.front.layouts.MainLayout;
@@ -45,7 +46,8 @@ public class CreateCompanyView extends ProfileView implements BeforeEnterObserve
 	private void initComponent() {
 		this.form.addSaveListener(e -> handleSaveClick(e));
 		this.form.addCancelListener(e -> UI.getCurrent().getPage().getHistory().back());
-
+		form.setMaxWidth("850px");
+		form.addClassNames(LumoUtility.Padding.MEDIUM);
 		setSizeFull();
 		setContent(form);
 	}

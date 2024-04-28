@@ -56,7 +56,7 @@ public class ApplyView extends VerticalLayout {
 		UiUtils.setWidth("30vw", firstName, lastName, dateOfBirth);
 
 		DatePicker.DatePickerI18n multiFormatI18n = new DatePicker.DatePickerI18n();
-		multiFormatI18n.setDateFormats("yyyy-MM-dd", "MM/dd/yyyy", "dd.MM.yyyy");
+		multiFormatI18n.setDateFormats("dd.MM.yyyy", "MM/dd/yyyy");
 		dateOfBirth.setI18n(multiFormatI18n);
 
 		HorizontalLayout controls = new HorizontalLayout(cancelBtn, continueBtn);

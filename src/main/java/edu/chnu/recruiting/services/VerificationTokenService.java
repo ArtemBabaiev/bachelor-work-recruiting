@@ -11,6 +11,7 @@ import edu.chnu.recruiting.exceptions.TokenInvalidException;
 import edu.chnu.recruiting.exceptions.VerificationTokenExpiredException;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.security.VerificationToken;
+import edu.chnu.recruiting.repositories.UserRepository;
 import edu.chnu.recruiting.repositories.VerificationTokeRepository;
 
 @Service
@@ -19,7 +20,7 @@ public class VerificationTokenService {
 	private VerificationTokeRepository tokenRepository;
 
 	@Autowired
-	private UserService userService;
+	private UserRepository userReporsitory;
 
 	@Autowired
 	private MailService mailService;
@@ -56,7 +57,7 @@ public class VerificationTokenService {
 		User user = verificationToken.getUser();
 		user.setEnabled(true);
 		tokenRepository.delete(verificationToken);
-		return userService.updateUser(user);
+		return userReporsitory.save(user);
 	}
 
 	public VerificationToken generateAndSendNewVerificationToken(String existingToken) {

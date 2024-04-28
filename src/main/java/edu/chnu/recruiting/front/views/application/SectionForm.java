@@ -15,7 +15,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -66,7 +65,8 @@ public class SectionForm extends VerticalLayout {
 		for (var field : model.getFields()) {
 			configureField(field);
 		}
-		nextBtn.setEnabled(binder.isValid());;
+		nextBtn.setEnabled(binder.isValid());
+		;
 		add(new HorizontalLayout(backBtn, nextBtn));
 
 	}
@@ -125,6 +125,9 @@ public class SectionForm extends VerticalLayout {
 
 	private DatePicker getDate(WizardField field) {
 		DatePicker f = new DatePicker(field.getQuestion());
+		DatePicker.DatePickerI18n multiFormatI18n = new DatePicker.DatePickerI18n();
+		multiFormatI18n.setDateFormats("dd.MM.yyyy", "MM/dd/yyyy");
+		f.setI18n(multiFormatI18n);
 		f.setWidth("30vw");
 		var builder = binder.forField(f);
 		if (field.isRequired()) {
@@ -197,7 +200,7 @@ public class SectionForm extends VerticalLayout {
 
 	private Component getAudio(WizardField field) {
 		AudioRecorder recorder = new AudioRecorder();
-		recorder.addRecordedListener(e -> {		
+		recorder.addRecordedListener(e -> {
 			field.setUserValue(e.getRecording());
 			binder.validate();
 		});

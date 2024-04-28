@@ -5,13 +5,12 @@ import java.util.stream.Stream;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -19,14 +18,11 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.HasValueChangeMode;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.shared.Registration;
-import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
-import com.vaadin.flow.theme.lumo.LumoUtility.Display;
-import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextAlignment;
 
 import lombok.Getter;
 
-public class SignUpForm extends VerticalLayout {
+public class SignUpForm extends FormLayout {
 	private H2 title = new H2("Sign up");
 
 	private Binder<SignUpModel> binder = new BeanValidationBinder<SignUpModel>(SignUpModel.class);
@@ -46,9 +42,6 @@ public class SignUpForm extends VerticalLayout {
 	public SignUpForm(SignUpModel model) {
 		binder.bindInstanceFields(this);
 
-		setHeightFull();
-		addClassNames(Display.FLEX, JustifyContent.CENTER, AlignItems.CENTER);
-
 		configureComponents();
 
 		configureBinder();
@@ -63,12 +56,12 @@ public class SignUpForm extends VerticalLayout {
 	private void configureComponents() {
 		title.addClassName(TextAlignment.LEFT);
 		setRequiredIndicatorVisible(username, email, password, confirmPassword);
-		setSize(title, username, email, password, confirmPassword);
+		setResponsiveSteps(new ResponsiveStep("0", 1));
 		setEagerChangeMode(username, email, password, confirmPassword);
 
 		confirmBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		cancelBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
-		
+
 		confirmBtn.addClickListener(e -> handleSaveClick(e));
 		cancelBtn.addClickListener(e -> fireEvent(new CancelEvent(this)));
 	}
@@ -78,7 +71,7 @@ public class SignUpForm extends VerticalLayout {
 			return e.equals(password.getValue());
 		}, "Passwords do not match").bind("confirmPassword");
 	}
-	
+
 	private void handleSaveClick(ClickEvent<Button> e) {
 		if (binder.isValid())
 			fireEvent(new SaveEvent(this, binder.getBean()));
@@ -86,10 +79,6 @@ public class SignUpForm extends VerticalLayout {
 
 	private void setRequiredIndicatorVisible(HasValueAndElement<?, ?>... components) {
 		Stream.of(components).forEach(comp -> comp.setRequiredIndicatorVisible(true));
-	}
-
-	private void setSize(HasSize... components) {
-		Stream.of(components).forEach(comp -> comp.setWidth("315px"));
 	}
 
 	private void setEagerChangeMode(HasValueChangeMode... components) {

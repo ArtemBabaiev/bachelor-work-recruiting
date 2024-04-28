@@ -19,6 +19,12 @@ public class MailService {
 	@Value("${spring.mail.from:}")
 	private String from;
 
+	public void sendEmailChange(String to, String sequence) {
+		String subject = "Email verification";
+		String message = "Code: " + sequence;
+		this.sendEmail(to, subject, message);
+	}
+	
 	public void sendVerificationEmail(String to, String token) {
 		String contextPath = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 		String subject = EmailTemplates.Subjects.CONFIRMATION;
