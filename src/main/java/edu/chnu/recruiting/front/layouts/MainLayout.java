@@ -22,7 +22,7 @@ import edu.chnu.recruiting.front.views.management.application.ApplicationsMgmtVi
 import edu.chnu.recruiting.front.views.management.company.CompanyMgmtView;
 import edu.chnu.recruiting.front.views.management.position.PositionsMgmtView;
 import edu.chnu.recruiting.front.views.position.PositionListingView;
-import edu.chnu.recruiting.front.views.profile.ProfileView;
+import edu.chnu.recruiting.front.views.profile.AccountProfileView;
 import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.utils.PropertiesReader;
 import edu.chnu.recruiting.utils.enums.StarterRoles;
@@ -85,7 +85,7 @@ public class MainLayout extends AppLayout {
 	private SideNav createNavigation() {
 		SideNav nav = new SideNav();
 
-		nav.addItem(new SideNavItem("Profile", ProfileView.class));
+		nav.addItem(new SideNavItem("Profile", AccountProfileView.class));
 		nav.addItem(new SideNavItem("Positions listing", PositionListingView.class));
 		var user = this.securityService.getAuthenticatedUserSilent();
 		if (user != null) {

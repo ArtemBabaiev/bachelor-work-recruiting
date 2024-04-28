@@ -56,6 +56,7 @@ public class CompanyMgmtView extends SplitLayout {
 		configureCompanyForm();
 		addToSecondary(new VerticalLayout(getRecruiterToolbar(), getRecruiterContent()));
 		addToPrimary(getCompanyContent());
+		setSplitterPosition(40);
 		updateList();
 		closeEditor();
 	}
@@ -170,7 +171,7 @@ public class CompanyMgmtView extends SplitLayout {
 	}
 
 	private void deleteRecruiter(RecruiterForm.DeleteEvent event) {
-		// service.deleteContact(event.getContact());
+		companyService.deleteRecruiter(company.getId(), event.getModel());
 		updateList();
 		closeEditor();
 	}

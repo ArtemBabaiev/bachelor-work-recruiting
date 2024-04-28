@@ -56,7 +56,7 @@ public class UserService {
 
 	public User createRecruiter(RecruiterFormModel model) throws AlreadyExistsException {
 		if (this.userRepository.existsByUsername(model.getUsername())) {
-			throw new AlreadyExistsException("User with such username already in use");
+			throw new AlreadyExistsException("Username is already in use");
 		}
 		User user = modelMapper.map(model, User.class);
 		user.setPassword(passwordEncoder.encode(model.getPassword()));
@@ -71,5 +71,9 @@ public class UserService {
 		}
 		entity.setEnabled(model.getEnabled());
 		return this.userRepository.save(entity);
+	}
+	
+	public void deleteUser(Long id) {
+		this.userRepository.deleteById(id);
 	}
 }

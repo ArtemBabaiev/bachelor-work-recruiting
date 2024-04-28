@@ -46,7 +46,7 @@ public class CompanyForm extends VerticalLayout {
 	}
 
 	private void configureComponents() {
-		this.setWidth("30vw", name, description, industry, contactPhone, email, address);
+		this.setMaxWidth("600px", name, description, industry, contactPhone, email, address);
 
 		createBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		cancelBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -66,7 +66,7 @@ public class CompanyForm extends VerticalLayout {
 			fireEvent(new SaveEvent(this, binder.getBean()));
 	}
 
-	private void setWidth(String width, HasSize... components) {
+	private void setMaxWidth(String width, HasSize... components) {
 		Stream.of(components).forEach(comp -> comp.setWidth(width));
 	}
 

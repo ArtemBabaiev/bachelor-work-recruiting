@@ -9,14 +9,12 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
-import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.models.formModels.RecruiterFormModel;
 import lombok.Getter;
 
@@ -55,12 +53,12 @@ public class RecruiterForm extends FormLayout {
 		delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
 		close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
-		binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
+		// binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
 		return new HorizontalLayout(save, delete, close);
 	}
 
 	private void validateAndSave() {
-		if (binder.isValid()) {
+		if (binder.validate().isOk()) {
 			fireEvent(new SaveEvent(this, binder.getBean()));
 		}
 	}
@@ -68,7 +66,7 @@ public class RecruiterForm extends FormLayout {
 	public void setBean(RecruiterFormModel bean) {
 		binder.setBean(bean);
 		if (bean != null) {
-			username.setReadOnly(bean.getId() != null);			
+			username.setReadOnly(bean.getId() != null);
 		}
 	}
 

@@ -2,6 +2,7 @@ package edu.chnu.recruiting.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,12 +74,12 @@ public class CompanyService {
 		}
 		return this.companyRepository.findByRecruiters(user);
 	}
-	
+
 	@Transactional
-	public List<User> getCompanyRecruiters(Long companyId){
+	public List<User> getCompanyRecruiters(Long companyId) {
 		return new ArrayList<User>(this.companyRepository.findById(companyId).get().getRecruiters());
 	}
-	
+
 	@Transactional
 	public void saveRecruiter(Long companyId, RecruiterFormModel model) throws AlreadyExistsException {
 		Company company = this.companyRepository.findById(companyId).get();
@@ -90,5 +91,14 @@ public class CompanyService {
 		} else {
 			rec = this.userService.updateRecruiter(model);
 		}
+	}
+
+	@Transactional
+	public void deleteRecruiter(Long companyId, RecruiterFormModel model) {
+		Company company = this.companyRepository.findById(companyId).get();
+		company.setRecruiters(company.getRecruiters().stream().filter(r -> !r.getId().equals(model.getId()))
+				.collect(Collectors.toList()));
+		this.companyRepository.save(company);
+		this.userService.deleteUser(model.getId());
 	}
 }
