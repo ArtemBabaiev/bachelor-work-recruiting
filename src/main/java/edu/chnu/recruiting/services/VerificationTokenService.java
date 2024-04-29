@@ -65,7 +65,7 @@ public class VerificationTokenService {
 		vToken.updateToken(UUID.randomUUID().toString(), this.tokenExpiration);
 		vToken = tokenRepository.save(vToken);
 
-		this.mailService.sendVerificationEmail(vToken.getUser().getEmail(), vToken.getToken());
+		this.mailService.sendVerificationEmail(vToken);
 
 		return vToken;
 	}

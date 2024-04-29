@@ -7,8 +7,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -16,6 +16,7 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import edu.chnu.recruiting.front.views.HomeView;
 import edu.chnu.recruiting.front.views.auth.LoginView;
 import edu.chnu.recruiting.front.views.auth.registration.SignUpView;
 import edu.chnu.recruiting.front.views.management.application.ApplicationsMgmtView;
@@ -32,7 +33,7 @@ public class MainLayout extends AppLayout {
 	private SecurityContext securityService;
 	private PropertiesReader propertiesReader;
 
-	private H2 title;
+	private Button title;
 
 	public MainLayout(SecurityContext securityService, PropertiesReader propertiesReader) {
 		this.securityService = securityService;
@@ -47,15 +48,16 @@ public class MainLayout extends AppLayout {
 		DrawerToggle toggle = new DrawerToggle();
 		toggle.setAriaLabel("Menu toggle");
 
-		title = new H2(this.propertiesReader.getApplicationName());
+		title = new Button(this.propertiesReader.getApplicationName(), e -> UI.getCurrent().navigate(HomeView.class));
 		title.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-
+		title.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE, ButtonVariant.LUMO_CONTRAST);
 		Button authBtn = new Button();
-		HorizontalLayout header = new HorizontalLayout(title);
+		Span space = new Span();
+		HorizontalLayout header = new HorizontalLayout(title, space);
 		header.setAlignItems(Alignment.CENTER);
 		header.addClassNames(LumoUtility.Margin.Right.MEDIUM);
 		header.setWidthFull();
-		header.expand(title);
+		header.expand(space);
 		if (this.securityService.isAuthenticated()) {
 			authBtn.setText("Log out");
 			authBtn.addClickListener(e -> this.securityService.logout());
@@ -85,6 +87,7 @@ public class MainLayout extends AppLayout {
 	private SideNav createNavigation() {
 		SideNav nav = new SideNav();
 
+		nav.addItem(new SideNavItem("Home", HomeView.class));
 		nav.addItem(new SideNavItem("Profile", AccountProfileView.class));
 		nav.addItem(new SideNavItem("Positions listing", PositionListingView.class));
 		var user = this.securityService.getAuthenticatedUserSilent();

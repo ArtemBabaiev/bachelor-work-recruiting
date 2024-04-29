@@ -53,9 +53,7 @@ public class UserService {
 
 		String token = UUID.randomUUID().toString();
 
-		verTokenService.createVerificationToken(user, token);
-
-		mailService.sendVerificationEmail(user.getEmail(), token);
+		mailService.sendVerificationEmail(verTokenService.createVerificationToken(user, token));
 		return user;
 	}
 

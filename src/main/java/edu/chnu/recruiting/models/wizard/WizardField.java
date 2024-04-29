@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.models.wizard;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class WizardField {
 	private boolean textToSpeech = false;
 
 	// in case checkbox, or dropdown list
-	private List<String> options = new ArrayList<String>();
+	private Set<String> options = new LinkedHashSet<String>();
 
 	private String fileName;
 	
