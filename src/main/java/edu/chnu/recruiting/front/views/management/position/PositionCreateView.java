@@ -19,6 +19,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
@@ -38,7 +40,7 @@ import jakarta.annotation.security.RolesAllowed;
 @PageTitle("Create Position")
 @Route(value = "management/position-create", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
-public class PositionCreateView extends VerticalLayout {
+public class PositionCreateView extends VerticalLayout implements BeforeEnterObserver {
 	Binder<Position> binder = new BeanValidationBinder<Position>(Position.class);
 	Position model = new Position();
 
@@ -59,15 +61,23 @@ public class PositionCreateView extends VerticalLayout {
 
 	public PositionCreateView(PositionService positionService) {
 		this.positionService = positionService;
+	}
+
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		// TODO Auto-generated method stub
+		initComponent();
+	}
+	
+	
+	private void initComponent() {
 		this.configureComponents();
 		this.configureBinder();
 		tabSheet.add("Position Info", this.getPositionInfoSheet());
 		tabSheet.add("Application Form", this.getFormSheet());
-		tabSheet.add("Complete", this.getCompleteSheet());
 		tabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_CENTERED);
 		tabSheet.setSizeFull();
-		add(tabSheet);
-
+		add(createPositionBtn, tabSheet);
 	}
 
 	private void configureComponents() {
@@ -111,14 +121,6 @@ public class PositionCreateView extends VerticalLayout {
 		VerticalLayout sheet = new VerticalLayout(getNote(), form);
 		sheet.setSizeFull();
 		return sheet;
-	}
-
-	private Component getCompleteSheet() {
-		var vl = new VerticalLayout();
-		vl.setSizeFull();
-		vl.setAlignItems(Alignment.CENTER);
-		vl.add(createPositionBtn);
-		return vl;
 	}
 
 	private Component getNote() {
