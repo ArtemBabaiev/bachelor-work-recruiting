@@ -85,7 +85,7 @@ public class PositionCreateView extends VerticalLayout {
 		var note = getNote();
 		VerticalLayout sheet = new VerticalLayout(note, form);
 		sheet.setAlignItems(Alignment.CENTER);
-		form.setMaxWidth("900px");
+		form.setMaxWidth("800px");
 		sheet.setSizeFull();
 		return sheet;
 	}

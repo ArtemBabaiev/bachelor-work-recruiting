@@ -4,7 +4,6 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -31,7 +30,7 @@ import edu.chnu.recruiting.models.wizard.WizardField;
 
 public class QuestionComponent extends VerticalLayout {
 	Binder<WizardField> binder = new BeanValidationBinder<WizardField>(WizardField.class);
-	WizardField field = new WizardField();
+	WizardField field;
 
 	ComboBox<ValueType> type = new ComboBox<>("Type");
 	TextField question = new TextField("Question");
@@ -50,30 +49,31 @@ public class QuestionComponent extends VerticalLayout {
 	Button downBtn = new Button(new Icon(VaadinIcon.ARROW_DOWN));
 	Button closeBtn = new Button(new Icon(VaadinIcon.CLOSE));
 
-	public QuestionComponent(ValueType type) {
-		field.setType(type);
+	public QuestionComponent(WizardField field) {
+		this.field = field;
+		field.setType(field.getType());
 		binder.bindInstanceFields(this);
 		addClassNames(LumoUtility.Background.BASE, LumoUtility.BorderRadius.LARGE);
 		configureComponent();
 		binder.setBean(field);
-		setExtra();
+
 		configureDisplayed();
 	}
 
 	private void configureComponent() {
-		type.addValueChangeListener(e -> setExtra());
-		
+		type.addValueChangeListener(e -> setExtra(e.getOldValue(), e.getValue()));
+
 		closeBtn.addClickListener(e -> remove());
 		upBtn.addClickListener(e -> handleUpClick(e));
 		downBtn.addClickListener(e -> handleDownClick(e));
 		question.setValueChangeMode(ValueChangeMode.EAGER);
-		
+
 		type.setItems(ValueType.values());
 		type.setItemLabelGenerator(v -> v.getLabel());
 		type.setRenderer(new ComponentRenderer<Component, ValueType>(v -> {
 			var icon = v.getIcon().create();
 			icon.getStyle().set("padding", "var(--lumo-space-xs)");
-			return new Span(icon,  new Span(v.getLabel()));
+			return new Span(icon, new Span(v.getLabel()));
 		}));
 		MessageInputI18n ms = new MessageInputI18n();
 		ms.setMessage("Option");
@@ -86,29 +86,29 @@ public class QuestionComponent extends VerticalLayout {
 		optionsList.setHeight("150px");
 		optionsList.setWidthFull();
 		optionsList.setRenderer(new ComponentRenderer<>(option -> {
-		    HorizontalLayout row = new HorizontalLayout();
-		    row.setAlignItems(Alignment.BASELINE);
-		    
-		    Span opt = new Span(option);
-		    Button removeBtn = new Button(new Icon(VaadinIcon.CLOSE));
-		    removeBtn.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
-		    removeBtn.addClickListener(e -> removeOption(option));
-		    row.add(removeBtn, opt);
-		    row.addClassNames(LumoUtility.Border.BOTTOM);
-		    return row;
+			HorizontalLayout row = new HorizontalLayout();
+			row.setAlignItems(Alignment.BASELINE);
+
+			Span opt = new Span(option);
+			Button removeBtn = new Button(new Icon(VaadinIcon.CLOSE));
+			removeBtn.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+			removeBtn.addClickListener(e -> removeOption(option));
+			row.add(removeBtn, opt);
+			row.addClassNames(LumoUtility.Border.BOTTOM);
+			return row;
 		}));
 	}
 
 	private void configureDisplayed() {
 		this.setSpacing(false);
 		this.addClassNames(LumoUtility.Padding.NONE, LumoUtility.Margin.NONE);
-		
+
 		controls.addClassNames(LumoUtility.Padding.NONE, LumoUtility.Margin.NONE);
 		controls.setWidthFull();
 		controls.setJustifyContentMode(JustifyContentMode.END);
 		controls.add(downBtn, upBtn, closeBtn);
 		controls.setSpacing(false);
-		
+
 		closeBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR,
 				ButtonVariant.LUMO_TERTIARY);
 		upBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
@@ -117,21 +117,23 @@ public class QuestionComponent extends VerticalLayout {
 		HorizontalLayout hzl = new HorizontalLayout(question, type);
 		hzl.addClassNames(LumoUtility.Padding.NONE, LumoUtility.Margin.NONE);
 		hzl.setWidthFull();
-		//hzl.expand(question);
+		// hzl.expand(question);
 		hzl.setFlexGrow(2, question);
 		hzl.setFlexGrow(1, type);
-		
+
 		info.addClassNames(LumoUtility.Padding.Top.NONE);
 		info.add(hzl, required);
 
 		extra.addClassNames(LumoUtility.Padding.Top.NONE);
-		
+
 		add(controls, info, extra);
 	}
 
-	private void setExtra() {
+	private void setExtra(ValueType oldValue, ValueType newValue) {
 		extra.removeAll();
-		binder.getBean().resetOptional();
+		if (oldValue != null) {
+			binder.getBean().resetOptional();
+		}
 		updateOptions();
 		switch (binder.getBean().getType()) {
 		case SELECTION_MULTIPLE:
@@ -141,19 +143,15 @@ public class QuestionComponent extends VerticalLayout {
 		case AUDIO:
 			extra.add(textToSpeech);
 			break;
-		}
-	}
-
-	private void setFullSize(HasSize... components) {
-		for (HasSize has : components) {
-			has.setSizeFull();
+		default:
+			break;
 		}
 	}
 
 	public void remove() {
 		this.removeFromParent();
 	}
-	
+
 	private void handleUpClick(ClickEvent<Button> e) {
 		fireEvent(new UpQuestionEvent(this));
 	}
@@ -171,7 +169,7 @@ public class QuestionComponent extends VerticalLayout {
 		binder.getBean().addOption(option);
 		updateOptions();
 	}
-	
+
 	private void updateOptions() {
 		optionsList.setItems(binder.getBean().getOptions());
 	}
@@ -179,7 +177,7 @@ public class QuestionComponent extends VerticalLayout {
 	public WizardField getField() {
 		return this.binder.getBean();
 	}
-	
+
 	public Registration addUpListener(ComponentEventListener<UpQuestionEvent> listener) {
 		return addListener(UpQuestionEvent.class, listener);
 	}
@@ -187,7 +185,7 @@ public class QuestionComponent extends VerticalLayout {
 	public Registration addDownListener(ComponentEventListener<DownQuestionEvent> listener) {
 		return addListener(DownQuestionEvent.class, listener);
 	}
-	
+
 	public static abstract class MoveQuestionEvent extends ComponentEvent<QuestionComponent> {
 		protected MoveQuestionEvent(QuestionComponent source) {
 			super(source, false);

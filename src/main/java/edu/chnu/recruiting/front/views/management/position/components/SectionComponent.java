@@ -20,13 +20,13 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.views.management.position.components.QuestionComponent.DownQuestionEvent;
 import edu.chnu.recruiting.front.views.management.position.components.QuestionComponent.UpQuestionEvent;
-import edu.chnu.recruiting.models.wizard.ValueType;
+import edu.chnu.recruiting.models.wizard.WizardField;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 
 public class SectionComponent extends VerticalLayout {
 	Binder<WizardStep> binder = new BeanValidationBinder<WizardStep>(WizardStep.class);
 	VerticalLayout box = new VerticalLayout();
-	WizardStep step = new WizardStep();
+	WizardStep step;
 	TextField name = new TextField("Section name");
 
 	Button addQuestionBtn = new Button("Add question");
@@ -34,8 +34,9 @@ public class SectionComponent extends VerticalLayout {
 	Button closeBtn = new Button(new Icon(VaadinIcon.CLOSE));
 	Button upBtn = new Button(new Icon(VaadinIcon.ARROW_UP));
 	Button downBtn = new Button(new Icon(VaadinIcon.ARROW_DOWN));
-
-	public SectionComponent() {
+	
+	public SectionComponent(WizardStep step) {
+		this.step = step;
 		binder.bindInstanceFields(this);
 
 		this.setWidthFull();
@@ -71,11 +72,20 @@ public class SectionComponent extends VerticalLayout {
 		binder.setBean(step);
 
 		add(controls, content);
+		if (!this.step.getFields().isEmpty()) {
+			for (var field : this.step.getFields()) {
+				QuestionComponent qst = new QuestionComponent(field);
+				qst.addUpListener(eUp -> handleUpClick(eUp));
+				qst.addDownListener(eDown -> handleDownEvent(eDown));
+
+				box.add(qst);
+			}
+		}
 
 	}
 
 	private void handleCreateQuestionClick(ClickEvent<Button> e) {
-		QuestionComponent qst = new QuestionComponent(ValueType.TEXT);
+		QuestionComponent qst = new QuestionComponent(new WizardField());
 		qst.addUpListener(eUp -> handleUpClick(eUp));
 		qst.addDownListener(eDown -> handleDownEvent(eDown));
 

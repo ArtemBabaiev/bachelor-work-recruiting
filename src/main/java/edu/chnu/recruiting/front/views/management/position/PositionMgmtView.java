@@ -13,6 +13,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteParam;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
@@ -64,6 +65,7 @@ public class PositionMgmtView extends VerticalLayout implements BeforeEnterObser
 	}
 
 	private void initComponent() {
+
 		form = new PositionForm(model);
 		this.setSizeFull();
 		configureComponents();
@@ -80,12 +82,15 @@ public class PositionMgmtView extends VerticalLayout implements BeforeEnterObser
 	}
 
 	private void configureComponents() {
+		editFormBtn.addClickListener(
+				e -> UI.getCurrent().navigate(PositionFormEditView.class, new RouteParam("id", model.getId())));
+		
 		form.setResponsiveSteps(new ResponsiveStep("0", 1));
 		form.addSaveListener(this::handleSaveEvent);
 		form.addCancelListener(this::handleCancelEvent);
 
 		activationBtn.setText(model.getActive() ? "Deactivate" : "Activate");
-		activationBtn.addThemeVariants(model.getActive()? ButtonVariant.LUMO_ERROR: ButtonVariant.LUMO_SUCCESS);
+		activationBtn.addThemeVariants(model.getActive() ? ButtonVariant.LUMO_ERROR : ButtonVariant.LUMO_SUCCESS);
 		activationBtn.addClickListener(e -> {
 			if (model.getActive()) {
 				positionService.deactivatePosition(model.getId());
