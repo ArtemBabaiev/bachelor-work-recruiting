@@ -30,7 +30,7 @@ public class PositionForm extends FormLayout {
 	private ComboBox<String> employmentType = new ComboBox<>("Employment type");
 	private SalaryRangePicker salaryRange = new SalaryRangePicker("Salary range");
 
-	private Button updateBtn = new Button("Update", e -> {
+	private Button updateBtn = new Button("Save", e -> {
 		if (binder.validate().isOk()) {
 			fireEvent(new SaveEvent(this, binder.getBean()));
 		}
@@ -71,6 +71,14 @@ public class PositionForm extends FormLayout {
 	
 	public void setBean(Position model) {
 		this.binder.setBean(model);
+	}
+	
+	public Button getSaveButton() {
+		return updateBtn;
+	}
+	
+	public Button getCancelButton() {
+		return cancelBtn;
 	}
 
 	public Registration addSaveListener(ComponentEventListener<SaveEvent> listener) {

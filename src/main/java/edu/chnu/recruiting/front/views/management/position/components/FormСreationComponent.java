@@ -7,7 +7,6 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.views.management.position.components.SectionComponent.DownSectionEvent;
 import edu.chnu.recruiting.front.views.management.position.components.SectionComponent.UpSectionEvent;
@@ -16,15 +15,14 @@ import edu.chnu.recruiting.front.views.management.position.components.SectionCom
 public class FormСreationComponent extends VerticalLayout {
 	VerticalLayout box = new VerticalLayout();
 	Button addSectionBtn = new Button("Add section");
+
 	public FormСreationComponent() {
 		addSectionBtn.addClickListener(e -> handleAddSectionClick(e));
 		this.setWidthFull();
-		box.setSizeUndefined();
-		box.addClassNames("resizable", LumoUtility.Margin.NONE, LumoUtility.Padding.NONE);
 		this.setAlignItems(Alignment.CENTER);
 		add(box, addSectionBtn);
 	}
-	
+
 	private void handleAddSectionClick(ClickEvent<Button> e) {
 		SectionComponent sc = new SectionComponent();
 		sc.addUpListener(eUp -> handleUpEvent(eUp));
@@ -32,7 +30,7 @@ public class FormСreationComponent extends VerticalLayout {
 		box.add(sc);
 		return;
 	}
-	
+
 	private void handleDownEvent(DownSectionEvent e) {
 		var children = box.getChildren().collect(Collectors.toList());
 		int size = children.size();
@@ -59,9 +57,8 @@ public class FormСreationComponent extends VerticalLayout {
 		box.add(children);
 		return;
 	}
-	
-	public List<SectionComponent> getSections(){
-		return box.getChildren().filter(c -> c instanceof SectionComponent)
-		.map(c -> (SectionComponent) c).toList();
+
+	public List<SectionComponent> getSections() {
+		return box.getChildren().filter(c -> c instanceof SectionComponent).map(c -> (SectionComponent) c).toList();
 	}
 }

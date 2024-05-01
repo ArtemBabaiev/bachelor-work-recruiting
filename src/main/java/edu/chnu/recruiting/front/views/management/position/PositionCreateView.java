@@ -1,131 +1,97 @@
 package edu.chnu.recruiting.front.views.management.position;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
+import com.vaadin.flow.theme.lumo.LumoUtility.Display;
+import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
+import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 
-import edu.chnu.recruiting.front.components.fields.picker.SalaryRange;
-import edu.chnu.recruiting.front.components.fields.picker.SalaryRangePicker;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.management.position.components.FormСreationComponent;
-import edu.chnu.recruiting.front.views.position.PositionView;
+import edu.chnu.recruiting.front.views.management.position.components.PositionForm;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.services.PositionService;
-import edu.chnu.recruiting.utils.UiUtils;
-import edu.chnu.recruiting.utils.enums.EmploymentType;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Create Position")
 @Route(value = "management/position-create", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
-public class PositionCreateView extends VerticalLayout implements BeforeEnterObserver {
-	Binder<Position> binder = new BeanValidationBinder<Position>(Position.class);
-	Position model = new Position();
+public class PositionCreateView extends VerticalLayout {
 
 	TabSheet tabSheet = new TabSheet();
 
-	TextField name = new TextField("Position name");
-	TextArea description = new TextArea("Description");
-	TextField department = new TextField("Department");
-	TextField location = new TextField("Location");
-	ComboBox<String> employmentType = new ComboBox<>("Employment type");
-	SalaryRangePicker salaryRange = new SalaryRangePicker("Salary range");
-	
 	FormСreationComponent form = new FormСreationComponent();
 
-	Button createPositionBtn = new Button("Create position");
+	PositionForm positionForm;
 
 	PositionService positionService;
 
 	public PositionCreateView(PositionService positionService) {
 		this.positionService = positionService;
-	}
-
-	@Override
-	public void beforeEnter(BeforeEnterEvent event) {
-		// TODO Auto-generated method stub
 		initComponent();
 	}
-	
-	
+
 	private void initComponent() {
+		positionForm = new PositionForm(new Position());
 		this.configureComponents();
-		this.configureBinder();
 		tabSheet.add("Position Info", this.getPositionInfoSheet());
 		tabSheet.add("Application Form", this.getFormSheet());
 		tabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_CENTERED);
 		tabSheet.setSizeFull();
-		add(createPositionBtn, tabSheet);
+		HorizontalLayout controls = new HorizontalLayout(positionForm.getSaveButton());
+		controls.addClassNames(LumoUtility.Padding.NONE);
+		controls.setJustifyContentMode(JustifyContentMode.END);
+		controls.setWidthFull();
+		this.setSpacing(false);
+		add(controls, tabSheet);
 	}
 
 	private void configureComponents() {
-		employmentType.setItems(Arrays.stream(EmploymentType.values()).map(EmploymentType::toString).toList());
-		employmentType.setItemLabelGenerator(i -> EmploymentType.valueOf(i).getLabel());
+		form.addClassName(LumoUtility.Padding.NONE);
 
-		createPositionBtn.addClickListener(e -> {
-			var pos = this.positionService.createPosition(binder.getBean(), form);
-			UI.getCurrent().navigate(PositionView.class, new RouteParam("posId", pos.getId()));
+		positionForm.getCancelButton().setVisible(false);
+		positionForm.addSaveListener(e -> {
+			var pos = this.positionService.createPosition(e.getModel(), form);
+			UI.getCurrent().navigate(PositionMgmtView.class, new RouteParam("id", pos.getId()));
 		});
 	}
 
-	private void configureBinder() {
-		binder.bindInstanceFields(this);
-		binder.addStatusChangeListener(e -> createPositionBtn.setEnabled(binder.isValid()));
-		binder.forField(salaryRange).withNullRepresentation(new SalaryRange(0.0, 0.0, "USD"))
-				.withValidator(
-						decimalRange -> decimalRange.getStart() == null || decimalRange.getEnd() == null
-								|| decimalRange.getStart() < decimalRange.getEnd(),
-						"Min salary should be less or equal to max salary")
-				.bind(position -> new SalaryRange(position.getMinSalary(), position.getMaxSalary(),
-						position.getCurrencyCode()), (position, salaryRange) -> {
-							position.setMinSalary(salaryRange.getStart());
-							position.setMaxSalary(salaryRange.getEnd());
-							position.setCurrencyCode(salaryRange.getCurrencyCode());
-						});
-		binder.setBean(model);
-	}
-
 	private Component getPositionInfoSheet() {
-		VerticalLayout infoSheet = new VerticalLayout();
+		positionForm.setResponsiveSteps(new ResponsiveStep("0", 1));
+		Div test = new Div(positionForm);
+		test.setMaxWidth("800px");
+		test.addClassNames(Display.FLEX, FlexDirection.COLUMN, JustifyContent.CENTER, AlignItems.CENTER);
+		VerticalLayout infoSheet = new VerticalLayout(test);
 		infoSheet.setSizeFull();
 		infoSheet.setAlignItems(Alignment.CENTER);
-		infoSheet.add(name, description, department, location, employmentType, salaryRange);
-		UiUtils.setValueChangeMode(ValueChangeMode.EAGER, name, description, department, location);
-		this.setWidth("40vw", name, description, department, location, employmentType, salaryRange);
 		return infoSheet;
 	}
 
 	private Component getFormSheet() {
-		VerticalLayout sheet = new VerticalLayout(getNote(), form);
+		var note = getNote();
+		VerticalLayout sheet = new VerticalLayout(note, form);
+		sheet.setAlignItems(Alignment.CENTER);
+		form.setMaxWidth("900px");
 		sheet.setSizeFull();
 		return sheet;
 	}
 
-	private Component getNote() {
-		Span note = new Span(
-				"First name, Last name and Date of birth are mandantory data and will be automatically created");
+	private Span getNote() {
+		Span note = new Span("First name, Last name and Date of birth are automatically collected");
 		Span iconSpan = new Span();
 
 		Icon icon = VaadinIcon.WARNING.create();
@@ -137,9 +103,5 @@ public class PositionCreateView extends VerticalLayout implements BeforeEnterObs
 		iconSpan.getElement().getThemeList().add("badge error");
 
 		return new Span(iconSpan, note);
-	}
-
-	private void setWidth(String width, HasSize... components) {
-		Stream.of(components).forEach(comp -> comp.setWidth(width));
 	}
 }
