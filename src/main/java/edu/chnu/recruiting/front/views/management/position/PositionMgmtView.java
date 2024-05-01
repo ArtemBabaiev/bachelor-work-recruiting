@@ -2,6 +2,7 @@ package edu.chnu.recruiting.front.views.management.position;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
@@ -84,6 +85,7 @@ public class PositionMgmtView extends VerticalLayout implements BeforeEnterObser
 		form.addCancelListener(this::handleCancelEvent);
 
 		activationBtn.setText(model.getActive() ? "Deactivate" : "Activate");
+		activationBtn.addThemeVariants(model.getActive()? ButtonVariant.LUMO_ERROR: ButtonVariant.LUMO_SUCCESS);
 		activationBtn.addClickListener(e -> {
 			if (model.getActive()) {
 				positionService.deactivatePosition(model.getId());
@@ -99,7 +101,8 @@ public class PositionMgmtView extends VerticalLayout implements BeforeEnterObser
 	}
 
 	private void handleSaveEvent(PositionForm.SaveEvent e) {
-		// TODO: handle update
+		model = this.positionService.updatePosition(e.getModel());
+		form.setBean(model);
 	}
 
 	private void handleCancelEvent(PositionForm.CancelEvent e) {
