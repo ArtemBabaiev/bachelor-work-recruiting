@@ -1,8 +1,11 @@
 package edu.chnu.recruiting.front.views.auth.registration;
 
+import java.time.LocalDate;
+
 import edu.chnu.recruiting.utils.constants.RegexPatterns;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -31,4 +34,10 @@ public class SignUpModel {
 	
 	@NotBlank
 	private String confirmPassword;
+	
+	@NotBlank
+	private String fullName;
+	
+	@NotNull
+	private LocalDate dateOfBirth;
 }

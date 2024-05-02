@@ -8,8 +8,8 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -18,17 +18,17 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.HasValueChangeMode;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.shared.Registration;
-import com.vaadin.flow.theme.lumo.LumoUtility.TextAlignment;
 
 import lombok.Getter;
 
 public class SignUpForm extends FormLayout {
-	private H2 title = new H2("Sign up");
 
 	private Binder<SignUpModel> binder = new BeanValidationBinder<SignUpModel>(SignUpModel.class);
 
 	private TextField username = new TextField("Username");
 	private TextField email = new TextField("Email");
+	private TextField fullName = new TextField("Full name");
+	private DatePicker dateOfBirth = new DatePicker("Date of birth");
 	private PasswordField password = new PasswordField("Password");
 	private PasswordField confirmPassword = new PasswordField("Confirm password");
 
@@ -50,14 +50,16 @@ public class SignUpForm extends FormLayout {
 
 		HorizontalLayout hz = new HorizontalLayout(confirmBtn, cancelBtn);
 
-		add(title, username, email, password, confirmPassword, hz);
+		add(username, email, fullName, dateOfBirth, password, confirmPassword, hz);
 	}
 
 	private void configureComponents() {
-		title.addClassName(TextAlignment.LEFT);
 		setRequiredIndicatorVisible(username, email, password, confirmPassword);
-		setResponsiveSteps(new ResponsiveStep("0", 1));
 		setEagerChangeMode(username, email, password, confirmPassword);
+
+		DatePicker.DatePickerI18n multiFormatI18n = new DatePicker.DatePickerI18n();
+		multiFormatI18n.setDateFormats("dd.MM.yyyy", "MM/dd/yyyy");
+		dateOfBirth.setI18n(multiFormatI18n);
 
 		confirmBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		cancelBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
