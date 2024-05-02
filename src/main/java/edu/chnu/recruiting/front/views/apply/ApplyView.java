@@ -11,6 +11,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
@@ -74,11 +75,11 @@ public class ApplyView extends VerticalLayout implements BeforeEnterObserver {
 		form.setResponsiveSteps(new ResponsiveStep("0", 1));
 		form.addContinueListener(e -> handleContinueEvent(e));
 		form.addCancelListener(e -> UI.getCurrent().getPage().getHistory().back());
-
+		form.addClassNames(LumoUtility.Background.CONTRAST_10, LumoUtility.BorderRadius.MEDIUM, LumoUtility.Padding.MEDIUM);
 		this.setAlignItems(Alignment.CENTER);
 
 		Div test = new Div(title, form);
-		test.setMaxWidth("450px");
+		test.setMaxWidth("550px");
 		test.addClassNames(Display.FLEX, FlexDirection.COLUMN, JustifyContent.CENTER, AlignItems.CENTER);
 		setSizeFull();
 		add(test);

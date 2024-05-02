@@ -8,6 +8,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -18,11 +19,12 @@ import edu.chnu.recruiting.front.components.microphone.VUserMedia;
 
 @Tag("audio-recorder")
 public class AudioRecorder extends HorizontalLayout {
-	VUserMedia mic;
-	Button startRecording = new Button("Start recording", new Icon(VaadinIcon.CIRCLE));
-	Button stopRecording = new Button("Stop recording",new Icon(VaadinIcon.STOP));
-	ByteArrayOutputStream currentRecording;
-	boolean recordingInProcess = false;
+	private VUserMedia mic;
+	private Button startRecording = new Button("Start recording", new Icon(VaadinIcon.CIRCLE));
+	private Button stopRecording = new Button("Stop recording",new Icon(VaadinIcon.STOP));
+	private ByteArrayOutputStream currentRecording;
+	private boolean recordingInProcess = false;
+	private Span label = new Span();
 
 	public AudioRecorder() {
 		mic = new VUserMedia();
@@ -33,7 +35,7 @@ public class AudioRecorder extends HorizontalLayout {
 				return currentRecording;
 			}
 		});
-		add(new HorizontalLayout(startRecording, stopRecording, mic));
+		add(new HorizontalLayout(startRecording, stopRecording, mic), label);
 
 		this.makeButtonActive(false, stopRecording);
 		this.makeButtonActive(true, startRecording);
@@ -59,8 +61,15 @@ public class AudioRecorder extends HorizontalLayout {
 		mic.addFinishedListener(e -> {
 			fireEvent(new RecordedEvent(this, currentRecording.toByteArray()));
 		});
+		
+		label.getStyle().set("color", "var(--lumo-secondary-text-color)").set("font-size",
+				"var(--lumo-font-size-xs)");
 	}
 
+	public void setLabel(String message) {
+		this.label.setText(message);
+	}
+	
 	private void makeButtonActive(boolean value, Button... buttons) {
 		for (Button button : buttons) {
 			button.setVisible(value);

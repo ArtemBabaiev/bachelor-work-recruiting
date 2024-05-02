@@ -38,6 +38,8 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 	public ApplicationFormView(ServiceManager uow) {
 		this.applicationService = uow.getApplicationService();
 		this.accessService = uow.getAccessService();
+		this.setSizeFull();
+		this.setAlignItems(Alignment.CENTER);
 	}
 
 	@Override
@@ -65,7 +67,6 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 		} else {
 			updateSectionComponent(application.getWizardData().getStep(application.getWizardData().getCurrentStep()));
 		}
-
 	}
 
 	private void updateSectionComponent(WizardStep step) {
@@ -76,7 +77,7 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 		currentSection = new SectionForm(step);
 		currentSection.addNextListener(e -> handleNextEvent(e));
 		currentSection.addBackListener(e -> handleBackEvent(e));
-
+		currentSection.setMaxWidth("550px");
 		add(currentSection);
 	}
 

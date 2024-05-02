@@ -8,12 +8,14 @@ import java.util.Set;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -49,10 +51,13 @@ public class SectionForm extends VerticalLayout {
 	}
 
 	private void initComponent() {
-		binder.setBean(model);
+		this.addClassNames(LumoUtility.Background.CONTRAST_10, LumoUtility.BorderRadius.MEDIUM);
 		binder.addStatusChangeListener(e -> nextBtn.setEnabled(binder.isValid()));
+		binder.setBean(model);
 		nextBtn.addClickListener(e -> {
-			fireEvent(new NextEvent(this, binder.getBean()));
+			if (binder.validate().isOk()) {
+				fireEvent(new NextEvent(this, binder.getBean()));
+			}
 		});
 		backBtn.addClickListener(e -> {
 			fireEvent(new BackEvent(this, binder.getBean()));
@@ -65,45 +70,45 @@ public class SectionForm extends VerticalLayout {
 		for (var field : model.getFields()) {
 			configureField(field);
 		}
-		nextBtn.setEnabled(binder.isValid());
-		;
 		add(new HorizontalLayout(backBtn, nextBtn));
 
 	}
 
 	private void configureField(WizardField field) {
+		Component toAdd = null;
 		switch (field.getType()) {
 		case AUDIO:
-			add(getAudio(field));
+			toAdd = getAudio(field);
 			break;
 		case DATE:
-			add(getDate(field));
+			toAdd = getDate(field);
 			break;
 		case NUMBER:
-			add(getNumber(field));
+			toAdd = getNumber(field);
 			break;
 		case SELECTION_MULTIPLE:
-			add(getMultiSelection(field));
+			toAdd = getMultiSelection(field);
 			break;
 		case SELECTION_SINGLE:
-			add(getSingleSelection(field));
+			toAdd = getSingleSelection(field);
 			break;
 		case TEXT:
-			add(getText(field));
+			toAdd = getText(field);
 			break;
 		case UPLOAD:
-			add(getUpload(field));
+			toAdd = getUpload(field);
 			break;
 
 		}
+		((HasSize) toAdd).setWidthFull();
+		add(toAdd, new Hr());
 	}
 
 	private TextField getText(WizardField field) {
 		TextField tf = new TextField(field.getQuestion());
-		tf.setWidth("30vw");
 		BindingBuilder<WizardStep, String> builder = binder.forField(tf);
 		if (field.isRequired()) {
-			builder.asRequired();
+			builder.asRequired("Required");
 		}
 		builder.bind(step -> (String) step.getFieldValue(field.getId()),
 				(step, value) -> step.setFieldValue(field.getId(), value));
@@ -113,10 +118,9 @@ public class SectionForm extends VerticalLayout {
 
 	private NumberField getNumber(WizardField field) {
 		NumberField f = new NumberField(field.getQuestion());
-		f.setWidth("30vw");
 		var builder = binder.forField(f);
 		if (field.isRequired()) {
-			builder.asRequired();
+			builder.asRequired("Required");
 		}
 		builder.bind(step -> (Double) step.getFieldValue(field.getId()),
 				(step, value) -> step.setFieldValue(field.getId(), value));
@@ -128,10 +132,9 @@ public class SectionForm extends VerticalLayout {
 		DatePicker.DatePickerI18n multiFormatI18n = new DatePicker.DatePickerI18n();
 		multiFormatI18n.setDateFormats("dd.MM.yyyy", "MM/dd/yyyy");
 		f.setI18n(multiFormatI18n);
-		f.setWidth("30vw");
 		var builder = binder.forField(f);
 		if (field.isRequired()) {
-			builder.asRequired();
+			builder.asRequired("Required");
 		}
 		builder.bind(step -> (LocalDate) step.getFieldValue(field.getId()),
 				(step, value) -> step.setFieldValue(field.getId(), value));
@@ -140,7 +143,6 @@ public class SectionForm extends VerticalLayout {
 
 	private CheckboxGroup<String> getMultiSelection(WizardField field) {
 		CheckboxGroup<String> f = new CheckboxGroup<String>(field.getQuestion());
-		f.setWidth("30vw");
 		f.setItems(field.getOptions());
 		var builder = binder.forField(f);
 		if (field.isRequired()) {
@@ -153,11 +155,10 @@ public class SectionForm extends VerticalLayout {
 
 	private RadioButtonGroup<String> getSingleSelection(WizardField field) {
 		RadioButtonGroup<String> f = new RadioButtonGroup<String>(field.getQuestion());
-		f.setWidth("30vw");
 		f.setItems(field.getOptions());
 		var builder = binder.forField(f);
 		if (field.isRequired()) {
-			builder.asRequired();
+			builder.asRequired("Required");
 		}
 		builder.bind(step -> (String) step.getFieldValue(field.getId()),
 				(step, value) -> step.setFieldValue(field.getId(), value));
@@ -168,9 +169,11 @@ public class SectionForm extends VerticalLayout {
 		MemoryBuffer memoryBuffer = new MemoryBuffer();
 		Upload singleFileUpload = new Upload(memoryBuffer);
 		Span currentUpload = new Span();
+		currentUpload.getStyle().set("color", "var(--lumo-secondary-text-color)").set("font-size",
+				"var(--lumo-font-size-s)");
 		setCurrentUpload(currentUpload, field.getFileName());
-		H4 question = new H4(field.getQuestion() + (field.isRequired() ? "*" : ""));
-		Span maxSizeMessage = new Span("Maximum file size: 20 MB");
+		H5 question = new H5(field.getQuestion() + (field.isRequired() ? "*" : ""));
+		singleFileUpload.setDropLabel(new Span("Drop files here. Max size: 20MB"));
 		singleFileUpload.addSucceededListener(e -> {
 			InputStream fileData = memoryBuffer.getInputStream();
 			try {
@@ -191,7 +194,7 @@ public class SectionForm extends VerticalLayout {
 			}
 		});
 		singleFileUpload.setMaxFileSize(20_971_520);
-		Div content = new Div(question, maxSizeMessage, singleFileUpload, currentUpload);
+		Div content = new Div(question, singleFileUpload, currentUpload);
 		if (field.isRequired()) {
 			binder.withValidator(step -> step.getFieldValue(field.getId()) != null, "File upload is required");
 		}
@@ -204,15 +207,20 @@ public class SectionForm extends VerticalLayout {
 			field.setUserValue(e.getRecording());
 			binder.validate();
 		});
+		Span note = new Span("For this question you must answer using recording");
 
 		if (field.isRequired()) {
 			binder.withValidator(step -> step.getFieldValue(field.getId()) != null, "Audio is required");
+			recorder.setLabel("Requried");
 		}
 		VerticalLayout question = new VerticalLayout();
 		question.addClassNames(LumoUtility.Padding.NONE);
+		question.add(note);
 		if (field.isTextToSpeech()) {
 			AudioTag audio = new AudioTag(field.getSpeech());
-			question.add(new Span("Click play to hear the question"), audio);
+			audio.setWidthFull();
+			note.setText(note.getText() + ". " + "Click play to hear the question");
+			question.add(audio);
 
 		} else {
 			question.add(new Span(field.getQuestion()));

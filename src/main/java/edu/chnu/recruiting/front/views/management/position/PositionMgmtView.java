@@ -6,7 +6,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -84,7 +83,7 @@ public class PositionMgmtView extends VerticalLayout implements BeforeEnterObser
 	private void configureComponents() {
 		editFormBtn.addClickListener(
 				e -> UI.getCurrent().navigate(PositionFormEditView.class, new RouteParam("id", model.getId())));
-		
+
 		form.setResponsiveSteps(new ResponsiveStep("0", 1));
 		form.addSaveListener(this::handleSaveEvent);
 		form.addCancelListener(this::handleCancelEvent);
@@ -98,10 +97,6 @@ public class PositionMgmtView extends VerticalLayout implements BeforeEnterObser
 				positionService.activatePosition(model.getId());
 			}
 			UI.getCurrent().getPage().reload();
-		});
-
-		editFormBtn.addClickListener(e -> {
-			Notification.show("Edit form click");
 		});
 	}
 
