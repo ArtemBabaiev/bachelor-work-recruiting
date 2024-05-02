@@ -26,7 +26,7 @@ public enum ApplicationStatus {
 		return ApplicationStatus.valueOf(e).getLabel();
 	}
 
-	public static Component getBadge(String status) {
+	public static Span getBadge(String status) {
 		Span badge = null;
 		switch (ApplicationStatus.valueOf(status)) {
 		case ACCEPTED:

@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.utils.WizardConverterJson;
@@ -52,6 +53,9 @@ public class Position {
 	
 	@Column(columnDefinition = "DATE")
 	private LocalDate datePosted;
+	
+	@Column(columnDefinition = "TIMESTAMP")
+	private LocalDateTime updatedAt;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Company company;

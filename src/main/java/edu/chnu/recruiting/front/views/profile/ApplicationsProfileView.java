@@ -1,5 +1,7 @@
 package edu.chnu.recruiting.front.views.profile;
 
+import java.time.ZoneId;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -25,6 +27,7 @@ import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.ApplicationProfileGridVM;
 import edu.chnu.recruiting.services.ApplicationService;
 import edu.chnu.recruiting.services.ServiceManager;
+import edu.chnu.recruiting.utils.DateUtils;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.PermitAll;
 
@@ -34,12 +37,12 @@ import jakarta.annotation.security.PermitAll;
 public class ApplicationsProfileView extends ProfileView {
 	private ApplicationService applicationService;
 	private User loggedInUser;
-	
+
 	private Grid<ApplicationProfileGridVM> grid;
 	private ApplicationDataProvider<ApplicationProfileGridVM> dataProvider;
 	private ApplicationProfileFilter applicatinoFilter;
 	private ConfigurableFilterDataProvider<ApplicationProfileGridVM, Void, IFilter<ApplicationSummary>> filterDataProvider;
-	
+
 	private TextField nameSearch = new TextField();
 	private ComboBox<String> statusBox = new ComboBox<String>();
 
@@ -47,9 +50,10 @@ public class ApplicationsProfileView extends ProfileView {
 		super(uow.getSecurityContext().getAuthenticatedUser());
 		this.applicationService = uow.getApplicationService();
 		this.loggedInUser = uow.getSecurityContext().getAuthenticatedUser();
-		
+
 		grid = new Grid<>(ApplicationProfileGridVM.class, false);
-		dataProvider = new ApplicationDataProvider<ApplicationProfileGridVM>(this.applicationService, ApplicationProfileGridVM.class);
+		dataProvider = new ApplicationDataProvider<ApplicationProfileGridVM>(this.applicationService,
+				ApplicationProfileGridVM.class);
 		applicatinoFilter = new ApplicationProfileFilter(this.loggedInUser);
 		filterDataProvider = dataProvider.withConfigurableFilter();
 		filterDataProvider.setFilter(applicatinoFilter);
@@ -58,10 +62,10 @@ public class ApplicationsProfileView extends ProfileView {
 
 		configureGrid();
 		configureComponents();
-		
+
 		setContent(getContent());
 	}
-	
+
 	private Component getContent() {
 		VerticalLayout content = new VerticalLayout();
 		content.add(new HorizontalLayout(nameSearch, statusBox));
@@ -71,12 +75,18 @@ public class ApplicationsProfileView extends ProfileView {
 	}
 
 	private void configureGrid() {
-		grid.addColumn(p -> p.getPositionName(), "positionName").setHeader("Position");
-		grid.addColumn(p -> p.getSubmittedAt(), "submittedAt").setHeader("Submitted at");
-		grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");
-		grid.addColumn(p -> p.getRejectReason()).setSortable(false).setHeader("Reject reason");
-		grid.addComponentColumn(p -> getContinueApplication(p));
-		grid.setItems(filterDataProvider);
+		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
+			String browserTimeZone = extendedClientDetails.getTimeZoneId();
+			grid.addColumn(p -> p.getPositionName(), "positionName").setHeader("Position");
+			grid.addColumn(p -> {
+				var time = p.getSubmittedAt();
+				return time != null ? DateUtils.format(time.atZone(ZoneId.of(browserTimeZone))) : null;
+			}, "submittedAt").setHeader("Submitted at");
+			grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");
+			grid.addColumn(p -> p.getRejectReason()).setSortable(false).setHeader("Reject reason");
+			grid.addComponentColumn(p -> getContinueApplication(p));
+			grid.setItems(filterDataProvider);
+		});
 	}
 
 	private void configureComponents() {
@@ -98,15 +108,14 @@ public class ApplicationsProfileView extends ProfileView {
 		});
 
 	}
-	
+
 	private Component getContinueApplication(ApplicationProfileGridVM app) {
 		if (!app.getStatus().equals(ApplicationStatus.PENDING_DATA.toString())) {
 			return null;
 		}
 		Button btn = new Button("Continue");
-		btn.addClickListener(e -> 
-			UI.getCurrent().navigate(ApplicationFormView.class, QueryParameters.of("id", app.getId().toString()))
-		);
+		btn.addClickListener(e -> UI.getCurrent().navigate(ApplicationFormView.class,
+				QueryParameters.of("id", app.getId().toString())));
 		return btn;
 	}
 }

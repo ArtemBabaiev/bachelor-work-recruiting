@@ -1,5 +1,7 @@
 package edu.chnu.recruiting.front.views.management.position;
 
+import java.time.ZoneId;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -22,12 +24,12 @@ import edu.chnu.recruiting.front.data.PositionDataProvider;
 import edu.chnu.recruiting.front.data.PositionMgmtFilter;
 import edu.chnu.recruiting.front.layouts.MainLayout;
 import edu.chnu.recruiting.front.views.management.application.ApplicationsMgmtView;
-import edu.chnu.recruiting.front.views.position.PositionView;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.services.ServiceManager;
+import edu.chnu.recruiting.utils.DateUtils;
 import edu.chnu.recruiting.utils.enums.EmploymentType;
 import jakarta.annotation.security.RolesAllowed;
 
@@ -48,6 +50,7 @@ public class PositionsMgmtView extends VerticalLayout {
 
 	public PositionsMgmtView(ServiceManager uow) {
 		this.positionService = uow.getPositionService();
+
 		companyEntity = uow.getCompanyService().getCompanyByUser(uow.getSecurityContext().getAuthenticatedUser());
 		grid = new Grid<>(PositionViewModel.class, false);
 		dataProvider = new PositionDataProvider(this.positionService);
@@ -83,16 +86,23 @@ public class PositionsMgmtView extends VerticalLayout {
 	}
 
 	private void configureGrid() {
+		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
+			String browserTimeZone = extendedClientDetails.getTimeZoneId();
+			grid.addColumn(p -> p.getName(), "name").setHeader("Name");
+			grid.addColumn(p -> EmploymentType.getLabel(p.getEmploymentType()), "employmentType")
+					.setHeader("Employment Type");
+			grid.addColumn(p -> p.getDatePosted(), "datePosted").setHeader("Posted at");
 
-		grid.addColumn(p -> p.getName(), "name").setHeader("Name");
-		grid.addColumn(p -> EmploymentType.getLabel(p.getEmploymentType()), "employmentType")
-				.setHeader("Employment Type");
-		grid.addColumn(p -> p.getDatePosted(), "datePosted").setHeader("Posted at");
-		grid.addComponentColumn(p -> getActiveBadge(p)).setHeader("Active");
-		grid.addComponentColumn(p -> getControls(p));
+			grid.addColumn(p -> {
+				var time = p.getUpdatedAt();
+				return time != null ? DateUtils.format(time.atZone(ZoneId.of(browserTimeZone))) : null;
+			}, "updatedAt").setHeader("Last updated");
+			grid.addComponentColumn(p -> getActiveBadge(p)).setHeader("Active");
+			grid.addComponentColumn(p -> getControls(p));
 
-		grid.getColumns().forEach(col -> col.setAutoWidth(true));
-		grid.setItems(filterDataProvider);
+			grid.getColumns().forEach(col -> col.setAutoWidth(true));
+			grid.setItems(filterDataProvider);
+		});
 
 	}
 

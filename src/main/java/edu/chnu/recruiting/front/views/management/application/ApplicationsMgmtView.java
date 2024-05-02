@@ -1,5 +1,7 @@
 package edu.chnu.recruiting.front.views.management.application;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import com.vaadin.flow.component.UI;
@@ -28,13 +30,14 @@ import edu.chnu.recruiting.models.viewModels.ApplicationMgmtGridVM;
 import edu.chnu.recruiting.services.ApplicationService;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.services.ServiceManager;
+import edu.chnu.recruiting.utils.DateUtils;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Applications")
 @Route(value = "management/applications", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
-public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterObserver{
+public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterObserver {
 	private PositionService positionService;
 	private ApplicationService applicationService;
 
@@ -42,34 +45,35 @@ public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterO
 	private ApplicationDataProvider<ApplicationMgmtGridVM> dataProvider;
 	private ApplicationMgmtFilter applicatinoFilter = new ApplicationMgmtFilter();
 	private ConfigurableFilterDataProvider<ApplicationMgmtGridVM, Void, IFilter<ApplicationSummary>> filterDataProvider;
-	
+
 	private TextField nameSearch = new TextField();
 	private ComboBox<Position> positionsBox = new ComboBox<Position>();
 	private ComboBox<String> statusBox = new ComboBox<String>();
 
 	private Long qPositionId = null;
-	
+
 	public ApplicationsMgmtView(ServiceManager uow) {
 		this.applicationService = uow.getApplicationService();
 		this.positionService = uow.getPositionService();
 
 		grid = new Grid<>(ApplicationMgmtGridVM.class, false);
-		dataProvider = new ApplicationDataProvider<ApplicationMgmtGridVM>(this.applicationService, ApplicationMgmtGridVM.class);
+		dataProvider = new ApplicationDataProvider<ApplicationMgmtGridVM>(this.applicationService,
+				ApplicationMgmtGridVM.class);
 		filterDataProvider = dataProvider.withConfigurableFilter();
 		filterDataProvider.setFilter(applicatinoFilter);
 
-		
 	}
-	
+
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
-		
+
 		try {
 			qPositionId = Long.parseLong(event.getLocation().getQueryParameters().getSingleParameter("position").get());
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 		initComponent();
 	}
-	
+
 	private void initComponent() {
 		setSizeFull();
 
@@ -89,7 +93,6 @@ public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterO
 		});
 		statusBox.setPlaceholder("Status");
 
-		
 		List<Position> positionItems = this.positionService.getByCurrentCompany();
 		positionsBox.setItems(positionItems);
 		positionsBox.setItemLabelGenerator(p -> p.getName());
@@ -107,22 +110,33 @@ public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterO
 			filterDataProvider.refreshAll();
 		});
 
-
-		grid.setItems(filterDataProvider);
-		
 		var optPos = positionItems.stream().filter(p -> p.getId().equals(qPositionId)).findFirst();
 		if (optPos.isPresent()) {
 			positionsBox.setValue(optPos.get());
+		} else if (!positionItems.isEmpty()) {
+			positionsBox.setValue(positionItems.get(0));
 		}
 	}
 
 	private void configureGrid() {
-		grid.addColumn(p -> p.getFullName(), "fullName").setHeader("Full name");
-		grid.addColumn(p -> p.getStartedAt(), "startedAt").setHeader("Started at");
-		grid.addColumn(p -> p.getSubmittedAt(), "submittedAt").setHeader("Submitted at");
-		grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");
-		grid.addComponentColumn(p -> new Button("Details", e -> UI.getCurrent().navigate(ApplicationMgmtView.class,
-				new RouteParameters("appId", p.getId().toString()))));
-		grid.getColumns().forEach(col -> col.setAutoWidth(true));
+		int offset = 0;
+		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
+			String browserTimeZone = extendedClientDetails.getTimeZoneId();
+			grid.addColumn(p -> p.getFullName(), "fullName").setHeader("Full name");
+			grid.addColumn(p -> {
+				return DateUtils.format(p.getStartedAt().atOffset(ZoneOffset.ofHours(offset)));
+			}, "startedAt").setHeader("Started at");
+			grid.addColumn(p -> {
+				var time = p.getSubmittedAt();
+				return time != null ? DateUtils.format(time.atZone(ZoneId.of(browserTimeZone))) : null;
+			}, "submittedAt").setHeader("Submitted at");
+			grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");
+			grid.addComponentColumn(p -> new Button("Details", e -> UI.getCurrent().navigate(ApplicationMgmtView.class,
+					new RouteParameters("appId", p.getId().toString()))));
+			grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+			grid.setItems(filterDataProvider);
+		});
+
 	}
 }

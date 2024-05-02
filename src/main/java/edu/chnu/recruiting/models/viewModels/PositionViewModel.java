@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.models.viewModels;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import edu.chnu.recruiting.models.security.User;
@@ -29,6 +30,8 @@ public class PositionViewModel {
 	private String employmentType;
 	
 	private LocalDate datePosted;
+	
+	private LocalDateTime updatedAt;
 
 	private Long companyId;
 

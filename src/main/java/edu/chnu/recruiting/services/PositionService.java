@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,11 +84,13 @@ public class PositionService {
 	}
 
 	public Position updatePosition(Position position) {
+		position.setUpdatedAt(LocalDateTime.now());
 		return positionRepository.save(position);
 	}
 	public Position updateWizard(Long positionId, FormСreationComponent form) {
 		Position position = this.positionRepository.findById(positionId).get();
 		position.setWizardData(this.wizardService.createWizard(form));
+		position.setUpdatedAt(LocalDateTime.now());
 		return positionRepository.save(position); 
 	}
 }
