@@ -117,8 +117,7 @@ public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterO
 	}
 
 	private void configureGrid() {
-		grid.addColumn(p -> p.getFirstName(), "firstName").setHeader("First name");
-		grid.addColumn(p -> p.getLastName(), "lastName").setHeader("Last name");
+		grid.addColumn(p -> p.getFullName(), "fullName").setHeader("Full name");
 		grid.addColumn(p -> p.getStartedAt(), "startedAt").setHeader("Started at");
 		grid.addColumn(p -> p.getSubmittedAt(), "submittedAt").setHeader("Submitted at");
 		grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");

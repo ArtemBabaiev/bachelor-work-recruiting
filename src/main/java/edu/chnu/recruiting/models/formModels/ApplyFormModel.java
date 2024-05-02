@@ -3,6 +3,7 @@ package edu.chnu.recruiting.models.formModels;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -10,13 +11,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ApplicationFormModel {
+public class ApplyFormModel {
 	@NotBlank
-	private String lastName;
+	@Email
+	private String email;
+
 	@NotBlank
-	private String firstName;
+	private String fullName;
+
 	@NotNull
 	private LocalDate dateOfBirth;
-	
+
 	private LocalDateTime startedAt = LocalDateTime.now();
 }

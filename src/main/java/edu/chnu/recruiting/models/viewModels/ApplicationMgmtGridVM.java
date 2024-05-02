@@ -11,9 +11,7 @@ import lombok.Setter;
 public class ApplicationMgmtGridVM {
 	
 	private Long id;
-	private String lastName;
-	
-	private String firstName;
+	private String fullName;
 
 	private LocalDate dateOfBirth;
 	

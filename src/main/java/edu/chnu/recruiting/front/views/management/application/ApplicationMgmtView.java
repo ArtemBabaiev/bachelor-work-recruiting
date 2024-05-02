@@ -109,8 +109,7 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 
 	private void addPersonalInfo() {
 		List<FieldDataComponent> fs = new ArrayList<SectionDataComponent.FieldDataComponent>();
-		fs.add(new FieldDataComponent("First name", model.getFirstName()));
-		fs.add(new FieldDataComponent("Last name", model.getLastName()));
+		fs.add(new FieldDataComponent("Full name", model.getFullName()));
 		fs.add(new FieldDataComponent("Date of Birth", model.getDateOfBirth()));
 		add(new SectionDataComponent("Personal Info", fs));
 	}

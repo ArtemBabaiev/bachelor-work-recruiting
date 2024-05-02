@@ -16,7 +16,7 @@ import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.ApplicationFull;
 import edu.chnu.recruiting.models.ApplicationSummary;
 import edu.chnu.recruiting.models.Position;
-import edu.chnu.recruiting.models.formModels.ApplicationFormModel;
+import edu.chnu.recruiting.models.formModels.ApplyFormModel;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.models.wizard.WizardStep;
@@ -39,13 +39,16 @@ public class ApplicationService {
 
 	@Autowired
 	private SecurityContext securityContext;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private ModelMapper modelMapper;
 
-	public Application apply(ApplicationFormModel model, Long positionId) {
-		User user = securityContext.getAuthenticatedUser();
+	public Application apply(ApplyFormModel model, Long positionId) {
 		Position position = positionService.getPosition(positionId);
+		User user = userService.getUserByEmail(model.getEmail());
 		if (!position.getActive()) {
 			throw new ForbiddenException();
 		}

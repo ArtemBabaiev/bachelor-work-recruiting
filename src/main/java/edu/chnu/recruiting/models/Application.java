@@ -22,8 +22,7 @@ public class Application {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String lastName;
-	private String firstName;
+	private String fullName;
 	
 	@Column(columnDefinition = "DATE")
 	private LocalDate dateOfBirth;
