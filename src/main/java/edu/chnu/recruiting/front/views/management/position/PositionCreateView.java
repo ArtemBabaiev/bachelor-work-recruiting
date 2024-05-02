@@ -7,10 +7,8 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
-import com.vaadin.flow.component.tabs.TabSheetVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
@@ -50,14 +48,13 @@ public class PositionCreateView extends VerticalLayout {
 		this.configureComponents();
 		tabSheet.add("Position Info", this.getPositionInfoSheet());
 		tabSheet.add("Application Form", this.getFormSheet());
-		tabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_CENTERED);
 		tabSheet.setSizeFull();
-		HorizontalLayout controls = new HorizontalLayout(positionForm.getSaveButton());
-		controls.addClassNames(LumoUtility.Padding.NONE);
-		controls.setJustifyContentMode(JustifyContentMode.END);
-		controls.setWidthFull();
 		this.setSpacing(false);
-		add(controls, tabSheet);
+		tabSheet.setMaxWidth("800px");
+		this.setSizeFull();
+		this.setAlignItems(Alignment.CENTER);
+		tabSheet.setSuffixComponent(positionForm.getSaveButton());
+		add(tabSheet);
 	}
 
 	private void configureComponents() {
@@ -73,7 +70,6 @@ public class PositionCreateView extends VerticalLayout {
 	private Component getPositionInfoSheet() {
 		positionForm.setResponsiveSteps(new ResponsiveStep("0", 1));
 		Div test = new Div(positionForm);
-		test.setMaxWidth("800px");
 		test.addClassNames(Display.FLEX, FlexDirection.COLUMN, JustifyContent.CENTER, AlignItems.CENTER);
 		VerticalLayout infoSheet = new VerticalLayout(test);
 		infoSheet.setSizeFull();
@@ -85,7 +81,6 @@ public class PositionCreateView extends VerticalLayout {
 		var note = getNote();
 		VerticalLayout sheet = new VerticalLayout(note, form);
 		sheet.setAlignItems(Alignment.CENTER);
-		form.setMaxWidth("800px");
 		sheet.setSizeFull();
 		return sheet;
 	}

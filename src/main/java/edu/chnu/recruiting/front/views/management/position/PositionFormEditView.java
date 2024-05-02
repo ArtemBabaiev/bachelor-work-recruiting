@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.front.views.management.position;
 
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -8,6 +9,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteParam;
 
 import edu.chnu.recruiting.exceptions.BadRequestException;
 import edu.chnu.recruiting.exceptions.ForbiddenException;
@@ -29,10 +31,12 @@ public class PositionFormEditView extends VerticalLayout implements BeforeEnterO
 	private PositionService positionService;
 	private AccessService accessService;
 
+	Long positionId;
 	private Wizard model;
 
 	private FormСreationComponent form;
 	private Button saveBtn = new Button("Save");
+	private Button backBtn = new Button("Back");
 
 	public PositionFormEditView(ServiceManager sm) {
 		this.positionService = sm.getPositionService();
@@ -43,8 +47,8 @@ public class PositionFormEditView extends VerticalLayout implements BeforeEnterO
 	public void beforeEnter(BeforeEnterEvent event) {
 		Position pos;
 		try {
-			Long id = event.getRouteParameters().getLong("id").get();
-			pos = positionService.getPosition(id);
+			positionId = event.getRouteParameters().getLong("id").get();
+			pos = positionService.getPosition(positionId);
 		} catch (Exception e) {
 			event.rerouteToError(BadRequestException.class);
 			return;
@@ -67,17 +71,20 @@ public class PositionFormEditView extends VerticalLayout implements BeforeEnterO
 		form.setMaxWidth("800px");
 
 		saveBtn.addClickListener(e -> handleSaveBtnClick(e));
+		backBtn.addClickListener(
+				e -> UI.getCurrent().navigate(PositionMgmtView.class, new RouteParam("id", positionId)));
 
-		HorizontalLayout controls = new HorizontalLayout(saveBtn);
+		HorizontalLayout controls = new HorizontalLayout(backBtn, saveBtn);
 		controls.setWidthFull();
 		controls.setMaxWidth("800px");
-		controls.setJustifyContentMode(JustifyContentMode.END);
+		controls.setJustifyContentMode(JustifyContentMode.BETWEEN);
 		add(controls, form);
 
 	}
 
 	private void handleSaveBtnClick(ClickEvent<Button> e) {
-		// TODO Auto-generated method stub
+		this.positionService.updateWizard(positionId, form);
+		UI.getCurrent().getPage().reload();
 	}
 
 }
