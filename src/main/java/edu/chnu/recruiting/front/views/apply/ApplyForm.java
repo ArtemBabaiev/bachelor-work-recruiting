@@ -25,7 +25,7 @@ public class ApplyForm extends FormLayout {
 	private Button continueBtn = new Button("Continue");
 	private Button cancelBtn = new Button("Cancel");
 
-	public ApplyForm() {
+	public ApplyForm(ApplyFormModel model) {
 		DatePicker.DatePickerI18n multiFormatI18n = new DatePicker.DatePickerI18n();
 		multiFormatI18n.setDateFormats("dd.MM.yyyy", "MM/dd/yyyy");
 		dateOfBirth.setI18n(multiFormatI18n);
@@ -35,7 +35,7 @@ public class ApplyForm extends FormLayout {
 
 		binder.bindInstanceFields(this);
 		binder.addStatusChangeListener(e -> continueBtn.setEnabled(binder.isValid()));
-		binder.setBean(new ApplyFormModel());
+		binder.setBean(model);
 
 		HorizontalLayout controls = new HorizontalLayout(cancelBtn, continueBtn);
 

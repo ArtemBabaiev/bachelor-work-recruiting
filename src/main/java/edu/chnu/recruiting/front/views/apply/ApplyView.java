@@ -11,7 +11,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
@@ -30,10 +29,11 @@ import edu.chnu.recruiting.services.ApplicationService;
 import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import edu.chnu.recruiting.utils.enums.SessionKeys;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Apply")
 @Route(value = "apply", layout = MainLayout.class)
-@AnonymousAllowed
+@PermitAll
 public class ApplyView extends VerticalLayout implements BeforeEnterObserver {
 
 	private H3 title = new H3("In order to proceed with application, the following information is required");
@@ -55,23 +55,22 @@ public class ApplyView extends VerticalLayout implements BeforeEnterObserver {
 	public void beforeEnter(BeforeEnterEvent event) {
 		var session = VaadinSession.getCurrent().getSession();
 		positionId = (Long) session.getAttribute(SessionKeys.APPLY_POSITION_ID.toString());
-		// session.removeAttribute(SessionKeys.APPLY_POSITION_ID.toString());
+		session.removeAttribute(SessionKeys.APPLY_POSITION_ID.toString());
 		if (positionId == null) {
 			event.rerouteToError(BadRequestException.class);
-		} else if (securityContext.isAuthenticated()) {
-			User user = securityContext.getAuthenticatedUser();
-			ApplyFormModel model = new ApplyFormModel();
-			model.setDateOfBirth(user.getDateOfBirth());
-			model.setEmail(user.getEmail());
-			model.setFullName(user.getFullName());
-			this.apply(model);
 		} else {
 			initComponent();
 		}
 	}
 
 	private void initComponent() {
-		form = new ApplyForm();
+		User user = securityContext.getAuthenticatedUser();
+		ApplyFormModel model = new ApplyFormModel();
+		model.setDateOfBirth(user.getDateOfBirth());
+		model.setEmail(user.getEmail());
+		model.setFullName(user.getFullName());
+
+		form = new ApplyForm(model);
 		form.setResponsiveSteps(new ResponsiveStep("0", 1));
 		form.addContinueListener(e -> handleContinueEvent(e));
 		form.addCancelListener(e -> UI.getCurrent().getPage().getHistory().back());

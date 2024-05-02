@@ -39,16 +39,13 @@ public class ApplicationService {
 
 	@Autowired
 	private SecurityContext securityContext;
-	
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private ModelMapper modelMapper;
 
 	public Application apply(ApplyFormModel model, Long positionId) {
 		Position position = positionService.getPosition(positionId);
-		User user = userService.getUserByEmail(model.getEmail());
+		User user = securityContext.getAuthenticatedUser();
 		if (!position.getActive()) {
 			throw new ForbiddenException();
 		}
