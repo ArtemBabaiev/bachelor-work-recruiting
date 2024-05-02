@@ -27,6 +27,7 @@ public class WizardService {
 		for (SectionComponent sectionComponent : sections) {
 			int questionIndex = 0;
 			WizardStep step = sectionComponent.getStep();
+			step.getFields().clear();
 			step.setId(sectionIndex++);
 			List<QuestionComponent> questions = sectionComponent.getQuestionsComponents();
 			for (QuestionComponent questionComponent : questions) {
@@ -39,7 +40,7 @@ public class WizardService {
 						field.setSpeech(new byte[0]);
 					}
 				}
-				step.addField(questionComponent.getField().withId(questionIndex++));
+				step.addField(questionComponent.getField());
 			}
 			wizard.addStep(step);
 		}
