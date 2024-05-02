@@ -8,14 +8,12 @@ import edu.chnu.recruiting.specification.GenericSpecification;
 import edu.chnu.recruiting.specification.SearchCriteria;
 
 public class ApplicationMgmtFilter implements IFilter<ApplicationSummary>{
-	private SearchCriteria firstName = new SearchCriteria("firstName", "like", "");
-	private SearchCriteria lastName = new SearchCriteria("lastName", "like", "");
+	private SearchCriteria fullName = new SearchCriteria("fullName", "like", "");
 	private SearchCriteria position = new SearchCriteria("position", ":", null);
 	private SearchCriteria status = new SearchCriteria("status", "!=", null);
 	
 	public void setName(String value) {
-		this.firstName.setValue(value);
-		this.lastName.setValue(value);
+		this.fullName.setValue(value);
 	}
 	
 	public void setPosition(Position value) {
@@ -32,8 +30,7 @@ public class ApplicationMgmtFilter implements IFilter<ApplicationSummary>{
 	}
 
 	public Specification<ApplicationSummary> getSpecification() {
-		return GenericSpecification.<ApplicationSummary>of(firstName)
-				.or(GenericSpecification.<ApplicationSummary>of(lastName))
+		return GenericSpecification.<ApplicationSummary>of(fullName)
 				.and(GenericSpecification.<ApplicationSummary>of(status))
 				.and(GenericSpecification.<ApplicationSummary>of(position))
 				;

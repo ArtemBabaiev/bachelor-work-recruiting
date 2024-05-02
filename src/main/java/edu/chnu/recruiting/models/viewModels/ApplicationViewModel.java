@@ -10,8 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApplicationViewModel {
-	private String lastName;
-	private String firstName;
+	private String fullName;
 
 	private LocalDate dateOfBirth;
 

@@ -47,6 +47,8 @@ public class UserService {
 		user.setEnabled(false);
 		user.setPassword(this.passwordEncoder.encode(model.getPassword()));
 		user.setUsername(model.getUsername());
+		user.setDateOfBirth(model.getDateOfBirth());
+		user.setFullName(model.getFullName());
 		user.setRole(this.roleService.getRoleByName(StarterRoles.USER.getName()));
 
 		user = this.userRepository.save(user);
@@ -99,5 +101,9 @@ public class UserService {
 		String newEncodedPassword = this.passwordEncoder.encode(model.getNewPassword());
 		user.setPassword(newEncodedPassword);
 		this.userRepository.save(user);
+	}
+	
+	public User getUserByEmail(String email) {
+		return this.userRepository.findByEmail(email).orElse(null);
 	}
 }
