@@ -81,4 +81,13 @@ public class PositionService {
 		Company comp = this.companyService.getCompanyByUser(this.securityContext.getAuthenticatedUser());
 		return this.positionRepository.findByCompany(comp);
 	}
+
+	public Position updatePosition(Position position) {
+		return positionRepository.save(position);
+	}
+	public Position updateWizard(Long positionId, FormСreationComponent form) {
+		Position position = this.positionRepository.findById(positionId).get();
+		position.setWizardData(this.wizardService.createWizard(form));
+		return positionRepository.save(position); 
+	}
 }

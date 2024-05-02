@@ -131,9 +131,9 @@ public class PositionsMgmtView extends VerticalLayout {
 	}
 
 	private Button getDetailsButton(PositionViewModel p) {
-		Button btn = new Button("Details", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT));
+		Button btn = new Button("Manage", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT));
 		btn.setIconAfterText(true);
-		btn.addClickListener(e -> UI.getCurrent().navigate(PositionView.class, new RouteParam("posId", p.getId())));
+		btn.addClickListener(e -> UI.getCurrent().navigate(PositionMgmtView.class, new RouteParam("id", p.getId())));
 		return btn;
 	}
 

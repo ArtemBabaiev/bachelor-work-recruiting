@@ -11,28 +11,41 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.front.views.management.position.components.SectionComponent.DownSectionEvent;
 import edu.chnu.recruiting.front.views.management.position.components.SectionComponent.UpSectionEvent;
+import edu.chnu.recruiting.models.wizard.Wizard;
+import edu.chnu.recruiting.models.wizard.WizardStep;
 
 @CssImport("./themes/recruiting/styles.css")
 public class FormСreationComponent extends VerticalLayout {
 	VerticalLayout box = new VerticalLayout();
 	Button addSectionBtn = new Button("Add section");
+
 	public FormСreationComponent() {
 		addSectionBtn.addClickListener(e -> handleAddSectionClick(e));
 		this.setWidthFull();
-		box.setSizeUndefined();
-		box.addClassNames("resizable", LumoUtility.Margin.NONE, LumoUtility.Padding.NONE);
 		this.setAlignItems(Alignment.CENTER);
+		this.addClassNames(LumoUtility.Padding.NONE);
+		box.addClassNames(LumoUtility.Padding.NONE);
 		add(box, addSectionBtn);
 	}
 	
+	public FormСreationComponent(Wizard wizard) {
+		this();
+		for (var step : wizard.getSteps()) {
+			SectionComponent sc = new SectionComponent(step);
+			sc.addUpListener(eUp -> handleUpEvent(eUp));
+			sc.addDownListener(eUp -> handleDownEvent(eUp));
+			box.add(sc);
+		}
+	}
+
 	private void handleAddSectionClick(ClickEvent<Button> e) {
-		SectionComponent sc = new SectionComponent();
+		SectionComponent sc = new SectionComponent(new WizardStep());
 		sc.addUpListener(eUp -> handleUpEvent(eUp));
 		sc.addDownListener(eUp -> handleDownEvent(eUp));
 		box.add(sc);
 		return;
 	}
-	
+
 	private void handleDownEvent(DownSectionEvent e) {
 		var children = box.getChildren().collect(Collectors.toList());
 		int size = children.size();
@@ -59,9 +72,8 @@ public class FormСreationComponent extends VerticalLayout {
 		box.add(children);
 		return;
 	}
-	
-	public List<SectionComponent> getSections(){
-		return box.getChildren().filter(c -> c instanceof SectionComponent)
-		.map(c -> (SectionComponent) c).toList();
+
+	public List<SectionComponent> getSections() {
+		return box.getChildren().filter(c -> c instanceof SectionComponent).map(c -> (SectionComponent) c).toList();
 	}
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.Company;
+import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.formModels.CompanyFormModel;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.models.viewModels.ApplicationViewModel;
@@ -30,5 +31,10 @@ public class AccessService {
 	public boolean canUserEditCompany(CompanyFormModel model) {
 		User user = this.securityContext.getAuthenticatedUser();
 		return model.getOwner().getId().equals(user.getId());
+	}
+	
+	public boolean canUserManagePosition(Position position) {
+		Company comp = this.companyService.getCompanyByUser(this.securityContext.getAuthenticatedUser());
+		return position.getCompany().getId().equals(comp.getId());
 	}
 }

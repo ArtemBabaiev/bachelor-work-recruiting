@@ -22,7 +22,7 @@ public class WizardField {
 	
 	private String question;
 	
-	private ValueType type;
+	private ValueType type = ValueType.TEXT;
 	
 	@JsonTypeInfo(use = Id.NAME, property = "type", include = As.EXTERNAL_PROPERTY)
 	@JsonSubTypes(value = { 
