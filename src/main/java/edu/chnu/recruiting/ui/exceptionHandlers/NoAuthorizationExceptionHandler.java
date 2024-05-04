@@ -19,7 +19,7 @@ public class NoAuthorizationExceptionHandler extends Component implements HasErr
 
 	@Override
 	public int setErrorParameter(BeforeEnterEvent event, ErrorParameter<NoAuthorizationException> parameter) {
-		getElement().setText("Anothorized action performed");
+		getElement().setText("Unauthorized action performed");
 		return HttpServletResponse.SC_UNAUTHORIZED;
 	}
 
