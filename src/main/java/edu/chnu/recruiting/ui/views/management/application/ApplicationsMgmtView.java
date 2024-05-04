@@ -1,0 +1,155 @@
+package edu.chnu.recruiting.ui.views.management.application;
+
+import java.time.ZoneOffset;
+import java.util.List;
+
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteParameters;
+
+import edu.chnu.recruiting.models.ApplicationSummary;
+import edu.chnu.recruiting.models.Position;
+import edu.chnu.recruiting.models.viewModels.ApplicationMgmtGridVM;
+import edu.chnu.recruiting.services.ApplicationService;
+import edu.chnu.recruiting.services.PositionService;
+import edu.chnu.recruiting.services.ServiceManager;
+import edu.chnu.recruiting.ui.MainLayout;
+import edu.chnu.recruiting.ui.data.ApplicationDataProvider;
+import edu.chnu.recruiting.ui.data.ApplicationMgmtFilter;
+import edu.chnu.recruiting.ui.data.IFilter;
+import edu.chnu.recruiting.utils.DateUtils;
+import edu.chnu.recruiting.utils.enums.ApplicationStatus;
+import jakarta.annotation.security.RolesAllowed;
+
+@PageTitle("Applications")
+@Route(value = "management/applications", layout = MainLayout.class)
+@RolesAllowed({ "COMPANY", "RECRUITER" })
+public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterObserver {
+	private PositionService positionService;
+	private ApplicationService applicationService;
+
+	private Grid<ApplicationMgmtGridVM> grid;
+	private ApplicationDataProvider<ApplicationMgmtGridVM> dataProvider;
+	private ApplicationMgmtFilter applicatinoFilter = new ApplicationMgmtFilter();
+	private ConfigurableFilterDataProvider<ApplicationMgmtGridVM, Void, IFilter<ApplicationSummary>> filterDataProvider;
+
+	private TextField nameSearch = new TextField();
+	private ComboBox<Position> positionsBox = new ComboBox<Position>();
+	private ComboBox<String> statusBox = new ComboBox<String>();
+
+	private Long qPositionId = null;
+
+	public ApplicationsMgmtView(ServiceManager uow) {
+		this.applicationService = uow.getApplicationService();
+		this.positionService = uow.getPositionService();
+
+		grid = new Grid<>(ApplicationMgmtGridVM.class, false);
+		dataProvider = new ApplicationDataProvider<ApplicationMgmtGridVM>(this.applicationService,
+				ApplicationMgmtGridVM.class);
+		filterDataProvider = dataProvider.withConfigurableFilter();
+		filterDataProvider.setFilter(applicatinoFilter);
+
+	}
+
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+
+		try {
+			qPositionId = Long.parseLong(event.getLocation().getQueryParameters().getSingleParameter("position").get());
+		} catch (Exception e) {
+		}
+		initComponent();
+	}
+
+	private void initComponent() {
+		setSizeFull();
+
+		configureGrid();
+		configureComponents();
+
+		add(new HorizontalLayout(positionsBox, nameSearch, statusBox), grid);
+	}
+
+	private void configureComponents() {
+		statusBox.setClearButtonVisible(true);
+		statusBox.setItems(ApplicationStatus.getAllValues());
+		statusBox.setItemLabelGenerator(s -> ApplicationStatus.getLabel(s));
+		statusBox.addValueChangeListener(e -> {
+			applicatinoFilter.setStatus(e.getValue());
+			filterDataProvider.refreshAll();
+		});
+		statusBox.setPlaceholder("Status");
+
+		List<Position> positionItems = this.positionService.getByCurrentCompany();
+		positionsBox.setItems(positionItems);
+		positionsBox.setItemLabelGenerator(p -> p.getName());
+		positionsBox.setPlaceholder("Position");
+		positionsBox.addValueChangeListener(e -> {
+			applicatinoFilter.setPosition(e.getValue());
+			filterDataProvider.refreshAll();
+		});
+
+		nameSearch.setPlaceholder("Candidate name");
+		nameSearch.setClearButtonVisible(true);
+		nameSearch.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+		nameSearch.addValueChangeListener(e -> {
+			applicatinoFilter.setName(e.getValue());
+			filterDataProvider.refreshAll();
+		});
+
+		var optPos = positionItems.stream().filter(p -> p.getId().equals(qPositionId)).findFirst();
+		if (optPos.isPresent()) {
+			positionsBox.setValue(optPos.get());
+		} else if (!positionItems.isEmpty()) {
+			positionsBox.setValue(positionItems.get(0));
+		}
+	}
+
+	private void configureGrid() {
+		int offset = 0;
+		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
+			int browserOffset = extendedClientDetails.getRawTimezoneOffset();
+			grid.addColumn(p -> p.getFullName(), "fullName").setHeader("Full name");
+			grid.addColumn(p -> {
+				return DateUtils.format(p.getStartedAt().atOffset(ZoneOffset.ofHours(offset)));
+			}, "startedAt").setHeader("Started at");
+			grid.addColumn(p -> {
+				var time = p.getSubmittedAt();
+				return time != null ? DateUtils.format(time.plusHours(browserOffset)) : null;
+			}, "submittedAt").setHeader("Submitted at");
+			grid.addComponentColumn(p -> {
+				Span badge = ApplicationStatus.getBadge(p.getStatus());
+				if (p.getStatus().equals(ApplicationStatus.REJECTED.toString())) {
+					Tooltip.forComponent(badge).withText(p.getRejectReason());
+				}
+				return badge;
+			}).setHeader("Status");
+
+			grid.addComponentColumn(p -> {
+				Button button = new Button("Details", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT), e -> UI.getCurrent()
+						.navigate(ApplicationMgmtView.class, new RouteParameters("appId", p.getId().toString())));
+				button.setIconAfterText(true);
+				return button;
+			});
+
+			grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+			grid.setItems(filterDataProvider);
+		});
+
+	}
+}

@@ -6,11 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.chnu.recruiting.front.views.management.position.components.FormСreationComponent;
-import edu.chnu.recruiting.front.views.management.position.components.QuestionComponent;
-import edu.chnu.recruiting.front.views.management.position.components.SectionComponent;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.models.wizard.WizardStep;
+import edu.chnu.recruiting.ui.views.management.position.components.FormСreationComponent;
+import edu.chnu.recruiting.ui.views.management.position.components.QuestionComponent;
+import edu.chnu.recruiting.ui.views.management.position.components.SectionComponent;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

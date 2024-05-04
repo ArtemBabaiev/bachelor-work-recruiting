@@ -43,6 +43,9 @@ public class ApplicationService {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	@Autowired
+	private MailService mailService;
+
 	public Application apply(ApplyFormModel model, Long positionId) {
 		Position position = positionService.getPosition(positionId);
 		User user = securityContext.getAuthenticatedUser();
@@ -50,6 +53,7 @@ public class ApplicationService {
 			throw new ForbiddenException();
 		}
 		ApplicationFull entity = modelMapper.map(model, ApplicationFull.class);
+		entity.setEmail(model.getEmail());
 		entity.setUser(user);
 		entity.setPosition(position);
 		entity.setWizardData(position.getWizardData());
@@ -115,13 +119,23 @@ public class ApplicationService {
 	}
 
 	@Transactional
-	public void acceptApplication(Long id) {
-		this.applicationRepository.updateStatus(id, ApplicationStatus.ACCEPTED.toString());
+	public void acceptApplication(Long id, String notes) {
+		ApplicationSummary app = this.applicationRepository.findById(id).get();
+		app.setStatus(ApplicationStatus.ACCEPTED.toString());
+		app.setRejectReason(null);
+		app.setNotes(notes);
+		app = this.applicationRepository.save(app);
+		mailService.sendAcceptedEmail(app);
 	}
 
 	@Transactional
 	public void rejectApplication(Long id, String rejectReason) {
-		this.applicationRepository.updateStatusAndReason(id, ApplicationStatus.REJECTED.toString(), rejectReason);
+		ApplicationSummary app = this.applicationRepository.findById(id).get();
+		app.setStatus(ApplicationStatus.REJECTED.toString());
+		app.setRejectReason(rejectReason);
+		app.setNotes(null);
+		app = this.applicationRepository.save(app);
+		mailService.sendRejectedEmail(app);
 	}
 
 }

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 import edu.chnu.recruiting.exceptions.AlreadyExistsException;
 import edu.chnu.recruiting.exceptions.PasswordException;
-import edu.chnu.recruiting.front.views.auth.registration.SignUpModel;
 import edu.chnu.recruiting.models.formModels.PasswordChangeFormModel;
 import edu.chnu.recruiting.models.formModels.RecruiterFormModel;
 import edu.chnu.recruiting.models.security.User;
 import edu.chnu.recruiting.repositories.UserRepository;
+import edu.chnu.recruiting.ui.views.auth.registration.SignUpModel;
 import edu.chnu.recruiting.utils.enums.StarterRoles;
 
 @Service

@@ -15,7 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 
-import edu.chnu.recruiting.front.views.auth.LoginView;
+import edu.chnu.recruiting.ui.views.auth.LoginView;
 
 @EnableWebSecurity
 @Configuration
