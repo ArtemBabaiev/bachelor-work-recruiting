@@ -1,6 +1,5 @@
 package edu.chnu.recruiting.front.views.management.application;
 
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 
@@ -8,10 +7,12 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -121,18 +122,30 @@ public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterO
 	private void configureGrid() {
 		int offset = 0;
 		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
-			String browserTimeZone = extendedClientDetails.getTimeZoneId();
+			int browserOffset = extendedClientDetails.getRawTimezoneOffset();
 			grid.addColumn(p -> p.getFullName(), "fullName").setHeader("Full name");
 			grid.addColumn(p -> {
 				return DateUtils.format(p.getStartedAt().atOffset(ZoneOffset.ofHours(offset)));
 			}, "startedAt").setHeader("Started at");
 			grid.addColumn(p -> {
 				var time = p.getSubmittedAt();
-				return time != null ? DateUtils.format(time.atZone(ZoneId.of(browserTimeZone))) : null;
+				return time != null ? DateUtils.format(time.plusHours(browserOffset)) : null;
 			}, "submittedAt").setHeader("Submitted at");
-			grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");
-			grid.addComponentColumn(p -> new Button("Details", e -> UI.getCurrent().navigate(ApplicationMgmtView.class,
-					new RouteParameters("appId", p.getId().toString()))));
+			grid.addComponentColumn(p -> {
+				Span badge = ApplicationStatus.getBadge(p.getStatus());
+				if (p.getStatus().equals(ApplicationStatus.REJECTED.toString())) {
+					Tooltip.forComponent(badge).withText(p.getRejectReason());
+				}
+				return badge;
+			}).setHeader("Status");
+
+			grid.addComponentColumn(p -> {
+				Button button = new Button("Details", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT), e -> UI.getCurrent()
+						.navigate(ApplicationMgmtView.class, new RouteParameters("appId", p.getId().toString())));
+				button.setIconAfterText(true);
+				return button;
+			});
+
 			grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
 			grid.setItems(filterDataProvider);

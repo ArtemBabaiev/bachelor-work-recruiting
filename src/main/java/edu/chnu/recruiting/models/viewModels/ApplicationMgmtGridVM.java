@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ApplicationMgmtGridVM {
+public class ApplicationMgmtGridVM implements HasId<Long> {
 	
 	private Long id;
 	private String fullName;
@@ -19,4 +19,5 @@ public class ApplicationMgmtGridVM {
 	private LocalDateTime submittedAt;
 
 	private String status;
+	private String rejectReason;
 }

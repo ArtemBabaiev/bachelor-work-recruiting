@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PasswordChangeFormModel {
+	@NotBlank
 	private String oldPassword;
 	@NotBlank
 	@Size(min = 8, max = 32)

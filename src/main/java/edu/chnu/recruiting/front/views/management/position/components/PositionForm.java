@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,7 +31,7 @@ public class PositionForm extends FormLayout {
 	private ComboBox<String> employmentType = new ComboBox<>("Employment type");
 	private SalaryRangePicker salaryRange = new SalaryRangePicker("Salary range");
 
-	private Button updateBtn = new Button("Save", e -> {
+	private Button saveBtn = new Button("Save", e -> {
 		if (binder.validate().isOk()) {
 			fireEvent(new SaveEvent(this, binder.getBean()));
 		}
@@ -42,7 +43,9 @@ public class PositionForm extends FormLayout {
 		configureBinder();
 		configureComponents();
 		add(name, description, department, location, employmentType, salaryRange);
-		add(new HorizontalLayout(updateBtn, cancelBtn));
+		saveBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+		cancelBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
+		add(new HorizontalLayout(saveBtn, cancelBtn));
 
 		binder.setBean(bean);
 	}
@@ -54,7 +57,7 @@ public class PositionForm extends FormLayout {
 
 	private void configureBinder() {
 		binder.bindInstanceFields(this);
-		binder.addStatusChangeListener(e -> updateBtn.setEnabled(binder.isValid()));
+		binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
 
 		binder.forField(salaryRange).withNullRepresentation(new SalaryRange(0.0, 0.0, "USD"))
 				.withValidator(
@@ -74,7 +77,7 @@ public class PositionForm extends FormLayout {
 	}
 	
 	public Button getSaveButton() {
-		return updateBtn;
+		return saveBtn;
 	}
 	
 	public Button getCancelButton() {

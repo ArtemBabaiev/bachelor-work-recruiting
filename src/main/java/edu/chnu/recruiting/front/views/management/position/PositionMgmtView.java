@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -34,7 +35,7 @@ import jakarta.annotation.security.RolesAllowed;
 public class PositionMgmtView extends VerticalLayout implements BeforeEnterObserver {
 	private Button activationBtn = new Button();
 	private Button editFormBtn = new Button("Edit form");
-	private Button backBtn = new Button("Back", e -> UI.getCurrent().navigate(PositionsMgmtView.class));
+	private Button backBtn = new Button(VaadinIcon.ARROW_LEFT.create(), e -> UI.getCurrent().navigate(PositionsMgmtView.class));
 	private Position model;
 	private PositionForm form;
 	private PositionService positionService;

@@ -2,12 +2,14 @@ package edu.chnu.recruiting.front.views.management.position;
 
 import java.time.ZoneId;
 
+import org.vaadin.lineawesome.LineAwesomeIcon;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -63,17 +65,17 @@ public class PositionsMgmtView extends VerticalLayout {
 		configureGrid();
 		configureComponents();
 
-		Div filters = new Div(nameSearch);
-		HorizontalLayout controls = new HorizontalLayout(filters);
+		HorizontalLayout controls = new HorizontalLayout();
 		controls.setWidthFull();
-		controls.expand(filters);
+		controls.addAndExpand(nameSearch);
+		controls.addAndExpand(new Span());
 		controls.add(createPositionBtn);
 		controls.setAlignItems(Alignment.BASELINE);
 		add(controls, grid);
 	}
 
 	private void configureComponents() {
-		nameSearch.setWidth("30vw");
+		nameSearch.setMaxWidth("450px");
 		nameSearch.setPlaceholder("Search");
 		nameSearch.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
 		nameSearch.addValueChangeListener(e -> {
@@ -82,6 +84,7 @@ public class PositionsMgmtView extends VerticalLayout {
 		});
 		nameSearch.setClearButtonVisible(true);
 
+		createPositionBtn.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 		createPositionBtn.addClickListener(e -> UI.getCurrent().navigate(PositionCreateView.class));
 	}
 
@@ -97,7 +100,7 @@ public class PositionsMgmtView extends VerticalLayout {
 				var time = p.getUpdatedAt();
 				return time != null ? DateUtils.format(time.atZone(ZoneId.of(browserTimeZone))) : null;
 			}, "updatedAt").setHeader("Last updated");
-			grid.addComponentColumn(p -> getActiveBadge(p)).setHeader("Active");
+			grid.addComponentColumn(p -> getActivationButton(p)).setHeader("Activation");
 			grid.addComponentColumn(p -> getControls(p));
 
 			grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -107,12 +110,13 @@ public class PositionsMgmtView extends VerticalLayout {
 	}
 
 	private Component getControls(PositionViewModel model) {
-		return new HorizontalLayout(this.getActivationButton(model), this.getShowApplicationsButton(model),
-				this.getDetailsButton(model));
+		return new HorizontalLayout(this.getDetailsButton(model), this.getShowApplicationsButton(model));
 	}
 
 	private Component getShowApplicationsButton(PositionViewModel model) {
-		Button btn = new Button("Show applications");
+		Button btn = new Button("Applications", VaadinIcon.ANGLE_DOUBLE_RIGHT.create());
+		btn.addThemeVariants(ButtonVariant.LUMO_ICON);
+		btn.setIconAfterText(true);
 		btn.addClickListener(e -> {
 			UI.getCurrent().navigate(ApplicationsMgmtView.class,
 					QueryParameters.of("position", model.getId().toString()));
@@ -141,22 +145,9 @@ public class PositionsMgmtView extends VerticalLayout {
 	}
 
 	private Button getDetailsButton(PositionViewModel p) {
-		Button btn = new Button("Manage", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT));
-		btn.setIconAfterText(true);
-		btn.addClickListener(e -> UI.getCurrent().navigate(PositionMgmtView.class, new RouteParam("id", p.getId())));
+		Button btn = new Button(LineAwesomeIcon.EDIT.create(),
+				e -> UI.getCurrent().navigate(PositionMgmtView.class, new RouteParam("id", p.getId())));
+		btn.addThemeVariants(ButtonVariant.LUMO_ICON);
 		return btn;
-	}
-
-	private Icon getActiveBadge(PositionViewModel p) {
-		Icon icon;
-		if (p.getActive()) {
-			icon = VaadinIcon.CHECK.create();
-			icon.getElement().getThemeList().add("badge success");
-		} else {
-			icon = VaadinIcon.CLOSE_SMALL.create();
-			icon.getElement().getThemeList().add("badge error");
-		}
-		icon.getStyle().set("padding", "var(--lumo-space-xs");
-		return icon;
 	}
 }

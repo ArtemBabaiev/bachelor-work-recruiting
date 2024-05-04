@@ -3,6 +3,8 @@ package edu.chnu.recruiting.front.views.management.position;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -36,7 +38,7 @@ public class PositionFormEditView extends VerticalLayout implements BeforeEnterO
 
 	private FormСreationComponent form;
 	private Button saveBtn = new Button("Save");
-	private Button backBtn = new Button("Back");
+	private Button backBtn = new Button(VaadinIcon.ARROW_LEFT.create());
 
 	public PositionFormEditView(ServiceManager sm) {
 		this.positionService = sm.getPositionService();
@@ -70,6 +72,8 @@ public class PositionFormEditView extends VerticalLayout implements BeforeEnterO
 		form = new FormСreationComponent(model);
 		form.setMaxWidth("800px");
 
+		saveBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+		
 		saveBtn.addClickListener(e -> handleSaveBtnClick(e));
 		backBtn.addClickListener(
 				e -> UI.getCurrent().navigate(PositionMgmtView.class, new RouteParam("id", positionId)));

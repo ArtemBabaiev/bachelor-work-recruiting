@@ -10,6 +10,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.shared.Tooltip;
@@ -45,6 +46,8 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 	private Long appId;
 
 	private ApplicationViewModel model;
+	
+	private Button backBtn = new Button(VaadinIcon.ARROW_LEFT.create(), e -> UI.getCurrent().getPage().getHistory().back());
 
 	public ApplicationMgmtView(ServiceManager uow) {
 		this.applicationService = uow.getApplicationService();
@@ -79,10 +82,14 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 	}
 
 	private Component getControls() {
-		HorizontalLayout controls = new HorizontalLayout();
+		HorizontalLayout controls = new HorizontalLayout(backBtn);
+		backBtn.addThemeVariants(ButtonVariant.LUMO_ICON);
 		Span badge = ApplicationStatus.getBadge(model.getStatus());
+		badge.setText("Status: " + badge.getText());
 		badge.getStyle().set("font-size", "var(--lumo-font-size-m)");
-		Tooltip.forComponent(badge).withText(model.getRejectReason());
+		if (model.getStatus().equals(ApplicationStatus.REJECTED.toString())) {
+			Tooltip.forComponent(badge).withText(model.getRejectReason());			
+		}
 		Div d = new Div(badge);
 		controls.addAndExpand(d);
 		Button acceptBtn = new Button("Accept", e -> {
