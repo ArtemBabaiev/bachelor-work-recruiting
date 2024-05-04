@@ -1,5 +1,6 @@
 package edu.chnu.recruiting.ui.views.open;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -7,11 +8,13 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
+import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import edu.chnu.recruiting.models.Position;
@@ -68,7 +71,7 @@ public class PositionListingView extends VerticalLayout {
 		filterDataProvider.setFilter(positionFilter);
 
 		grid.addColumn(p -> p.getName(), "name").setHeader("Name");
-		grid.addColumn(p -> p.getCompanyName(), "companyName").setHeader("Company");
+		grid.addComponentColumn(p -> getCompanyColumn(p)).setSortProperty("companyName").setHeader("Company");
 		grid.addColumn(p -> p.getDepartment(), "department").setHeader("Department");
 		grid.addColumn(p -> EmploymentType.getLabel(p.getEmploymentType()), "employmentType")
 				.setHeader("Employment Type");
@@ -78,6 +81,12 @@ public class PositionListingView extends VerticalLayout {
 		
 		grid.setItems(filterDataProvider);
 
+	}
+
+	private Component getCompanyColumn(PositionViewModel position) {
+		SideNavItem item = new SideNavItem(position.getCompanyName());
+		item.setPath(CompanyView.class, new RouteParameters("id", position.getCompanyId().toString()));
+		return item;
 	}
 
 	private Button getDetailsButton(PositionViewModel p) {

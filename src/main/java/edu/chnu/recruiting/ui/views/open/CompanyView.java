@@ -128,10 +128,10 @@ public class CompanyView extends SplitLayout implements BeforeEnterObserver{
 
 	private void configureGrid() {
 		grid.addColumn(p -> p.getName(), "name").setHeader("Name");
-		grid.addColumn(p -> p.getCompanyName(), "companyName").setHeader("Company");
 		grid.addColumn(p -> p.getDepartment(), "department").setHeader("Department");
 		grid.addColumn(p -> EmploymentType.getLabel(p.getEmploymentType()), "employmentType")
 				.setHeader("Employment Type");
+		grid.addColumn(p -> getSalaryRepresentation(p)).setHeader("Salary Range");
 		grid.addColumn(p -> p.getDatePosted(), "datePosted").setHeader("Posted at");
 		grid.addComponentColumn(p -> getDetailsButton(p));
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -140,6 +140,17 @@ public class CompanyView extends SplitLayout implements BeforeEnterObserver{
 		
 	}
 
+	private String getSalaryRepresentation(PositionViewModel position) {
+		if (position.getMaxSalary() == null && position.getMinSalary() == null) {
+			return "Unspecified";
+		} else if (position.getMaxSalary() == null) {
+			return position.getMinSalary() + position.getCurrencyCode();
+		} else if (position.getMaxSalary() == null) {
+			return position.getMinSalary() + position.getCurrencyCode();
+		}
+		return position.getMinSalary() + "-" + position.getMaxSalary() + " " + position.getCurrencyCode();
+	}
+	
 	private Button getDetailsButton(PositionViewModel p) {
 		Button btn = new Button("Details", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT));
 		btn.setIconAfterText(true);
