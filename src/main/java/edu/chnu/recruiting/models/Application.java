@@ -23,12 +23,16 @@ public class Application {
 	private Long id;
 	
 	private String fullName;
+
+	private String email;
 	
 	@Column(columnDefinition = "DATE")
 	private LocalDate dateOfBirth;
 	
 	private String status;
 	private String rejectReason;
+	private String notes;
+	
 	
 	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime startedAt;

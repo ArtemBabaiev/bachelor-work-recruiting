@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,13 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import edu.chnu.recruiting.front.views.management.position.components.FormСreationComponent;
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.repositories.PositionRepository;
 import edu.chnu.recruiting.security.SecurityContext;
+import edu.chnu.recruiting.ui.views.management.position.components.FormСreationComponent;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -83,11 +84,13 @@ public class PositionService {
 	}
 
 	public Position updatePosition(Position position) {
+		position.setUpdatedAt(LocalDateTime.now());
 		return positionRepository.save(position);
 	}
 	public Position updateWizard(Long positionId, FormСreationComponent form) {
 		Position position = this.positionRepository.findById(positionId).get();
 		position.setWizardData(this.wizardService.createWizard(form));
+		position.setUpdatedAt(LocalDateTime.now());
 		return positionRepository.save(position); 
 	}
 }

@@ -1,17 +1,22 @@
 package edu.chnu.recruiting.models.viewModels;
 
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
-import edu.chnu.recruiting.models.security.User;
-import lombok.Data;
-
-@Data
-public class CompanyViewModel {
+@Getter
+@Setter
+public class CompanyViewModel implements HasId<Long>{
 	private Long id;
-
+	
 	private String name;
-
-	private List<User> recruiters;
-
-	private User owner;
+	
+	private String description;
+	
+	private String industry;
+	
+	private String contactPhone;
+	
+	private String email;
+	
+	private String address;
 }

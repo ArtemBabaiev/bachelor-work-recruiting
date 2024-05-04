@@ -3,7 +3,6 @@ package edu.chnu.recruiting.utils.enums;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
 
 import lombok.Getter;
@@ -26,7 +25,7 @@ public enum ApplicationStatus {
 		return ApplicationStatus.valueOf(e).getLabel();
 	}
 
-	public static Component getBadge(String status) {
+	public static Span getBadge(String status) {
 		Span badge = null;
 		switch (ApplicationStatus.valueOf(status)) {
 		case ACCEPTED:

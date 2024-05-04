@@ -6,7 +6,7 @@ import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.SessionInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 
-import edu.chnu.recruiting.front.exceptionHandlers.CustomErrorHandler;
+import edu.chnu.recruiting.ui.exceptionHandlers.CustomErrorHandler;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

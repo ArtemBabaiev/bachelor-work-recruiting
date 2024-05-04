@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ApplicationProfileGridVM {
+public class ApplicationProfileGridVM implements HasId<Long> {
 	private Long id;
 	private String positionName;
 	private String status;

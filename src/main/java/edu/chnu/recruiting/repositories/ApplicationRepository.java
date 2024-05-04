@@ -12,8 +12,8 @@ import edu.chnu.recruiting.models.ApplicationSummary;
 @Repository
 public interface ApplicationRepository extends JpaRepository<ApplicationSummary, Long>, JpaSpecificationExecutor<ApplicationSummary>{
 	@Modifying
-	@Query("update ApplicationSummary a set a.status = :uStatus where a.id = :sId")
-	void updateStatus(@Param("sId") Long sId, @Param("uStatus") String uStatus);
+	@Query("update ApplicationSummary a set a.status = :uStatus, a.notes = :uNotes where a.id = :sId")
+	void updateStatusAndNotes(@Param("sId") Long sId, @Param("uStatus") String uStatus, @Param("uNotes") String uNotes);
 	
 	@Modifying
 	@Query("update ApplicationSummary a set a.status = :uStatus, a.rejectReason = :uReason where a.id = :sId")

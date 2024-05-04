@@ -10,7 +10,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import edu.chnu.recruiting.models.Application;
 import edu.chnu.recruiting.models.security.VerificationToken;
+import edu.chnu.recruiting.models.templates.AcceptedTemplateModel;
+import edu.chnu.recruiting.models.templates.RejectedTemplateModel;
 import edu.chnu.recruiting.models.templates.VerifyEmailModel;
 import edu.chnu.recruiting.utils.TemplateUtils;
 import edu.chnu.recruiting.utils.enums.EmailTemplate;
@@ -39,6 +42,30 @@ public class MailService {
 		executorService.submit(() -> {
 			this.sendTemplateEmial(token.getUser().getEmail(), EmailTemplate.VERIFY_EMAIL.getSubject(),
 					EmailTemplate.VERIFY_EMAIL.getTemplateName(), model);
+		});
+	}
+	
+	public void sendAcceptedEmail(Application application) {
+		AcceptedTemplateModel model = new AcceptedTemplateModel();
+		model.setPositionName(application.getPosition().getName());
+		model.setCompanyName(application.getPosition().getCompany().getName());
+		model.setNotes(application.getNotes());
+		
+		executorService.submit(() -> {
+			this.sendTemplateEmial(application.getEmail(), EmailTemplate.ACCEPTED.getSubject(),
+					EmailTemplate.ACCEPTED.getTemplateName(), model);
+		});
+	}
+	
+	public void sendRejectedEmail(Application application) {
+		RejectedTemplateModel model = new RejectedTemplateModel();
+		model.setPositionName(application.getPosition().getName());
+		model.setCompanyName(application.getPosition().getCompany().getName());
+		model.setRejectReason(application.getRejectReason());
+		
+		executorService.submit(() -> {
+			this.sendTemplateEmial(application.getEmail(), EmailTemplate.REJECTED.getSubject(),
+					EmailTemplate.REJECTED.getTemplateName(), model);
 		});
 	}
 

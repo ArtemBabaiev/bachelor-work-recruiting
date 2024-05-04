@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<p>
+		Your application for '<span th:text="${model.positionName}"></span>'
+		at <span th:text="${model.companyName}"></span> was rejected
+	</p>
+	<th:block>
+		<p>Rejection reason:</p>
+		<p>
+			<span th:text="${model.rejectReason}"></span>
+		</p>
+	</th:block>
+</body>
+</html>

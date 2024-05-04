@@ -101,4 +101,12 @@ public class CompanyService {
 		this.companyRepository.save(company);
 		this.userService.deleteUser(model.getId());
 	}
+	
+	public <T> T getCompany(Long id, Class<T> type) {
+		Company company = this.companyRepository.findById(id).orElse(null);
+		if (company == null) {
+			return null;
+		}
+		return modelMapper.map(company, type);
+	}
 }
