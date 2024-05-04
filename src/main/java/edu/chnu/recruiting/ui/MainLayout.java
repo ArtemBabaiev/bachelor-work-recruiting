@@ -23,7 +23,7 @@ import edu.chnu.recruiting.ui.views.auth.registration.SignUpView;
 import edu.chnu.recruiting.ui.views.management.application.ApplicationsMgmtView;
 import edu.chnu.recruiting.ui.views.management.company.CompanyMgmtView;
 import edu.chnu.recruiting.ui.views.management.position.PositionsMgmtView;
-import edu.chnu.recruiting.ui.views.position.PositionListingView;
+import edu.chnu.recruiting.ui.views.open.PositionListingView;
 import edu.chnu.recruiting.ui.views.profile.AccountProfileView;
 import edu.chnu.recruiting.utils.PropertiesReader;
 import edu.chnu.recruiting.utils.enums.StarterRoles;

@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.ui.views.position;
+package edu.chnu.recruiting.ui.views.open;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -47,13 +47,14 @@ public class PositionListingView extends VerticalLayout {
 		configureGrid();
 		configureComponents();
 
-		HorizontalLayout filters = new HorizontalLayout(nameSearch);
+		HorizontalLayout filters = new HorizontalLayout();
+		filters.addAndExpand(nameSearch);
 		filters.setAlignItems(Alignment.BASELINE);
 		add(filters, grid);
 	}
 
 	private void configureComponents() {
-		nameSearch.setWidth("30vw");
+		nameSearch.setMaxWidth("450px");
 		nameSearch.setPlaceholder("Search");
 		nameSearch.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
 		nameSearch.addValueChangeListener(e -> {

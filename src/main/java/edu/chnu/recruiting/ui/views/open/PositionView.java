@@ -1,4 +1,4 @@
-package edu.chnu.recruiting.ui.views.position;
+package edu.chnu.recruiting.ui.views.open;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
