@@ -3,7 +3,6 @@ package edu.chnu.recruiting.front.views.management.position.components;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -23,7 +22,7 @@ public class OptionComponent extends HorizontalLayout {
 	public String getValue() {
 		return option.getText();
 	}
-	
+
 	public Registration setRemoveClickListener(ComponentEventListener<ClickEvent<Button>> listener) {
 		return removeBtn.addClickListener(listener);
 	}

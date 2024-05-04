@@ -1,6 +1,5 @@
 package edu.chnu.recruiting.front.components.fields.picker;
 
-import java.util.ArrayList;
 import java.util.Currency;
 
 import com.vaadin.flow.component.Text;
@@ -33,8 +32,7 @@ public class SalaryRangePicker extends CustomField<SalaryRange> {
 		code.getElement().executeJs("this.focusElement.setAttribute('title', 'CurrencyCode')");
 		code.setItems(Currency.getAvailableCurrencies().stream().map(c -> c.getCurrencyCode()).toList());
 		code.setAllowCustomValue(false);
-		
-		
+
 		setModelValue(new SalaryRange(), false);
 		add(start, new Text(" – "), end, new Text(" – "), code);
 	}

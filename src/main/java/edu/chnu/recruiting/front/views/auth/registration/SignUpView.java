@@ -1,7 +1,6 @@
 package edu.chnu.recruiting.front.views.auth.registration;
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;

@@ -6,13 +6,9 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.jpa.domain.Specification;
 
 import com.vaadin.flow.data.provider.QuerySortOrder;
 import com.vaadin.flow.data.provider.SortDirection;
-
-import edu.chnu.recruiting.front.data.PositionFilter;
-import edu.chnu.recruiting.models.Position;
 
 public class VaadinToSpring {
 	public static Sort convert(List<QuerySortOrder> vaadinOrders) {

@@ -21,9 +21,8 @@ import edu.chnu.recruiting.front.components.microphone.VUserMedia;
 public class AudioRecorder extends HorizontalLayout {
 	private VUserMedia mic;
 	private Button startRecording = new Button("Start recording", new Icon(VaadinIcon.CIRCLE));
-	private Button stopRecording = new Button("Stop recording",new Icon(VaadinIcon.STOP));
+	private Button stopRecording = new Button("Stop recording", new Icon(VaadinIcon.STOP));
 	private ByteArrayOutputStream currentRecording;
-	private boolean recordingInProcess = false;
 	private Span label = new Span();
 
 	public AudioRecorder() {
@@ -57,19 +56,17 @@ public class AudioRecorder extends HorizontalLayout {
 			this.makeButtonActive(false, stopRecording);
 		});
 
-
 		mic.addFinishedListener(e -> {
 			fireEvent(new RecordedEvent(this, currentRecording.toByteArray()));
 		});
-		
-		label.getStyle().set("color", "var(--lumo-secondary-text-color)").set("font-size",
-				"var(--lumo-font-size-xs)");
+
+		label.getStyle().set("color", "var(--lumo-secondary-text-color)").set("font-size", "var(--lumo-font-size-xs)");
 	}
 
 	public void setLabel(String message) {
 		this.label.setText(message);
 	}
-	
+
 	private void makeButtonActive(boolean value, Button... buttons) {
 		for (Button button : buttons) {
 			button.setVisible(value);

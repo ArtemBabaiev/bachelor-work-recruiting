@@ -3,7 +3,6 @@ package edu.chnu.recruiting.utils.enums;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
 
 import lombok.Getter;
