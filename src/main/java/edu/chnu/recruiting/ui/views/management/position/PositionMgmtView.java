@@ -29,7 +29,7 @@ import edu.chnu.recruiting.ui.MainLayout;
 import edu.chnu.recruiting.ui.views.management.position.components.PositionForm;
 import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Positions")
+@PageTitle("Position Management")
 @Route(value = "management/positions/:id", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
 public class PositionMgmtView extends VerticalLayout implements BeforeEnterObserver {

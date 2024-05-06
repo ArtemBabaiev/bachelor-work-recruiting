@@ -7,13 +7,14 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.security.SecurityContext;
@@ -25,19 +26,16 @@ import edu.chnu.recruiting.ui.views.management.company.CompanyMgmtView;
 import edu.chnu.recruiting.ui.views.management.position.PositionsMgmtView;
 import edu.chnu.recruiting.ui.views.open.PositionListingView;
 import edu.chnu.recruiting.ui.views.profile.AccountProfileView;
-import edu.chnu.recruiting.utils.PropertiesReader;
 import edu.chnu.recruiting.utils.enums.StarterRoles;
 
 public class MainLayout extends AppLayout {
 
 	private SecurityContext securityService;
-	private PropertiesReader propertiesReader;
 
-	private Button title;
+	private H2 title = new H2();
 
-	public MainLayout(SecurityContext securityService, PropertiesReader propertiesReader) {
+	public MainLayout(SecurityContext securityService) {
 		this.securityService = securityService;
-		this.propertiesReader = propertiesReader;
 		setPrimarySection(Section.DRAWER);
 		addDrawerContent();
 		addHeaderContent();
@@ -48,16 +46,13 @@ public class MainLayout extends AppLayout {
 		DrawerToggle toggle = new DrawerToggle();
 		toggle.setAriaLabel("Menu toggle");
 
-		title = new Button(this.propertiesReader.getApplicationName(), e -> UI.getCurrent().navigate(HomeView.class));
 		title.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-		title.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE, ButtonVariant.LUMO_CONTRAST);
 		Button authBtn = new Button();
-		Span space = new Span();
-		HorizontalLayout header = new HorizontalLayout(title, space);
+		HorizontalLayout header = new HorizontalLayout(title);
 		header.setAlignItems(Alignment.CENTER);
 		header.addClassNames(LumoUtility.Margin.Right.MEDIUM);
 		header.setWidthFull();
-		header.expand(space);
+		header.expand(title);
 		if (this.securityService.isAuthenticated()) {
 			authBtn.setText("Log out");
 			authBtn.addClickListener(e -> this.securityService.logout());
@@ -75,7 +70,7 @@ public class MainLayout extends AppLayout {
 	}
 
 	private void addDrawerContent() {
-		H1 appName = new H1("My App");
+		H1 appName = new H1("Recruiting App");
 		appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 		Header header = new Header(appName);
 
@@ -118,5 +113,16 @@ public class MainLayout extends AppLayout {
 		Footer layout = new Footer();
 
 		return layout;
+	}
+
+	@Override
+	protected void afterNavigation() {
+		super.afterNavigation();
+		title.setText(getCurrentPageTitle());
+	}
+
+	private String getCurrentPageTitle() {
+		PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
+		return title == null ? "" : title.value();
 	}
 }

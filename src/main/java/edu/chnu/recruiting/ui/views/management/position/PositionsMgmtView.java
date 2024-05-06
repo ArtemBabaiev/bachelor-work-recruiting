@@ -35,7 +35,7 @@ import edu.chnu.recruiting.utils.DateUtils;
 import edu.chnu.recruiting.utils.enums.EmploymentType;
 import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Positions")
+@PageTitle("Positions Management")
 @Route(value = "management/positions", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
 public class PositionsMgmtView extends VerticalLayout {
