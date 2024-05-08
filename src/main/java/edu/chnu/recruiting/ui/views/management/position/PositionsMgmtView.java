@@ -8,6 +8,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -48,6 +49,7 @@ public class PositionsMgmtView extends VerticalLayout {
 	private Company companyEntity;
 
 	private TextField nameSearch = new TextField();
+	private ComboBox<EmploymentType> employmentFilter = new ComboBox<EmploymentType>();
 	private Button createPositionBtn = new Button("Create new position");
 
 	public PositionsMgmtView(ServiceManager uow) {
@@ -68,6 +70,7 @@ public class PositionsMgmtView extends VerticalLayout {
 		HorizontalLayout controls = new HorizontalLayout();
 		controls.setWidthFull();
 		controls.addAndExpand(nameSearch);
+		controls.add(employmentFilter);
 		controls.addAndExpand(new Span());
 		controls.add(createPositionBtn);
 		controls.setAlignItems(Alignment.BASELINE);
@@ -83,6 +86,19 @@ public class PositionsMgmtView extends VerticalLayout {
 			filterDataProvider.refreshAll();
 		});
 		nameSearch.setClearButtonVisible(true);
+		
+		employmentFilter.setPlaceholder("Employment type");
+		employmentFilter.setItems(EmploymentType.values());
+		employmentFilter.setItemLabelGenerator(EmploymentType::getLabel);
+		employmentFilter.setClearButtonVisible(true);
+		employmentFilter.addValueChangeListener(e -> {
+			if (e.getValue() != null) {
+				positionFilter.setEmploymentTypeCriteria(e.getValue().getValue());				
+			} else {
+				positionFilter.setEmploymentTypeCriteria(null);		
+			}
+			filterDataProvider.refreshAll();
+		});
 
 		createPositionBtn.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 		createPositionBtn.addClickListener(e -> UI.getCurrent().navigate(PositionCreateView.class));

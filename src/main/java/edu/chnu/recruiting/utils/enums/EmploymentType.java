@@ -12,9 +12,11 @@ public enum EmploymentType {
 	FULL_TIME("Full time");
 	
 	private String label;
+	private String value;
 	
 	private EmploymentType(String label) {
 		this.label = label;
+		this.value = this.toString();
 	}
 	
 	public static List<String> getAllValues() {
