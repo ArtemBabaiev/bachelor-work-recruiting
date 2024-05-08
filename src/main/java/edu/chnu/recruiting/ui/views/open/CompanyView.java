@@ -5,20 +5,21 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -37,28 +38,27 @@ import edu.chnu.recruiting.ui.data.PositionCompanyFilter;
 import edu.chnu.recruiting.ui.data.PositionDataProvider;
 import edu.chnu.recruiting.utils.enums.EmploymentType;
 
-@PageTitle("Positions listing")
 @Route(value = "companies/:id", layout = MainLayout.class)
 @AnonymousAllowed
-public class CompanyView extends SplitLayout implements BeforeEnterObserver{
+public class CompanyView extends SplitLayout implements BeforeEnterObserver, HasDynamicTitle {
 
 	private CompanyViewModel model;
-	
+
 	private Grid<PositionViewModel> grid;
 	private PositionDataProvider dataProvider;
 	private PositionCompanyFilter positionFilter;
 	private ConfigurableFilterDataProvider<PositionViewModel, Void, IFilter<Position>> filterDataProvider;
-	
+
 	private CompanyService companyService;
 	private PositionService positionService;
-	
+
 	private TextField nameSearch = new TextField();
-	
+
 	public CompanyView(CompanyService companyService, PositionService positionService) {
 		this.companyService = companyService;
 		this.positionService = positionService;
 	}
-	
+
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		Long id;
@@ -74,7 +74,12 @@ public class CompanyView extends SplitLayout implements BeforeEnterObserver{
 		} else {
 			initComponent();
 		}
-		
+
+	}
+
+	@Override
+	public String getPageTitle() {
+		return "Company: " + model.getName();
 	}
 
 	private void initComponent() {
@@ -83,10 +88,9 @@ public class CompanyView extends SplitLayout implements BeforeEnterObserver{
 		dataProvider = new PositionDataProvider(this.positionService);
 		filterDataProvider = dataProvider.withConfigurableFilter();
 		filterDataProvider.setFilter(positionFilter);
-		
+
 		setSizeFull();
-		
-		
+
 		Component companyInfo = getCompanyInfo();
 		configureGrid();
 		configureComponents();
@@ -98,21 +102,20 @@ public class CompanyView extends SplitLayout implements BeforeEnterObserver{
 		addToPrimary(companyInfo);
 		addToSecondary(new VerticalLayout(filters, grid));
 		setSplitterPosition(30);
-		
+
 	}
 
 	private Component getCompanyInfo() {
 		VerticalLayout vl = new VerticalLayout();
 		vl.addClassNames(LumoUtility.Background.CONTRAST_10, LumoUtility.BorderRadius.MEDIUM);
 		vl.setWidthFull();
-		H3 name = new H3(model.getName());
-		Div properties = new Div();
-		vl.add(name, properties);
-		properties.add(new H4("Description"), new Paragraph(model.getDescription()));
-		properties.add(new H4("Industry"), new Paragraph(model.getIndustry()));
-		properties.add(new H4("Address"), new Paragraph(model.getAddress()));
-		properties.add(new H4("Email"), new Paragraph(model.getEmail()));
-		properties.add(new H4("Contact Phone"), new Paragraph(model.getContactPhone()));
+		H2 name = new H2(model.getName());
+		vl.add(name);
+		vl.add(getCompanyItem(VaadinIcon.FACTORY, model.getIndustry()));
+		vl.add(getCompanyItem(VaadinIcon.MAP_MARKER, model.getAddress()));
+		vl.add(getCompanyItem(VaadinIcon.AT, model.getEmail()));
+		vl.add(getCompanyItem(VaadinIcon.PHONE, model.getContactPhone()));
+		vl.add(getDescription(model.getDescription()));
 		return vl;
 	}
 
@@ -135,9 +138,9 @@ public class CompanyView extends SplitLayout implements BeforeEnterObserver{
 		grid.addColumn(p -> p.getDatePosted(), "datePosted").setHeader("Posted at");
 		grid.addComponentColumn(p -> getDetailsButton(p));
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
-		
+
 		grid.setItems(filterDataProvider);
-		
+
 	}
 
 	private String getSalaryRepresentation(PositionViewModel position) {
@@ -150,11 +153,31 @@ public class CompanyView extends SplitLayout implements BeforeEnterObserver{
 		}
 		return position.getMinSalary() + "-" + position.getMaxSalary() + " " + position.getCurrencyCode();
 	}
-	
+
 	private Button getDetailsButton(PositionViewModel p) {
 		Button btn = new Button("Details", new Icon(VaadinIcon.ANGLE_DOUBLE_RIGHT));
 		btn.setIconAfterText(true);
 		btn.addClickListener(e -> UI.getCurrent().navigate(PositionView.class, new RouteParam("posId", p.getId())));
 		return btn;
+	}
+
+	private Component getCompanyItem(VaadinIcon vaadinIcon, String value) {
+		var icon = vaadinIcon.create();
+		Span text = new Span(value);
+		text.addClassName(LumoUtility.FontSize.LARGE);
+		HorizontalLayout hl = new HorizontalLayout(icon, text);
+		hl.addClassName(LumoUtility.Padding.NONE);
+		hl.setAlignItems(Alignment.CENTER);
+		return hl;
+	}
+
+	private Component getDescription(String value) {
+		Div desc = new Div();
+		desc.add(new H3("Description"));
+		var text = new Paragraph(value);
+		text.addClassName(LumoUtility.FontSize.LARGE);
+		desc.add(text);
+		desc.setSizeFull();
+		return desc;
 	}
 }

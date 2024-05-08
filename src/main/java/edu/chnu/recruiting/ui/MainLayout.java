@@ -14,7 +14,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.security.SecurityContext;
@@ -45,7 +44,7 @@ public class MainLayout extends AppLayout {
 	private void addHeaderContent() {
 		DrawerToggle toggle = new DrawerToggle();
 		toggle.setAriaLabel("Menu toggle");
-
+		title.setText("Recruiting App");
 		title.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 		Button authBtn = new Button();
 		HorizontalLayout header = new HorizontalLayout(title);
@@ -113,16 +112,5 @@ public class MainLayout extends AppLayout {
 		Footer layout = new Footer();
 
 		return layout;
-	}
-
-	@Override
-	protected void afterNavigation() {
-		super.afterNavigation();
-		title.setText(getCurrentPageTitle());
-	}
-
-	private String getCurrentPageTitle() {
-		PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
-		return title == null ? "" : title.value();
 	}
 }
