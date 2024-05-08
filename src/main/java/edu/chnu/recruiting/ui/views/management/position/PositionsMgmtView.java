@@ -1,5 +1,8 @@
 package edu.chnu.recruiting.ui.views.management.position;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import com.vaadin.flow.component.Component;
@@ -86,16 +89,16 @@ public class PositionsMgmtView extends VerticalLayout {
 			filterDataProvider.refreshAll();
 		});
 		nameSearch.setClearButtonVisible(true);
-
+		
 		employmentFilter.setPlaceholder("Employment type");
 		employmentFilter.setItems(EmploymentType.values());
 		employmentFilter.setItemLabelGenerator(EmploymentType::getLabel);
 		employmentFilter.setClearButtonVisible(true);
 		employmentFilter.addValueChangeListener(e -> {
 			if (e.getValue() != null) {
-				positionFilter.setEmploymentTypeCriteria(e.getValue().getValue());
+				positionFilter.setEmploymentTypeCriteria(e.getValue().getValue());				
 			} else {
-				positionFilter.setEmploymentTypeCriteria(null);
+				positionFilter.setEmploymentTypeCriteria(null);		
 			}
 			filterDataProvider.refreshAll();
 		});
@@ -106,7 +109,7 @@ public class PositionsMgmtView extends VerticalLayout {
 
 	private void configureGrid() {
 		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
-			int browserOffset = extendedClientDetails.getRawTimezoneOffset();
+			ZoneId clientZoneId = ZoneId.of(extendedClientDetails.getTimeZoneId());
 			grid.addColumn(p -> p.getName(), "name").setHeader("Name");
 			grid.addColumn(p -> EmploymentType.getLabel(p.getEmploymentType()), "employmentType")
 					.setHeader("Employment Type");
@@ -114,7 +117,12 @@ public class PositionsMgmtView extends VerticalLayout {
 
 			grid.addColumn(p -> {
 				var time = p.getUpdatedAt();
-				return time != null ? DateUtils.format(time.plusHours(browserOffset)) : null;
+				if (time == null) {
+					return null;
+				};
+				ZonedDateTime systemZonedDateTime = time.atZone(ZoneId.systemDefault());
+				ZonedDateTime clientZonedDateTime = systemZonedDateTime.withZoneSameInstant(clientZoneId);
+				return DateUtils.format(clientZonedDateTime);
 			}, "updatedAt").setHeader("Last updated");
 			grid.addComponentColumn(p -> getActivationButton(p)).setHeader("Activation");
 			grid.addComponentColumn(p -> getControls(p));

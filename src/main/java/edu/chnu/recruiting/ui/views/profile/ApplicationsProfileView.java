@@ -1,5 +1,7 @@
 package edu.chnu.recruiting.ui.views.profile;
 
+import java.time.ZoneId;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -74,11 +76,14 @@ public class ApplicationsProfileView extends ProfileView {
 
 	private void configureGrid() {
 		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
-			int browserOffset = extendedClientDetails.getRawTimezoneOffset();
+			ZoneId clientZoneId = ZoneId.of(extendedClientDetails.getTimeZoneId());
 			grid.addColumn(p -> p.getPositionName(), "positionName").setHeader("Position");
 			grid.addColumn(p -> {
 				var time = p.getSubmittedAt();
-				return time != null ? DateUtils.format(time.plusHours(browserOffset)) : null;
+				if (time == null) {
+					return null;
+				}
+				return DateUtils.format(time.atZone(ZoneId.systemDefault()).withZoneSameInstant(clientZoneId));
 			}, "submittedAt").setHeader("Submitted at");
 			grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");
 			grid.addColumn(p -> p.getRejectReason()).setSortable(false).setHeader("Reject reason");

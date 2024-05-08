@@ -1,6 +1,6 @@
 package edu.chnu.recruiting.ui.views.management.application;
 
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.List;
 
 import com.vaadin.flow.component.UI;
@@ -122,14 +122,18 @@ public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterO
 	private void configureGrid() {
 		int offset = 0;
 		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
-			int browserOffset = extendedClientDetails.getRawTimezoneOffset();
+			ZoneId clientZoneId = ZoneId.of(extendedClientDetails.getTimeZoneId());
 			grid.addColumn(p -> p.getFullName(), "fullName").setHeader("Full name");
 			grid.addColumn(p -> {
-				return DateUtils.format(p.getStartedAt().atOffset(ZoneOffset.ofHours(offset)));
+				return DateUtils
+						.format(p.getStartedAt().atZone(ZoneId.systemDefault()).withZoneSameInstant(clientZoneId));
 			}, "startedAt").setHeader("Started at");
 			grid.addColumn(p -> {
 				var time = p.getSubmittedAt();
-				return time != null ? DateUtils.format(time.plusHours(browserOffset)) : null;
+				if (time == null) {
+					return null;
+				}
+				return DateUtils.format(time.atZone(ZoneId.systemDefault()).withZoneSameInstant(clientZoneId));
 			}, "submittedAt").setHeader("Submitted at");
 			grid.addComponentColumn(p -> {
 				Span badge = ApplicationStatus.getBadge(p.getStatus());
