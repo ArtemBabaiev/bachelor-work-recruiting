@@ -108,7 +108,7 @@ public class CompanyMgmtView extends SplitLayout {
 	}
 
 	private Component getRecruiterToolbar() {
-		Button addContactButton = new Button("Add contact");
+		Button addContactButton = new Button("Add recruiter");
 		addContactButton.addClickListener(click -> addUser());
 
 		var toolbar = new HorizontalLayout(addContactButton);
