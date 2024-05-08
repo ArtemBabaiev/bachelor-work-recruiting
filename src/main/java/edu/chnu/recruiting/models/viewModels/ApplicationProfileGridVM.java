@@ -13,4 +13,5 @@ public class ApplicationProfileGridVM implements HasId<Long> {
 	private String status;
 	private LocalDateTime submittedAt;
 	private String rejectReason;
+	private String notes;
 }

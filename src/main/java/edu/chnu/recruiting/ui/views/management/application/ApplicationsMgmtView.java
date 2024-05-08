@@ -120,7 +120,6 @@ public class ApplicationsMgmtView extends VerticalLayout implements BeforeEnterO
 	}
 
 	private void configureGrid() {
-		int offset = 0;
 		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
 			ZoneId clientZoneId = ZoneId.of(extendedClientDetails.getTimeZoneId());
 			grid.addColumn(p -> p.getFullName(), "fullName").setHeader("Full name");

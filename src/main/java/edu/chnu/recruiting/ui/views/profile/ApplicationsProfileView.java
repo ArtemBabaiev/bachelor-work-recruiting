@@ -86,7 +86,14 @@ public class ApplicationsProfileView extends ProfileView {
 				return DateUtils.format(time.atZone(ZoneId.systemDefault()).withZoneSameInstant(clientZoneId));
 			}, "submittedAt").setHeader("Submitted at");
 			grid.addComponentColumn(p -> ApplicationStatus.getBadge(p.getStatus())).setHeader("Status");
-			grid.addColumn(p -> p.getRejectReason()).setSortable(false).setHeader("Reject reason");
+			grid.addColumn(p -> {
+				String reason= p.getRejectReason();
+				if (reason != null) {
+					return reason;
+				}
+				return p.getNotes();
+				
+			}).setSortable(false).setHeader("Reject reason/Notes");
 			grid.addComponentColumn(p -> getContinueApplication(p));
 			grid.setItems(filterDataProvider);
 		});
