@@ -27,7 +27,7 @@ import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.ui.MainLayout;
 import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Company")
+@PageTitle("Company Management")
 @Route(value = "management/company", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY" })
 public class CompanyMgmtView extends SplitLayout {
