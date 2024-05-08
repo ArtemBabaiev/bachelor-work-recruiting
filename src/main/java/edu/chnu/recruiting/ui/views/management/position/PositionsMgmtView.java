@@ -1,7 +1,5 @@
 package edu.chnu.recruiting.ui.views.management.position;
 
-import java.time.ZoneId;
-
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import com.vaadin.flow.component.Component;
@@ -88,16 +86,16 @@ public class PositionsMgmtView extends VerticalLayout {
 			filterDataProvider.refreshAll();
 		});
 		nameSearch.setClearButtonVisible(true);
-		
+
 		employmentFilter.setPlaceholder("Employment type");
 		employmentFilter.setItems(EmploymentType.values());
 		employmentFilter.setItemLabelGenerator(EmploymentType::getLabel);
 		employmentFilter.setClearButtonVisible(true);
 		employmentFilter.addValueChangeListener(e -> {
 			if (e.getValue() != null) {
-				positionFilter.setEmploymentTypeCriteria(e.getValue().getValue());				
+				positionFilter.setEmploymentTypeCriteria(e.getValue().getValue());
 			} else {
-				positionFilter.setEmploymentTypeCriteria(null);		
+				positionFilter.setEmploymentTypeCriteria(null);
 			}
 			filterDataProvider.refreshAll();
 		});
@@ -108,7 +106,7 @@ public class PositionsMgmtView extends VerticalLayout {
 
 	private void configureGrid() {
 		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
-			String browserTimeZone = extendedClientDetails.getTimeZoneId();
+			int browserOffset = extendedClientDetails.getRawTimezoneOffset();
 			grid.addColumn(p -> p.getName(), "name").setHeader("Name");
 			grid.addColumn(p -> EmploymentType.getLabel(p.getEmploymentType()), "employmentType")
 					.setHeader("Employment Type");
@@ -116,7 +114,7 @@ public class PositionsMgmtView extends VerticalLayout {
 
 			grid.addColumn(p -> {
 				var time = p.getUpdatedAt();
-				return time != null ? DateUtils.format(time.atZone(ZoneId.of(browserTimeZone))) : null;
+				return time != null ? DateUtils.format(time.plusHours(browserOffset)) : null;
 			}, "updatedAt").setHeader("Last updated");
 			grid.addComponentColumn(p -> getActivationButton(p)).setHeader("Activation");
 			grid.addComponentColumn(p -> getControls(p));
