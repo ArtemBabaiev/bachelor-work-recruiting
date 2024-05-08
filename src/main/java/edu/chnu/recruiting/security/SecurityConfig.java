@@ -23,12 +23,17 @@ public class SecurityConfig extends VaadinWebSecurity {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth -> auth
-				.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/images/*.png")).permitAll())
-				.authorizeHttpRequests(
-						auth -> auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll())
-				.csrf(csrf -> csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"),
-						AntPathRequestMatcher.antMatcher("/VAADIN/dynamic/resource/**/microphone")))
+		http
+		.authorizeHttpRequests(auth -> {
+			auth.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/images/*.png"),
+					AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll();
+			//auth.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/actuator/**")).permitAll();
+		})
+		.csrf(csrf -> csrf.ignoringRequestMatchers(
+				AntPathRequestMatcher.antMatcher("/h2-console/**"),
+				AntPathRequestMatcher.antMatcher("/VAADIN/dynamic/resource/**/microphone"),
+				AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/actuator/**")
+				))
 				.headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable());
 		super.configure(http);
 		setLoginView(http, LoginView.class);

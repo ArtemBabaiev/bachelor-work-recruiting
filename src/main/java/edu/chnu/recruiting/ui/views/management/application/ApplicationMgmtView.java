@@ -37,7 +37,7 @@ import edu.chnu.recruiting.ui.views.management.application.SectionDataComponent.
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Applications")
+@PageTitle("Application Management")
 @Route(value = "management/applications/:appId", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
 public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterObserver {

@@ -1,6 +1,8 @@
 spring: 
   application:
-    name: Recruiting App
+    name: developmentClient
+  config:
+    import: optional:configserver:http://localhost:8888
   datasource: 
     url: jdbc:mysql://localhost:3306/bachelor-recruiting?createDatabaseIfNotExist=true
     username: root
@@ -19,7 +21,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: artdcxx4@gmail.com
-    password: txzc umcv haeh mjwt
+    password: ${GOOGLE_APPLICATION_PASSWORD}
     from: Recruiting-Bachelor-Project
     properties:
       mail:
@@ -27,10 +29,16 @@ spring:
           auth: true
           starttls:
             enable: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
   mustache:
     check-template-location: false
  
 vaadin: 
+  exclude-urls: /actuator/**
   launch-browser: true
   whitelisted-packages: com.vaadin,org.vaadin,dev.hilla,edu.chnu.recruiting
 
