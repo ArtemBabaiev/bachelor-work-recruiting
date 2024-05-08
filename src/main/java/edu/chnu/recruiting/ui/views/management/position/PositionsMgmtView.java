@@ -21,6 +21,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
@@ -68,6 +69,7 @@ public class PositionsMgmtView extends VerticalLayout {
 		configureComponents();
 
 		HorizontalLayout controls = new HorizontalLayout();
+		controls.addClassName(LumoUtility.FlexWrap.WRAP);
 		controls.setWidthFull();
 		controls.addAndExpand(nameSearch);
 		controls.add(employmentFilter);
