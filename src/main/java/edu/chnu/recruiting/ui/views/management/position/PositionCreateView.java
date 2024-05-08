@@ -7,6 +7,8 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.router.PageTitle;
@@ -64,6 +66,10 @@ public class PositionCreateView extends VerticalLayout {
 		positionForm.addSaveListener(e -> {
 			var pos = this.positionService.createPosition(e.getModel(), form);
 			UI.getCurrent().navigate(PositionMgmtView.class, new RouteParam("id", pos.getId()));
+			Notification
+					.show("Application successfully created", 5000,
+							com.vaadin.flow.component.notification.Notification.Position.BOTTOM_STRETCH)
+					.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 		});
 	}
 
