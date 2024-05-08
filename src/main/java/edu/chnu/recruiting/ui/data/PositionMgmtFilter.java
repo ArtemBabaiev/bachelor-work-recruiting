@@ -35,6 +35,7 @@ public class PositionMgmtFilter implements IFilter<Position> {
 	}
 
 	public Specification<Position> getSpecification() {
-		return GenericSpecification.<Position>of(name).and(GenericSpecification.<Position>of(employmentType));
+		return GenericSpecification.<Position>of(company).and(GenericSpecification.<Position>of(name))
+				.and(GenericSpecification.<Position>of(employmentType));
 	}
 }

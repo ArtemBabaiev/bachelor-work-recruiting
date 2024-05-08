@@ -6,9 +6,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -35,7 +33,6 @@ public class MainLayout extends AppLayout {
 
 	public MainLayout(SecurityContext securityService) {
 		this.securityService = securityService;
-		setPrimarySection(Section.DRAWER);
 		addDrawerContent();
 		addHeaderContent();
 		setDrawerOpened(false);
@@ -69,13 +66,9 @@ public class MainLayout extends AppLayout {
 	}
 
 	private void addDrawerContent() {
-		H1 appName = new H1("Recruiting App");
-		appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-		Header header = new Header(appName);
-
 		Scroller scroller = new Scroller(createNavigation());
 
-		addToDrawer(header, scroller, createFooter());
+		addToDrawer(scroller, createFooter());
 	}
 
 	private SideNav createNavigation() {
