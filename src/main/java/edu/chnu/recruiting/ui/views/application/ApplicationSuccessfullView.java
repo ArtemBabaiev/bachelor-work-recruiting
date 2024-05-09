@@ -1,14 +1,16 @@
 package edu.chnu.recruiting.ui.views.application;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
-import com.vaadin.flow.theme.lumo.LumoUtility.Display;
-import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 
 import edu.chnu.recruiting.ui.MainLayout;
+import edu.chnu.recruiting.ui.views.open.PositionListingView;
+import edu.chnu.recruiting.ui.views.profile.ApplicationsProfileView;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Application Successfull")
@@ -16,9 +18,21 @@ import jakarta.annotation.security.PermitAll;
 @PermitAll
 public class ApplicationSuccessfullView extends VerticalLayout {
 	public ApplicationSuccessfullView() {
-		setHeightFull();
-		addClassNames(Display.FLEX, JustifyContent.CENTER, AlignItems.CENTER);
-		H2 message = new H2("Application was saved successfully");
-		add(message);
+		initComponent();
+	}
+	
+	private void initComponent(){
+		setSizeFull();
+		setAlignItems(Alignment.CENTER);
+		setJustifyContentMode(JustifyContentMode.CENTER);
+		H2 message = new H2("Your application has been submitted");
+		Button listingNav = new Button("Explore more positions",
+				e -> UI.getCurrent().navigate(PositionListingView.class));
+		Button profileNav = new Button("View submitted applications",
+				e -> UI.getCurrent().navigate(ApplicationsProfileView.class));
+
+		HorizontalLayout controls = new HorizontalLayout(listingNav, profileNav);
+
+		add(message, controls);
 	}
 }

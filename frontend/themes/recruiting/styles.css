@@ -1,28 +1,11 @@
 @import url('./main-layout.css');
 
-.question-card:hover {
-	cursor: grab;
-}
-
-td.disabled-grid-row {
-	background-color: #CCCCCC;
-}
-
-@media only screen and (min-width: 1051px) {
-	.resizable {
-		width: 50%;
-	}
-}
-
-/* For screens up to 1050px wide */
-@media only screen and (max-width: 1050px) {
-	.resizable {
-		width: 100%;
-	}
-}
-
 @media all and (max-width: 1100px) {
 	.list-view.editing .toolbar, .list-view.editing .user-grid {
 		display: none;
 	}
+}
+
+vaadin-button.underlined::part(label){
+	text-decoration: underline;
 }

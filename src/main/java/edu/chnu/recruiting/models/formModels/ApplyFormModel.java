@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ public class ApplyFormModel {
 	private String fullName;
 
 	@NotNull
+	@Past
 	private LocalDate dateOfBirth;
 
 	private LocalDateTime startedAt = LocalDateTime.now();

@@ -24,4 +24,6 @@ public interface PositionRepository extends JpaRepository<Position, Long>, JpaSp
 	@Modifying
 	@Query("UPDATE Position p SET p.active = :uActive WHERE p.id = :sId")
 	void setActiveWhereId(@Param("sId") Long sId, @Param("uActive") Boolean uActive);
+	
+	long countByActiveIsTrue();
 }

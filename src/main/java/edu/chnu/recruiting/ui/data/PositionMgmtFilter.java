@@ -15,6 +15,8 @@ public class PositionMgmtFilter implements IFilter<Position> {
 	private SearchCriteria name = new SearchCriteria("name", "like", "");
 	private SearchCriteria company = new SearchCriteria("company", ":", null);
 
+	private SearchCriteria employmentType = new SearchCriteria("employmentType", "!=", null);
+
 	public PositionMgmtFilter(Company company) {
 		this.company.setValue(company);
 	}
@@ -23,7 +25,17 @@ public class PositionMgmtFilter implements IFilter<Position> {
 		this.name.setValue(value);
 	}
 
+	public void setEmploymentTypeCriteria(String value) {
+		this.employmentType.setValue(value);
+		if (value == null) {
+			employmentType.setOperation("!=");
+		} else {
+			employmentType.setOperation(":");
+		}
+	}
+
 	public Specification<Position> getSpecification() {
-		return GenericSpecification.<Position>of(name).and(GenericSpecification.<Position>of(company));
+		return GenericSpecification.<Position>of(company).and(GenericSpecification.<Position>of(name))
+				.and(GenericSpecification.<Position>of(employmentType));
 	}
 }

@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
@@ -14,7 +13,6 @@ import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.ui.views.management.position.components.SectionComponent.DownSectionEvent;
 import edu.chnu.recruiting.ui.views.management.position.components.SectionComponent.UpSectionEvent;
 
-@CssImport("./themes/recruiting/styles.css")
 public class FormСreationComponent extends VerticalLayout {
 	VerticalLayout box = new VerticalLayout();
 	Button addSectionBtn = new Button("Add section");

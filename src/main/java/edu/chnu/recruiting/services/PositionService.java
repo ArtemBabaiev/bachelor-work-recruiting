@@ -87,10 +87,15 @@ public class PositionService {
 		position.setUpdatedAt(LocalDateTime.now());
 		return positionRepository.save(position);
 	}
+
 	public Position updateWizard(Long positionId, FormСreationComponent form) {
 		Position position = this.positionRepository.findById(positionId).get();
 		position.setWizardData(this.wizardService.createWizard(form));
 		position.setUpdatedAt(LocalDateTime.now());
-		return positionRepository.save(position); 
+		return positionRepository.save(position);
+	}
+
+	public long countActivePositions() {
+		return this.positionRepository.countByActiveIsTrue();
 	}
 }

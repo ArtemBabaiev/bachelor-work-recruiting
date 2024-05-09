@@ -19,7 +19,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: artdcxx4@gmail.com
-    password: txzc umcv haeh mjwt
+    password: ${GOOGLE_APPLICATION_PASSWORD}
     from: Recruiting-Bachelor-Project
     properties:
       mail:

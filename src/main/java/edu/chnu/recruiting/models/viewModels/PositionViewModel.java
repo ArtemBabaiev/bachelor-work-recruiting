@@ -36,6 +36,10 @@ public class PositionViewModel {
 	private Long companyId;
 
 	private String companyName;
+	
+	private String companyEmail;
+	
+	private String companyContactPhone;
 
 	private List<User> companyRecruiters;
 

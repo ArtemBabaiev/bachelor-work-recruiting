@@ -19,7 +19,6 @@ import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.ui.MainLayout;
 import edu.chnu.recruiting.ui.views.application.SectionForm.BackEvent;
 import edu.chnu.recruiting.ui.views.application.SectionForm.NextEvent;
-import edu.chnu.recruiting.ui.views.profile.ApplicationsProfileView;
 import edu.chnu.recruiting.utils.enums.ApplicationStatus;
 import jakarta.annotation.security.PermitAll;
 
@@ -46,7 +45,7 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 	public void beforeEnter(BeforeEnterEvent event) {
 		try {
 			var optId = event.getLocation().getQueryParameters().getSingleParameter("id");
-			applicationId =Long.parseLong(optId.get());
+			applicationId = Long.parseLong(optId.get());
 		} catch (Exception e) {
 			event.rerouteToError(BadRequestException.class);
 			return;
@@ -89,7 +88,7 @@ public class ApplicationFormView extends VerticalLayout implements BeforeEnterOb
 		try {
 			updateSectionComponent(this.applicationService.saveStepAndGetNext(applicationId, e.getStep()));
 		} catch (WizardFinishedException e2) {
-			UI.getCurrent().navigate(ApplicationsProfileView.class);
+			UI.getCurrent().navigate(ApplicationSuccessfullView.class);
 		}
 	}
 }

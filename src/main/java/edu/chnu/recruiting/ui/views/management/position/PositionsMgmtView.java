@@ -1,6 +1,7 @@
 package edu.chnu.recruiting.ui.views.management.position;
 
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
@@ -8,6 +9,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -20,6 +22,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParam;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import edu.chnu.recruiting.models.Company;
 import edu.chnu.recruiting.models.Position;
@@ -35,7 +38,7 @@ import edu.chnu.recruiting.utils.DateUtils;
 import edu.chnu.recruiting.utils.enums.EmploymentType;
 import jakarta.annotation.security.RolesAllowed;
 
-@PageTitle("Positions")
+@PageTitle("Positions Management")
 @Route(value = "management/positions", layout = MainLayout.class)
 @RolesAllowed({ "COMPANY", "RECRUITER" })
 public class PositionsMgmtView extends VerticalLayout {
@@ -48,6 +51,7 @@ public class PositionsMgmtView extends VerticalLayout {
 	private Company companyEntity;
 
 	private TextField nameSearch = new TextField();
+	private ComboBox<EmploymentType> employmentFilter = new ComboBox<EmploymentType>();
 	private Button createPositionBtn = new Button("Create new position");
 
 	public PositionsMgmtView(ServiceManager uow) {
@@ -66,8 +70,10 @@ public class PositionsMgmtView extends VerticalLayout {
 		configureComponents();
 
 		HorizontalLayout controls = new HorizontalLayout();
+		controls.addClassName(LumoUtility.FlexWrap.WRAP);
 		controls.setWidthFull();
 		controls.addAndExpand(nameSearch);
+		controls.add(employmentFilter);
 		controls.addAndExpand(new Span());
 		controls.add(createPositionBtn);
 		controls.setAlignItems(Alignment.BASELINE);
@@ -83,6 +89,19 @@ public class PositionsMgmtView extends VerticalLayout {
 			filterDataProvider.refreshAll();
 		});
 		nameSearch.setClearButtonVisible(true);
+		
+		employmentFilter.setPlaceholder("Employment type");
+		employmentFilter.setItems(EmploymentType.values());
+		employmentFilter.setItemLabelGenerator(EmploymentType::getLabel);
+		employmentFilter.setClearButtonVisible(true);
+		employmentFilter.addValueChangeListener(e -> {
+			if (e.getValue() != null) {
+				positionFilter.setEmploymentTypeCriteria(e.getValue().getValue());				
+			} else {
+				positionFilter.setEmploymentTypeCriteria(null);		
+			}
+			filterDataProvider.refreshAll();
+		});
 
 		createPositionBtn.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 		createPositionBtn.addClickListener(e -> UI.getCurrent().navigate(PositionCreateView.class));
@@ -90,7 +109,7 @@ public class PositionsMgmtView extends VerticalLayout {
 
 	private void configureGrid() {
 		UI.getCurrent().getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
-			String browserTimeZone = extendedClientDetails.getTimeZoneId();
+			ZoneId clientZoneId = ZoneId.of(extendedClientDetails.getTimeZoneId());
 			grid.addColumn(p -> p.getName(), "name").setHeader("Name");
 			grid.addColumn(p -> EmploymentType.getLabel(p.getEmploymentType()), "employmentType")
 					.setHeader("Employment Type");
@@ -98,7 +117,12 @@ public class PositionsMgmtView extends VerticalLayout {
 
 			grid.addColumn(p -> {
 				var time = p.getUpdatedAt();
-				return time != null ? DateUtils.format(time.atZone(ZoneId.of(browserTimeZone))) : null;
+				if (time == null) {
+					return null;
+				};
+				ZonedDateTime systemZonedDateTime = time.atZone(ZoneId.systemDefault());
+				ZonedDateTime clientZonedDateTime = systemZonedDateTime.withZoneSameInstant(clientZoneId);
+				return DateUtils.format(clientZonedDateTime);
 			}, "updatedAt").setHeader("Last updated");
 			grid.addComponentColumn(p -> getActivationButton(p)).setHeader("Activation");
 			grid.addComponentColumn(p -> getControls(p));
