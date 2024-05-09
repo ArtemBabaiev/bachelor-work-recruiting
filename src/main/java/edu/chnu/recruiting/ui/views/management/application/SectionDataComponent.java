@@ -30,10 +30,18 @@ public class SectionDataComponent extends VerticalLayout {
 
 		public FieldDataComponent(String questionTxt, Object answerTxt) {
 			question = new H4(questionTxt);
-			if (answerTxt instanceof Collection<?> col) {	
-				answer = new Paragraph(String.join(", ", (Collection<String>) col));
+			if (answerTxt instanceof Collection<?> col) {
+				if (col == null || col.isEmpty()) {
+					answer = new Paragraph("No answer");
+				} else {
+					answer = new Paragraph(String.join(", ", (Collection<String>) col));					
+				}
 			} else {
-				answer = new Paragraph(answerTxt == null? "": answerTxt.toString());
+				if (answerTxt == null || (answerTxt instanceof String str && str.isEmpty())) {
+					answer = new Paragraph("No answer");
+				} else {
+					answer = new Paragraph(answerTxt == null? "": answerTxt.toString());					
+				}
 			}
 			add(question, answer);
 		}
