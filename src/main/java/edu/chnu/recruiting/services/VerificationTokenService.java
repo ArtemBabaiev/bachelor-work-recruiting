@@ -25,9 +25,6 @@ public class VerificationTokenService {
 	@Autowired
 	private MailService mailService;
 
-	@Value("${base-url}")
-	private String contextPath;
-
 	@Value("${verifaction-token.expiration: 1440}")
 	private int tokenExpiration;
 
