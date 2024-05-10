@@ -10,11 +10,7 @@ spring:
     #show-sql: true
     hibernate:
       ddl-auto: update
-    database-platform: 
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        #globally_quoted_identifiers: true
+    database-platform: org.hibernate.dialect.MySQLDialect
   mail:
     host: smtp.gmail.com
     port: 587
@@ -30,9 +26,9 @@ spring:
   mustache:
     check-template-location: false
  
-vaadin: 
+vaadin:
   launch-browser: true
-  whitelisted-packages: com.vaadin,org.vaadin,dev.hilla,edu.chnu.recruiting
+  allowed-packages: com.vaadin,org.vaadin,dev.hilla,edu.chnu.recruiting
 
 verifaction-token:
   expiration: 1440 # 24 hours

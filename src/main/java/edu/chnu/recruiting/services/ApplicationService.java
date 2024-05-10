@@ -119,23 +119,25 @@ public class ApplicationService {
 	}
 
 	@Transactional
-	public void acceptApplication(Long id, String notes) {
+	public ApplicationSummary acceptApplication(Long id, String notes) {
 		ApplicationSummary app = this.applicationRepository.findById(id).get();
 		app.setStatus(ApplicationStatus.ACCEPTED.toString());
 		app.setRejectReason(null);
 		app.setNotes(notes);
 		app = this.applicationRepository.save(app);
 		mailService.sendAcceptedEmail(app);
+		return app;
 	}
 
 	@Transactional
-	public void rejectApplication(Long id, String rejectReason) {
+	public ApplicationSummary rejectApplication(Long id, String rejectReason) {
 		ApplicationSummary app = this.applicationRepository.findById(id).get();
 		app.setStatus(ApplicationStatus.REJECTED.toString());
 		app.setRejectReason(rejectReason);
 		app.setNotes(null);
 		app = this.applicationRepository.save(app);
 		mailService.sendRejectedEmail(app);
+		return app;
 	}
 
 }

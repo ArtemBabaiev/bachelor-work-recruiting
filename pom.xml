@@ -19,6 +19,7 @@
 		<java.version>17</java.version>
 		<vaadin.version>24.3.8</vaadin.version>
 		<modelmapper.version>3.2.0</modelmapper.version>
+		<jakarta.mail.verion>2.0.1</jakarta.mail.verion>
 	</properties>
 
 	<dependencyManagement>
@@ -92,18 +93,6 @@
 			<artifactId>vaadin-spring-boot-starter</artifactId>
 		</dependency>
 		<!-- other dependencies -->
-		<!--<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>-->
-
-		<!--<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<scope>runtime</scope>
-		</dependency>-->
-
 		<dependency>
 			<groupId>org.parttio</groupId>
 			<artifactId>line-awesome</artifactId>
@@ -125,7 +114,7 @@
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>jakarta.mail</artifactId>
-			<version>2.0.1</version>
+			<version>${jakarta.mail.verion}</version>
 		</dependency>
 
 		<dependency>
@@ -143,14 +132,22 @@
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-texttospeech</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
+		<defaultGoal>spring-boot:run</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -173,98 +170,97 @@
 	</build>
 
 	<repositories>
-		<repository>
-			<id>Vaadin Directory</id>
-			<url>https://maven.vaadin.com/vaadin-addons</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+        <repository>
+            <id>Vaadin Directory</id>
+            <url>https://maven.vaadin.com/vaadin-addons</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 	<profiles>
-		<profile>
+        <profile>
 			<!-- Production mode is activated using -Pproduction -->
-			<id>production</id>
-			<dependencies>
+            <id>production</id>
+            <dependencies>
 				<!-- Exclude development dependencies from production -->
-				<dependency>
-					<groupId>com.vaadin</groupId>
-					<artifactId>vaadin-core</artifactId>
-					<exclusions>
-						<exclusion>
-							<groupId>com.vaadin</groupId>
-							<artifactId>vaadin-dev</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>com.vaadin</groupId>
-						<artifactId>vaadin-maven-plugin</artifactId>
-						<version>${vaadin.version}</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>build-frontend</goal>
-								</goals>
-								<phase>compile</phase>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+                <dependency>
+                    <groupId>com.vaadin</groupId>
+                    <artifactId>vaadin-core</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.vaadin</groupId>
+                            <artifactId>vaadin-dev</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.vaadin</groupId>
+                        <artifactId>vaadin-maven-plugin</artifactId>
+                        <version>${vaadin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>build-frontend</goal>
+                                </goals>
+                                <phase>compile</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
-		<profile>
-			<id>it</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>start-spring-boot</id>
-								<phase>pre-integration-test</phase>
-								<goals>
-									<goal>start</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>stop-spring-boot</id>
-								<phase>post-integration-test</phase>
-								<goals>
-									<goal>stop</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
+        <profile>
+            <id>it</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>start-spring-boot</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-spring-boot</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
 
-					<!-- Runs the integration tests (*IT) after the server is
-					started -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-failsafe-plugin</artifactId>
-						<executions>
-							<execution>
-								<goals>
-									<goal>integration-test</goal>
-									<goal>verify</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<trimStackTrace>false</trimStackTrace>
-							<enableAssertions>true</enableAssertions>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+					<!-- Runs the integration tests (*IT) after the server is started -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <trimStackTrace>false</trimStackTrace>
+                            <enableAssertions>true</enableAssertions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
-	</profiles>
+    </profiles>
 
 </project>
