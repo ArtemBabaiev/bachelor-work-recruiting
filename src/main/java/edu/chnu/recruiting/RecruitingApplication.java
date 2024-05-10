@@ -8,9 +8,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-
 
 /**
  * The entry point of the Spring Boot application.
@@ -25,6 +25,13 @@ import com.vaadin.flow.theme.lumo.Lumo;
 @Theme(value = "recruiting", variant = Lumo.DARK)
 @Push
 @EntityScan(basePackageClasses = { RecruitingApplication.class, Jsr310JpaConverters.class })
+@PWA(
+		name = "Recruiting Application", 
+		shortName = "Recruiting", 
+		offlinePath = "./offline.html", 
+		offlineResources = { "./images/offline.png" }
+
+)
 public class RecruitingApplication implements AppShellConfigurator {
 
 	public static void main(String[] args) {
