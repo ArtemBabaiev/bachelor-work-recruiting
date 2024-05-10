@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,7 +27,7 @@ public class MailService {
 	private static ExecutorService executorService = Executors.newFixedThreadPool(2);
 
 	@Autowired
-	private JavaMailSenderImpl mailSender;
+    private JavaMailSender mailSender;
 
 	@Autowired
 	private TemplateUtils templateUtils;

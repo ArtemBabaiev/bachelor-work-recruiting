@@ -19,6 +19,7 @@
 		<java.version>17</java.version>
 		<vaadin.version>24.3.8</vaadin.version>
 		<modelmapper.version>3.2.0</modelmapper.version>
+		<jakarta.mail.verion>2.0.1</jakarta.mail.verion>
 	</properties>
 
 	<dependencyManagement>
@@ -113,7 +114,7 @@
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>jakarta.mail</artifactId>
-			<version>2.0.1</version>
+			<version>${jakarta.mail.verion}</version>
 		</dependency>
 
 		<dependency>
@@ -131,11 +132,18 @@
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-texttospeech</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -173,10 +181,10 @@
 
 	<profiles>
         <profile>
-            <!-- Production mode is activated using -Pproduction -->
+			<!-- Production mode is activated using -Pproduction -->
             <id>production</id>
             <dependencies>
-                <!-- Exclude development dependencies from production -->
+				<!-- Exclude development dependencies from production -->
                 <dependency>
                     <groupId>com.vaadin</groupId>
                     <artifactId>vaadin-core</artifactId>
@@ -232,7 +240,7 @@
                         </executions>
                     </plugin>
 
-                    <!-- Runs the integration tests (*IT) after the server is started -->
+					<!-- Runs the integration tests (*IT) after the server is started -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
