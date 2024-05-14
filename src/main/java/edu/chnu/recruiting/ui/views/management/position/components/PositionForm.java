@@ -46,7 +46,6 @@ public class PositionForm extends FormLayout {
 		saveBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 		cancelBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		add(new HorizontalLayout(saveBtn, cancelBtn));
-
 		binder.setBean(bean);
 	}
 
@@ -57,7 +56,6 @@ public class PositionForm extends FormLayout {
 
 	private void configureBinder() {
 		binder.bindInstanceFields(this);
-		binder.addStatusChangeListener(e -> saveBtn.setEnabled(binder.isValid()));
 
 		binder.forField(salaryRange).withNullRepresentation(new SalaryRange(0.0, 0.0, "USD"))
 				.withValidator(

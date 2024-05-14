@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -162,8 +163,7 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 		input.setWidthFull();
 		vl.add(input);
 
-		dialog.getFooter().add(new Button("Cancel", e1 -> dialog.close()));
-		dialog.getFooter().add(new Button("Confirm", e1 -> {
+		Button confirmBtn = new Button("Confirm", e1 -> {
 			var value = input.getValue();
 			if (value != null && !value.isBlank()) {
 				this.applicationService.acceptApplication(appId, value);
@@ -171,7 +171,12 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 			} else {
 				input.setInvalid(true);
 			}
-		}));
+		});
+		confirmBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		confirmBtn.addClickShortcut(Key.ENTER);
+		
+		dialog.getFooter().add(new Button("Cancel", e1 -> dialog.close()));
+		dialog.getFooter().add(confirmBtn);
 		dialog.open();
 	}
 
@@ -190,8 +195,7 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 		input.setWidthFull();
 		vl.add(input);
 
-		dialog.getFooter().add(new Button("Cancel", e1 -> dialog.close()));
-		dialog.getFooter().add(new Button("Confirm", e1 -> {
+		Button confirmBtn = new Button("Confirm", e1 -> {
 			var value = input.getValue();
 			if (value != null && !value.isBlank()) {
 				applicationService.rejectApplication(appId, input.getValue());
@@ -199,7 +203,13 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 			} else {
 				input.setInvalid(true);
 			}
-		}));
+		});
+		
+		confirmBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		confirmBtn.addClickShortcut(Key.ENTER);
+		
+		dialog.getFooter().add(new Button("Cancel", e1 -> dialog.close()));
+		dialog.getFooter().add(confirmBtn);
 		dialog.open();
 	}
 

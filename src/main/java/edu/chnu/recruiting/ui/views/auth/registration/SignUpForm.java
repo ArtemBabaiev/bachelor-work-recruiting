@@ -6,6 +6,7 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValueAndElement;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -45,7 +46,7 @@ public class SignUpForm extends FormLayout {
 		configureComponents();
 
 		configureBinder();
-		binder.addStatusChangeListener(e -> confirmBtn.setEnabled(binder.isValid()));
+		//binder.addStatusChangeListener(e -> confirmBtn.setEnabled(binder.isValid()));
 		binder.setBean(model);
 
 		HorizontalLayout hz = new HorizontalLayout(confirmBtn, cancelBtn);
@@ -66,6 +67,8 @@ public class SignUpForm extends FormLayout {
 
 		confirmBtn.addClickListener(e -> handleSaveClick(e));
 		cancelBtn.addClickListener(e -> fireEvent(new CancelEvent(this)));
+		
+		confirmBtn.addClickShortcut(Key.ENTER);
 	}
 
 	private void configureBinder() {
@@ -75,7 +78,7 @@ public class SignUpForm extends FormLayout {
 	}
 
 	private void handleSaveClick(ClickEvent<Button> e) {
-		if (binder.isValid())
+		if (binder.validate().isOk())
 			fireEvent(new SaveEvent(this, binder.getBean()));
 	}
 
