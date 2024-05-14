@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -44,6 +45,7 @@ public class PositionForm extends FormLayout {
 		configureComponents();
 		add(name, description, department, location, employmentType, salaryRange);
 		saveBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+		saveBtn.addClickShortcut(Key.ENTER);
 		cancelBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		add(new HorizontalLayout(saveBtn, cancelBtn));
 		binder.setBean(bean);
