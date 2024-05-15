@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -173,8 +172,7 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 			}
 		});
 		confirmBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		confirmBtn.addClickShortcut(Key.ENTER);
-		
+
 		dialog.getFooter().add(new Button("Cancel", e1 -> dialog.close()));
 		dialog.getFooter().add(confirmBtn);
 		dialog.open();
@@ -204,10 +202,9 @@ public class ApplicationMgmtView extends VerticalLayout implements BeforeEnterOb
 				input.setInvalid(true);
 			}
 		});
-		
+
 		confirmBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		confirmBtn.addClickShortcut(Key.ENTER);
-		
+
 		dialog.getFooter().add(new Button("Cancel", e1 -> dialog.close()));
 		dialog.getFooter().add(confirmBtn);
 		dialog.open();
