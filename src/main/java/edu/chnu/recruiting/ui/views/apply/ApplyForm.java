@@ -2,6 +2,7 @@ package edu.chnu.recruiting.ui.views.apply;
 
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -31,10 +32,14 @@ public class ApplyForm extends FormLayout {
 		dateOfBirth.setI18n(multiFormatI18n);
 
 		cancelBtn.addClickListener(e -> fireEvent(new CancelEvent(this)));
-		continueBtn.addClickListener(e -> fireEvent(new ContinueEvent(this, binder.getBean())));
+		continueBtn.addClickListener(e -> {
+			if (binder.validate().isOk()) {
+				fireEvent(new ContinueEvent(this, binder.getBean()));
+			}
+		});
+		continueBtn.addClickShortcut(Key.ENTER);
 
 		binder.bindInstanceFields(this);
-		binder.addStatusChangeListener(e -> continueBtn.setEnabled(binder.isValid()));
 		binder.setBean(model);
 
 		HorizontalLayout controls = new HorizontalLayout(cancelBtn, continueBtn);
@@ -43,7 +48,7 @@ public class ApplyForm extends FormLayout {
 
 		this.setColspan(controls, 2);
 	}
-	
+
 	public Registration addContinueListener(ComponentEventListener<ContinueEvent> listener) {
 		return addListener(ContinueEvent.class, listener);
 	}

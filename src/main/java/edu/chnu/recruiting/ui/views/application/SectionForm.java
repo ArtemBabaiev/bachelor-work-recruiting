@@ -118,6 +118,7 @@ public class SectionForm extends VerticalLayout {
 
 	private NumberField getNumber(WizardField field) {
 		NumberField f = new NumberField(field.getQuestion());
+		f.setStepButtonsVisible(true);
 		var builder = binder.forField(f);
 		if (field.isRequired()) {
 			builder.asRequired("Required");

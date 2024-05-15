@@ -34,7 +34,6 @@ public class CompanyForm extends FormLayout {
 		binder.bindInstanceFields(this);
 		configureComponents();
 
-		binder.addStatusChangeListener(e -> createBtn.setEnabled(binder.isValid()));
 		binder.setBean(model);
 
 		add(name, description, industry, contactPhone, email, address, new HorizontalLayout(cancelBtn, createBtn));
@@ -51,6 +50,13 @@ public class CompanyForm extends FormLayout {
 
 		createBtn.addClickListener(e -> handleCreateClick(e));
 		cancelBtn.addClickListener(e -> fireEvent(new CancelEvent(this)));
+		
+		name.setPlaceholder("Enter company name");
+		description.setPlaceholder("Describe your company");
+		industry.setPlaceholder("e.g., IT, Trading");
+		contactPhone.setPlaceholder("Enter phone number");
+		email.setPlaceholder("Enter email address (e.g., contact@yourcompany.com)");
+		address.setPlaceholder("Enter your company's physical address");
 	}
 
 	public void setBean(CompanyFormModel bean) {
@@ -58,7 +64,7 @@ public class CompanyForm extends FormLayout {
 	}
 
 	private void handleCreateClick(ClickEvent<Button> e) {
-		if (binder.isValid())
+		if (binder.validate().isOk())
 			fireEvent(new SaveEvent(this, binder.getBean()));
 	}
 
