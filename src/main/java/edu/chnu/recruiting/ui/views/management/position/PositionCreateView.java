@@ -23,7 +23,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 import edu.chnu.recruiting.models.Position;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.ui.MainLayout;
-import edu.chnu.recruiting.ui.views.management.position.components.FormСreationComponent;
+import edu.chnu.recruiting.ui.views.management.position.components.FormCreationComponent;
 import edu.chnu.recruiting.ui.views.management.position.components.PositionForm;
 import jakarta.annotation.security.RolesAllowed;
 
@@ -34,7 +34,7 @@ public class PositionCreateView extends VerticalLayout {
 
 	TabSheet tabSheet = new TabSheet();
 
-	FormСreationComponent form = new FormСreationComponent();
+	FormCreationComponent form = new FormCreationComponent();
 
 	PositionForm positionForm;
 

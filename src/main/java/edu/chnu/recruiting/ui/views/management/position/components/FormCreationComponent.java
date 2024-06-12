@@ -13,11 +13,11 @@ import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.ui.views.management.position.components.SectionComponent.DownSectionEvent;
 import edu.chnu.recruiting.ui.views.management.position.components.SectionComponent.UpSectionEvent;
 
-public class FormСreationComponent extends VerticalLayout {
+public class FormCreationComponent extends VerticalLayout {
 	VerticalLayout box = new VerticalLayout();
 	Button addSectionBtn = new Button("Add section");
 
-	public FormСreationComponent() {
+	public FormCreationComponent() {
 		addSectionBtn.addClickListener(e -> handleAddSectionClick(e));
 		this.setWidthFull();
 		this.setAlignItems(Alignment.CENTER);
@@ -26,7 +26,7 @@ public class FormСreationComponent extends VerticalLayout {
 		add(box, addSectionBtn);
 	}
 	
-	public FormСreationComponent(Wizard wizard) {
+	public FormCreationComponent(Wizard wizard) {
 		this();
 		for (var step : wizard.getSteps()) {
 			SectionComponent sc = new SectionComponent(step);

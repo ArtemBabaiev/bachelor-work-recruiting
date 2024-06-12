@@ -22,7 +22,7 @@ import edu.chnu.recruiting.services.AccessService;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.services.ServiceManager;
 import edu.chnu.recruiting.ui.MainLayout;
-import edu.chnu.recruiting.ui.views.management.position.components.FormСreationComponent;
+import edu.chnu.recruiting.ui.views.management.position.components.FormCreationComponent;
 import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Position form")
@@ -36,7 +36,7 @@ public class PositionFormEditView extends VerticalLayout implements BeforeEnterO
 	Long positionId;
 	private Wizard model;
 
-	private FormСreationComponent form;
+	private FormCreationComponent form;
 	private Button saveBtn = new Button("Save");
 	private Button backBtn = new Button(VaadinIcon.ARROW_LEFT.create());
 
@@ -69,7 +69,7 @@ public class PositionFormEditView extends VerticalLayout implements BeforeEnterO
 		setAlignItems(Alignment.CENTER);
 		setSizeFull();
 
-		form = new FormСreationComponent(model);
+		form = new FormCreationComponent(model);
 		form.setMaxWidth("800px");
 
 		saveBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);

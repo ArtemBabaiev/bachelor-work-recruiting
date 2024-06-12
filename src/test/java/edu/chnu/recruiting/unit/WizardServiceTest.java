@@ -19,7 +19,7 @@ import edu.chnu.recruiting.models.wizard.WizardField;
 import edu.chnu.recruiting.models.wizard.WizardStep;
 import edu.chnu.recruiting.services.GcTextToSpeechService;
 import edu.chnu.recruiting.services.WizardService;
-import edu.chnu.recruiting.ui.views.management.position.components.FormСreationComponent;
+import edu.chnu.recruiting.ui.views.management.position.components.FormCreationComponent;
 
 @ExtendWith(MockitoExtension.class)
 public class WizardServiceTest {
@@ -40,7 +40,7 @@ public class WizardServiceTest {
 		WizardStep step1 = new WizardStep();
 		step1.setFields(new ArrayList<WizardField>(List.of(new WizardField(), new WizardField(), new WizardField())));
 		wizard.addStep(step1);
-		FormСreationComponent form = new FormСreationComponent(wizard);
+		FormCreationComponent form = new FormCreationComponent(wizard);
 		when(this.ttsService.getSpeech(anyString())).thenReturn(new byte[] { 1, 1, 1, 1 });
 		var newWizard = wizardService.createWizard(form);
 		assertEquals(2, newWizard.getSteps().size());

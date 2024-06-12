@@ -24,7 +24,7 @@ import edu.chnu.recruiting.security.SecurityContext;
 import edu.chnu.recruiting.services.CompanyService;
 import edu.chnu.recruiting.services.PositionService;
 import edu.chnu.recruiting.services.WizardService;
-import edu.chnu.recruiting.ui.views.management.position.components.FormСreationComponent;
+import edu.chnu.recruiting.ui.views.management.position.components.FormCreationComponent;
 
 @ExtendWith(MockitoExtension.class)
 public class PositionServiceTest {
@@ -54,12 +54,12 @@ public class PositionServiceTest {
 		authUser.setRole(new Role("ROLE_COMPANY"));
 		Position position = new Position();
 
-		when(this.wizardService.createWizard(any(FormСreationComponent.class))).thenReturn(new Wizard());
+		when(this.wizardService.createWizard(any(FormCreationComponent.class))).thenReturn(new Wizard());
 		when(securityContext.getAuthenticatedUser()).thenReturn(authUser);
 		when(companyService.getCompanyByUser(any(User.class))).thenReturn(new Company());
 		when(positionRepository.save(position)).thenReturn(position);
 
-		var returned = positionService.createPosition(position, new FormСreationComponent());
+		var returned = positionService.createPosition(position, new FormCreationComponent());
 
 		assertNotNull(returned.getWizardData());
 		assertNotNull(returned.getCompany());
@@ -79,10 +79,10 @@ public class PositionServiceTest {
 		Position position = new Position();
 
 		when(this.positionRepository.findById(anyLong())).thenReturn(Optional.of(position));
-		when(this.wizardService.createWizard(any(FormСreationComponent.class))).thenReturn(new Wizard());
+		when(this.wizardService.createWizard(any(FormCreationComponent.class))).thenReturn(new Wizard());
 		when(positionRepository.save(position)).thenReturn(position);
 
-		var returned = positionService.updateWizard(1L, new FormСreationComponent());
+		var returned = positionService.updateWizard(1L, new FormCreationComponent());
 
 		assertNotNull(returned.getWizardData());
 	}

@@ -17,7 +17,7 @@ import edu.chnu.recruiting.models.viewModels.PositionViewModel;
 import edu.chnu.recruiting.models.wizard.Wizard;
 import edu.chnu.recruiting.repositories.PositionRepository;
 import edu.chnu.recruiting.security.SecurityContext;
-import edu.chnu.recruiting.ui.views.management.position.components.FormСreationComponent;
+import edu.chnu.recruiting.ui.views.management.position.components.FormCreationComponent;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -37,7 +37,7 @@ public class PositionService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	public Position createPosition(Position position, FormСreationComponent formComponent) {
+	public Position createPosition(Position position, FormCreationComponent formComponent) {
 		Wizard wizard = this.wizardService.createWizard(formComponent);
 		Company company = companyService.getCompanyByUser(securityContext.getAuthenticatedUser());
 		position.setWizardData(wizard);
@@ -88,7 +88,7 @@ public class PositionService {
 		return positionRepository.save(position);
 	}
 
-	public Position updateWizard(Long positionId, FormСreationComponent form) {
+	public Position updateWizard(Long positionId, FormCreationComponent form) {
 		Position position = this.positionRepository.findById(positionId).get();
 		position.setWizardData(this.wizardService.createWizard(form));
 		position.setUpdatedAt(LocalDateTime.now());
