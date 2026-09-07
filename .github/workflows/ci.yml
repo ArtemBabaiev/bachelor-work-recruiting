@@ -11,12 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          # Автоматичне кешування директорії ~/.m2/repository
           cache: 'maven'
+          
       - name: Build, Test and PMD Analysis
         run: mvn -B verify
+
+      - name: Upload PMD Report
+        if: always() # Виконується навіть якщо тести чи перевірки впали
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmd-report
+          path: target/pmd.xml
